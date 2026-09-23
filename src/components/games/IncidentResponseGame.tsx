@@ -15,7 +15,7 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({ onCo
   const [step, setStep] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const loc = {
+  const locData = {
     es: {
       tag: 'Mecánica 12 / Respuesta',
       title: 'Respuesta ante Incidentes',
@@ -163,55 +163,9 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({ onCo
         },
       ],
     },
-  }[language] || {
-    tag: 'Mecánica 12 / Respuesta',
-    title: 'Respuesta ante Incidentes',
-    stepBadge: (curr: number, total: number) => `Paso ${curr} de ${total}`,
-    mascot: 'Ciber dice: "Los errores pasan y no tienen nada de malo. Lo importante es no tener miedo de hablar con un adulto."',
-    nextBtn: 'Siguiente Situación',
-    completeBtn: '¡Completar Protocolo de Emergencia!',
-    scenarios: [
-      {
-        title: 'Situación de Alerta 1',
-        scenario: 'Hiciste clic por error en un enlace que prometía "Robux gratis". De repente, tu pantalla empieza a parpadear con alertas raras.',
-        question: '¿Qué es lo primero y más importante que debes hacer?',
-        options: [
-          {
-            text: 'Cerrar la pestaña, desconectar internet si es posible y avisar con calma a tus padres.',
-            isBest: true,
-            feedback: '¡Excelente decisión! Mantener la calma y pedir ayuda a un adulto resuelve cualquier problema sin empeorarlo.',
-          },
-          {
-            text: 'Intentar ocultarlo y descargar un archivo misterioso que promete "arreglarlo".',
-            isBest: false,
-            feedback: '¡Cuidado! Descargar más cosas suele empeorar la infección del dispositivo.',
-          },
-          {
-            text: 'Ingresar tu usuario y contraseña para ver si la cuenta sigue funcionando.',
-            isBest: false,
-            feedback: '¡No! Si la página es falsa, regalarías tus datos a los estafadores.',
-          },
-        ],
-      },
-      {
-        title: 'Situación de Alerta 2',
-        scenario: 'Junto con tus padres, cerraron la página. Ahora quieren asegurarse de que tu cuenta de juego esté a salvo.',
-        question: '¿Cuál es el siguiente paso correcto?',
-        options: [
-          {
-            text: 'Cambiar la contraseña desde la app oficial y activar la verificación en dos pasos (2FA).',
-            isBest: true,
-            feedback: '¡Magistral! Cambiar la clave y blindar con 2FA expulsa a cualquier intruso de tu cuenta.',
-          },
-          {
-            text: 'Dejar la misma clave porque "seguro no pasó nada".',
-            isBest: false,
-            feedback: 'Es mejor prevenir: cambiar la clave solo toma 2 minutos y te da total tranquilidad.',
-          },
-        ],
-      },
-    ],
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   const scenarioSteps = loc.scenarios;
   const current = scenarioSteps[step];
@@ -230,29 +184,29 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({ onCo
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold">
             <LifeBuoy className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-rose-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-rose-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+        <span className="text-xs font-bold text-slate-600">
           {loc.stepBadge(step + 1, scenarioSteps.length)}
         </span>
       </div>
 
       {/* Mascot advice */}
-      <div className="flex items-center gap-3 p-3 bg-rose-50/80 rounded-2xl border border-rose-100">
+      <div className="flex items-center gap-3.5 p-4 bg-rose-50/80 rounded-3xl border border-rose-100">
         <CiberMascot size="sm" expression={feedback ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-rose-950 leading-snug">
+        <div className="text-xs sm:text-sm text-rose-950 leading-relaxed">
           {loc.mascot}
         </div>
       </div>

@@ -36,7 +36,7 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({ onComplete, ag
     return 'Ciber dice: "Mueve los diales para que un desconocido en Internet no pueda ver dónde estás ni mandarte mensajes privados."';
   };
 
-  const loc = {
+  const locData = {
     es: {
       tag: `Mecánica 7 • Nivel ${ageGroup} años`,
       title: 'El Dial de Privacidad',
@@ -133,55 +133,26 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({ onComplete, ag
       saveBtn: 'Save Safe Privacy Settings!',
       needAdjustBtn: 'Set location & direct messages to a safe level',
     },
-  }[language] || {
-    tag: 'Mecánica 7 / Privacidad',
-    title: 'El Dial de Privacidad',
-    shieldedStatus: 'Perfil Blindado',
-    exposedStatus: 'Datos Expuestos',
-    mascot: 'Ciber dice: "Mueve los diales para que un desconocido en Internet no pueda ver dónde estás ni mandarte mensajes privados."',
-    dial1Label: 'Ubicación GPS en publicaciones',
-    dial2Label: '¿Quién ve mis fotos y videos?',
-    dial3Label: '¿Quién puede enviarme mensajes directos?',
-    levels: {
-      public: 'Público',
-      friends: 'Amigos',
-      private: 'Solo yo',
-    },
-    messageLevels: {
-      public: 'Cualquiera',
-      friends: 'Solo Amigos',
-      private: 'Nadie',
-    },
-    previewTitle: 'Vista de un desconocido en Internet:',
-    q1: '¿Puede ver dónde vives / estudias?',
-    q1Yes: '⚠️ Sí (Visible)',
-    q1No: '🔒 Oculto',
-    q2: '¿Puede ver tus fotos privadas?',
-    q2Yes: '⚠️ Sí (Cualquiera)',
-    q2No: '🔒 Solo Amigos',
-    q3: '¿Puede escribirte un mensaje directo?',
-    q3Yes: '⚠️ Sí (Abierto)',
-    q3No: '🔒 Bloqueado a extraños',
-    saveBtn: '¡Guardar Configuración Segura!',
-    needAdjustBtn: 'Ajusta la ubicación y mensajes a modo seguro',
   };
 
+  const loc = locData[language] || locData.en || locData.es;
+
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
             <Sliders className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-cyan-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-cyan-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className={`text-[11px] font-bold px-3 py-1 rounded-full ${isSafeEnough ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+        <span className={`text-xs font-bold ${isSafeEnough ? 'text-emerald-700' : 'text-amber-700'}`}>
           {isSafeEnough ? loc.shieldedStatus : loc.exposedStatus}
         </span>
       </div>

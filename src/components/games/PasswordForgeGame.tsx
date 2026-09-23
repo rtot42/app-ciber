@@ -47,34 +47,7 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({ onComplete
     return ['Robot', 'Galaxia', 'Dragon', 'Delfin', 'Pixel', 'Trueno'];
   };
 
-  const loc = {
-    es: {
-      mechanicTag: `Mecánica 6 • Nivel ${ageGroup} años`,
-      title: 'La Forja de Contraseñas',
-      combineBtn: 'Combinar',
-      mascotText: getAgeMascotText(),
-      digitalLock: 'Tu cerradura digital',
-      placeholder: 'Escribe tu contraseña...',
-      armorLevel: 'Nivel de blindaje:',
-      timeToBreak: 'Tiempo para romperla:',
-      ingredientsTitle: 'Ingredientes de una contraseña legendaria:',
-      reqLength: ageGroup === '13–14' ? '12+ letras' : '10+ letras',
-      reqUpperLower: 'Mayúsculas & minúsculas',
-      reqNumber: 'Al menos un número (0-9)',
-      reqSymbol: 'Símbolo secreto (@, #, !)',
-      quickAddTitle: 'Toca para añadir bloques seguros:',
-      forgeBtn: '¡Forjar Contraseña & Guardar Llave!',
-      needMoreBtn: 'Cumple al menos 4 requisitos para continuar',
-      weak: 'Débil',
-      regular: 'Regular',
-      strong: 'Fuerte',
-      legendary: '¡Legendaria!',
-      timeWeak: '3 segundos',
-      timeRegular: '4 horas',
-      timeStrong: '3 años',
-      timeLegendary: '¡8.000 siglos!',
-      words: getAgeWords(),
-    },
+  const locData = {
     fr: {
       mechanicTag: `Mécanique 6 • Niveau ${ageGroup} ans`,
       title: 'La Forge de Mots de Passe',
@@ -100,6 +73,33 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({ onComplete
       timeRegular: '4 heures',
       timeStrong: '3 ans',
       timeLegendary: '8 000 siècles !',
+      words: getAgeWords(),
+    },
+    es: {
+      mechanicTag: `Mecánica 6 • Nivel ${ageGroup} años`,
+      title: 'La Forja de Contraseñas',
+      combineBtn: 'Combinar',
+      mascotText: getAgeMascotText(),
+      digitalLock: 'Tu cerradura digital',
+      placeholder: 'Escribe tu contraseña...',
+      armorLevel: 'Nivel de blindaje:',
+      timeToBreak: 'Tiempo para romperla:',
+      ingredientsTitle: 'Ingredientes de una contraseña legendaria:',
+      reqLength: ageGroup === '13–14' ? '12+ letras' : '10+ letras',
+      reqUpperLower: 'Mayúsculas & minúsculas',
+      reqNumber: 'Al menos un número (0-9)',
+      reqSymbol: 'Símbolo secreto (@, #, !)',
+      quickAddTitle: 'Toca para añadir bloques seguros:',
+      forgeBtn: '¡Forjar Contraseña & Guardar Llave!',
+      needMoreBtn: 'Cumple al menos 4 requisitos para continuar',
+      weak: 'Débil',
+      regular: 'Regular',
+      strong: 'Fuerte',
+      legendary: '¡Legendaria!',
+      timeWeak: '3 segundos',
+      timeRegular: '4 horas',
+      timeStrong: '3 años',
+      timeLegendary: '¡8.000 siglos!',
       words: getAgeWords(),
     },
     en: {
@@ -129,33 +129,9 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({ onComplete
       timeLegendary: '8,000 centuries!',
       words: getAgeWords(),
     },
-  }[language] || {
-    mechanicTag: `Mecánica 6 • Nivel ${ageGroup} años`,
-    title: 'La Forja de Contraseñas',
-    combineBtn: 'Combinar',
-    mascotText: getAgeMascotText(),
-    digitalLock: 'Tu cerradura digital',
-    placeholder: 'Escribe tu contraseña...',
-    armorLevel: 'Nivel de blindaje:',
-    timeToBreak: 'Tiempo para romperla:',
-    ingredientsTitle: 'Ingredientes de una contraseña legendaria:',
-    reqLength: ageGroup === '13–14' ? '12+ letras' : '10+ letras',
-    reqUpperLower: 'Mayúsculas & minúsculas',
-    reqNumber: 'Al menos un número (0-9)',
-    reqSymbol: 'Símbolo secreto (@, #, !)',
-    quickAddTitle: 'Toca para añadir bloques seguros:',
-    forgeBtn: '¡Forjar Contraseña & Guardar Llave!',
-    needMoreBtn: 'Cumple al menos 4 requisitos para continuar',
-    weak: 'Débil',
-    regular: 'Regular',
-    strong: 'Fuerte',
-    legendary: '¡Legendaria!',
-    timeWeak: '3 segundos',
-    timeRegular: '4 horas',
-    timeStrong: '3 años',
-    timeLegendary: '¡8.000 siglos!',
-    words: getAgeWords(),
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   // Criteria calculations
   const minRequiredLength = ageGroup === '13–14' ? 12 : 10;
@@ -204,23 +180,23 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({ onComplete
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-4">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
             <KeyRound className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-purple-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-purple-600 tracking-wider">
               {loc.mechanicTag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
         <button
           onClick={handleGenerateMagic}
-          className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 hover:bg-purple-100 transition cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-purple-50 text-purple-700 hover:bg-purple-100 transition cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>{loc.combineBtn}</span>
@@ -228,9 +204,9 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({ onComplete
       </div>
 
       {/* Mascot advice */}
-      <div className="flex items-center gap-3 p-3 bg-purple-50/80 rounded-2xl border border-purple-100">
+      <div className="flex items-center gap-3.5 p-4 bg-purple-50/80 rounded-3xl border border-purple-100">
         <CiberMascot size="sm" expression={passedCount >= 4 ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-purple-900 leading-snug">
+        <div className="text-xs sm:text-sm text-purple-900 leading-relaxed">
           {loc.mascotText}
         </div>
       </div>

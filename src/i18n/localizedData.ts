@@ -1781,7 +1781,7 @@ const HOTSPOT_LOCALIZATIONS: Record<Language, Record<string, { label: string; fe
 };
 
 export function getLocalizedWorlds(lang: Language): World[] {
-  const langOverrides = WORLD_LOCALIZATIONS[lang] || WORLD_LOCALIZATIONS.es;
+  const langOverrides = WORLD_LOCALIZATIONS[lang] || WORLD_LOCALIZATIONS.en || WORLD_LOCALIZATIONS.es;
 
   return WORLDS_DATA.map((world) => {
     const override = langOverrides[world.id];
@@ -1814,7 +1814,7 @@ export function getLocalizedWorlds(lang: Language): World[] {
 }
 
 export function getLocalizedBadges(lang: Language): AchievementBadge[] {
-  const langOverrides = BADGE_LOCALIZATIONS[lang] || BADGE_LOCALIZATIONS.es;
+  const langOverrides = BADGE_LOCALIZATIONS[lang] || BADGE_LOCALIZATIONS.en || BADGE_LOCALIZATIONS.es;
 
   return BADGES_DATA.map((badge) => {
     const override = langOverrides[badge.id];
@@ -1831,7 +1831,7 @@ export function getLocalizedBadges(lang: Language): AchievementBadge[] {
 }
 
 export function getLocalizedHotspots(lang: Language): GameHotspot[] {
-  const langOverrides = HOTSPOT_LOCALIZATIONS[lang] || HOTSPOT_LOCALIZATIONS.es;
+  const langOverrides = HOTSPOT_LOCALIZATIONS[lang] || HOTSPOT_LOCALIZATIONS.en || HOTSPOT_LOCALIZATIONS.es;
 
   return PHOTO_HOTSPOTS.map((hs) => {
     const override = langOverrides[hs.id];

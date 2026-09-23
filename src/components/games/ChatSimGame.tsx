@@ -37,7 +37,7 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({ onComplete, ageGroup =
     return '¡Hola! Jugamos juntos ayer en Roblox. Eres muy bueno. ¿Cuántos años tienes y a qué colegio vas?';
   };
 
-  const loc = {
+  const locData = {
     es: {
       tag: `Mecánica 5 • Nivel ${ageGroup} años`,
       title: 'Simulador de Conversación',
@@ -161,47 +161,9 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({ onComplete, ageGroup =
         },
       ],
     },
-  }[language] || {
-    tag: 'Mecánica 5 / Chat Seguro',
-    title: 'Simulador de Conversación',
-    stepText: (s: number) => `Paso ${Math.min(s + 1, 2)} de 2`,
-    contactSub: 'Desconocido en multijugador',
-    blockBtn: 'Bloquear',
-    prompt: '¿Qué responderías tú?',
-    completeBtn: '¡Completar Simulación de Chat!',
-    systemInit: 'Nuevo mensaje de chat privado de "GamerGhost99"',
-    initialOtherMsg: '¡Hola! Jugamos juntos ayer en Roblox. Eres muy bueno. ¿Cuántos años tienes y a qué colegio vas?',
-    step0: [
-      {
-        text: 'Tengo 11 y voy al San Patricio en el centro.',
-        isSafe: false,
-        response: 'Dar tu edad y tu colegio a alguien que solo conoces de una partida es peligroso.',
-        myReply: 'Tengo 11 y voy al San Patricio.',
-        botFollowup: '¡Qué bien! Mándame una foto de tu uniforme y te agrego a mi grupo VIP.',
-      },
-      {
-        text: 'Prefiero no compartir datos personales. Hablemos solo de trucos del juego.',
-        isSafe: true,
-        response: '¡Excelente respuesta! Mantienes el juego divertido sin regalar tu información personal.',
-        myReply: 'Prefiero no compartir datos personales. Hablemos solo del juego.',
-        botFollowup: 'Entendido. ¿Cuál es tu estrategia en el mapa de lava?',
-      },
-    ],
-    step1: [
-      {
-        text: 'Bloquear y avisar a mamá o papá si insiste en pedir datos.',
-        isSafe: true,
-        response: '¡Perfecto! Tienes todo el control para bloquear a quien te incomode y contarlo sin miedo.',
-        myReply: 'He decidido bloquearte por seguridad.',
-      },
-      {
-        text: 'Seguir hablando y aceptar vernos en el parque el sábado.',
-        isSafe: false,
-        response: '¡Alerta roja! Nunca aceptes encontrarte en persona con nadie de Internet sin tus padres.',
-        myReply: 'Está bien, nos vemos en el parque.',
-      },
-    ],
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -236,21 +198,21 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({ onComplete, ageGroup =
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
             <MessageSquare className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-cyan-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-cyan-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+        <span className="text-xs font-bold text-slate-600">
           {loc.stepText(step)}
         </span>
       </div>

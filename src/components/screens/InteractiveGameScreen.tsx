@@ -42,22 +42,6 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
   const ageGroup: ChildAgeGroup = profile?.ageGroup || '8–10';
 
   const getMechanicLabels = () => {
-    if (language === 'en') {
-      return [
-        { type: 'image-detection' as GameType, label: '1. Photo Risk Hunt', icon: '📸' },
-        { type: 'password-forge' as GameType, label: '2. Password Forge', icon: '🔐' },
-        { type: 'phishing-inbox' as GameType, label: '3. Phishing Inbox', icon: '🎣' },
-        { type: 'chat-sim' as GameType, label: '4. Safe Chat Sim', icon: '💬' },
-        { type: 'privacy-dial' as GameType, label: '5. Privacy Dial', icon: '🎛️' },
-        { type: 'safe-risky-sort' as GameType, label: '6. Safe or Risky', icon: '⚖️' },
-        { type: 'drag-drop' as GameType, label: '7. Firewall Blocks', icon: '🧱' },
-        { type: 'memory-match' as GameType, label: '8. Memory Match', icon: '🃏' },
-        { type: 'puzzle-vault' as GameType, label: '9. Enigma Vault', icon: '🗝️' },
-        { type: 'ai-detector' as GameType, label: '10. AI Detector', icon: '✨' },
-        { type: 'incident-response' as GameType, label: '11. Incident Help', icon: '🛟' },
-        { type: 'quiz' as GameType, label: '12. Visual Choice', icon: '❓' },
-      ];
-    }
     if (language === 'fr') {
       return [
         { type: 'image-detection' as GameType, label: '1. Détection Photos', icon: '📸' },
@@ -74,19 +58,35 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
         { type: 'quiz' as GameType, label: '12. Choix Visuel', icon: '❓' },
       ];
     }
+    if (language === 'es') {
+      return [
+        { type: 'image-detection' as GameType, label: '1. Detección en Fotos', icon: '📸' },
+        { type: 'password-forge' as GameType, label: '2. Forja de Contraseñas', icon: '🔐' },
+        { type: 'phishing-inbox' as GameType, label: '3. Bandeja Phishing', icon: '🎣' },
+        { type: 'chat-sim' as GameType, label: '4. Simulador de Chat', icon: '💬' },
+        { type: 'privacy-dial' as GameType, label: '5. Dial de Privacidad', icon: '🎛️' },
+        { type: 'safe-risky-sort' as GameType, label: '6. Seguro o Riesgoso', icon: '⚖️' },
+        { type: 'drag-drop' as GameType, label: '7. Armador de Bloques', icon: '🧱' },
+        { type: 'memory-match' as GameType, label: '8. Parejas de Memoria', icon: '🃏' },
+        { type: 'puzzle-vault' as GameType, label: '9. Bóveda de Enigmas', icon: '🗝️' },
+        { type: 'ai-detector' as GameType, label: '10. Detector de IA', icon: '✨' },
+        { type: 'incident-response' as GameType, label: '11. Respuesta a Incidentes', icon: '🛟' },
+        { type: 'quiz' as GameType, label: '12. Decisión Visual', icon: '❓' },
+      ];
+    }
     return [
-      { type: 'image-detection' as GameType, label: '1. Detección en Fotos', icon: '📸' },
-      { type: 'password-forge' as GameType, label: '2. Forja de Contraseñas', icon: '🔐' },
-      { type: 'phishing-inbox' as GameType, label: '3. Bandeja Phishing', icon: '🎣' },
-      { type: 'chat-sim' as GameType, label: '4. Simulador de Chat', icon: '💬' },
-      { type: 'privacy-dial' as GameType, label: '5. Dial de Privacidad', icon: '🎛️' },
-      { type: 'safe-risky-sort' as GameType, label: '6. Seguro o Riesgoso', icon: '⚖️' },
-      { type: 'drag-drop' as GameType, label: '7. Armador de Bloques', icon: '🧱' },
-      { type: 'memory-match' as GameType, label: '8. Parejas de Memoria', icon: '🃏' },
-      { type: 'puzzle-vault' as GameType, label: '9. Bóveda de Enigmas', icon: '🗝️' },
-      { type: 'ai-detector' as GameType, label: '10. Detector de IA', icon: '✨' },
-      { type: 'incident-response' as GameType, label: '11. Respuesta a Incidentes', icon: '🛟' },
-      { type: 'quiz' as GameType, label: '12. Decisión Visual', icon: '❓' },
+      { type: 'image-detection' as GameType, label: '1. Photo Risk Hunt', icon: '📸' },
+      { type: 'password-forge' as GameType, label: '2. Password Forge', icon: '🔐' },
+      { type: 'phishing-inbox' as GameType, label: '3. Phishing Inbox', icon: '🎣' },
+      { type: 'chat-sim' as GameType, label: '4. Safe Chat Sim', icon: '💬' },
+      { type: 'privacy-dial' as GameType, label: '5. Privacy Dial', icon: '🎛️' },
+      { type: 'safe-risky-sort' as GameType, label: '6. Safe or Risky', icon: '⚖️' },
+      { type: 'drag-drop' as GameType, label: '7. Firewall Blocks', icon: '🧱' },
+      { type: 'memory-match' as GameType, label: '8. Memory Match', icon: '🃏' },
+      { type: 'puzzle-vault' as GameType, label: '9. Enigma Vault', icon: '🗝️' },
+      { type: 'ai-detector' as GameType, label: '10. AI Detector', icon: '✨' },
+      { type: 'incident-response' as GameType, label: '11. Incident Help', icon: '🛟' },
+      { type: 'quiz' as GameType, label: '12. Visual Choice', icon: '❓' },
     ];
   };
 
@@ -105,14 +105,14 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
         </button>
 
         {/* Mechanic Quick Selector Dropdown & Age Indicator */}
-        <div className="flex items-center gap-1.5">
-          <span className="px-2 py-0.5 rounded-full bg-cyan-100/70 border border-cyan-200/80 text-cyan-800 text-[10px] font-black uppercase tracking-wider">
-            {ageGroup} {language === 'en' ? 'yrs' : language === 'fr' ? 'ans' : 'años'}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-cyan-800">
+            {ageGroup} {language === 'fr' ? 'ans' : language === 'es' ? 'años' : 'yrs'}
           </span>
           <div className="relative">
           <button
             onClick={() => setShowMechanicPicker(!showMechanicPicker)}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition cursor-pointer border border-slate-200/60"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition cursor-pointer border border-slate-200/60"
           >
             <span>{gameMechanics.find((m) => m.type === activeGameType)?.icon}</span>
             <span className="max-w-[130px] truncate">{gameMechanics.find((m) => m.type === activeGameType)?.label}</span>
@@ -151,7 +151,7 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
         {/* Hint button */}
         <button
           onClick={() => setShowHint(!showHint)}
-          className="w-8 h-8 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center transition cursor-pointer hover:bg-cyan-100"
+          className="w-8 h-8 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center transition cursor-pointer hover:bg-cyan-100"
           title={t('gameScreen.hintTitle')}
         >
           <HelpCircle className="w-4 h-4" />

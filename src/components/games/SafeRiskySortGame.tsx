@@ -24,7 +24,7 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({ onComplete
   const [feedback, setFeedback] = useState<string | null>(null);
   const [results, setResults] = useState<{ id: string; correct: boolean }[]>([]);
 
-  const loc = {
+  const locData = {
     es: {
       tag: 'Mecánica 8 / Clasificación',
       title: 'Seguro o Riesgoso',
@@ -166,53 +166,9 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({ onComplete
         },
       ],
     },
-  }[language] || {
-    tag: 'Mecánica 8 / Clasificación',
-    title: 'Seguro o Riesgoso',
-    mascot: 'Ciber dice: "Analiza la situación y decide si es una práctica segura o si expone tus datos a un peligro."',
-    safeBtn: 'Zona Segura',
-    riskyBtn: 'Zona de Riesgo',
-    finishedTitle: '¡Todas las cartas clasificadas!',
-    finishedDesc: 'Demostraste un gran instinto para distinguir conductas protectoras de descuidos digitales.',
-    claimBtn: '¡Recoger Recompensas!',
-    cards: [
-      {
-        id: 'c1',
-        text: 'Publicar una foto de tu dibujo favorito con tu apodo gamer',
-        category: 'Creatividad',
-        isSafe: true,
-        explanation: '¡Totalmente seguro! Compartir arte o pasatiempos sin datos de tu escuela o casa es genial.',
-      },
-      {
-        id: 'c2',
-        text: 'Subir una foto mostrando el frente de tu casa con el cartel de la calle',
-        category: 'Ubicación',
-        isSafe: false,
-        explanation: '¡Riesgoso! La fachada con número y calle indica exactamente dónde vives.',
-      },
-      {
-        id: 'c3',
-        text: 'Usar una contraseña diferente para tu correo y para tus videojuegos',
-        category: 'Contraseñas',
-        isSafe: true,
-        explanation: '¡Excelente práctica! Si filtran la clave de un juego, tu correo sigue 100% blindado.',
-      },
-      {
-        id: 'c4',
-        text: 'Un desconocido en Roblox te pide tu número de WhatsApp para "darte gemas"',
-        category: 'Desconocidos',
-        isSafe: false,
-        explanation: '¡Riesgoso! Sacar la charla fuera del juego a chats personales es un engaño clásico.',
-      },
-      {
-        id: 'c5',
-        text: 'Activar la verificación en dos pasos (2FA) con ayuda de tus padres',
-        category: 'Seguridad',
-        isSafe: true,
-        explanation: '¡La mejor defensa! Aunque alguien adivine tu contraseña, no podrá entrar sin el segundo código.',
-      },
-    ],
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   const cards = loc.cards;
   const currentCard = cards[currentIndex];
@@ -231,29 +187,29 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({ onComplete
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
             <Layers className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-emerald-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-emerald-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+        <span className="text-xs font-bold text-slate-600">
           {Math.min(currentIndex + 1, cards.length)} / {cards.length}
         </span>
       </div>
 
       {/* Mascot hint */}
-      <div className="flex items-center gap-3 p-3 bg-emerald-50/80 rounded-2xl border border-emerald-100">
+      <div className="flex items-center gap-3.5 p-4 bg-emerald-50/80 rounded-3xl border border-emerald-100">
         <CiberMascot size="sm" expression={feedback ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-emerald-950 leading-snug">
+        <div className="text-xs sm:text-sm text-emerald-950 leading-relaxed">
           {loc.mascot}
         </div>
       </div>

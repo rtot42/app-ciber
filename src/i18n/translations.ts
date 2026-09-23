@@ -23,6 +23,7 @@ export interface Translations {
     english: string;
     badge: string;
     requiresLevel: string;
+    world: string;
   };
   nav: {
     home: string;
@@ -293,6 +294,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       english: 'English',
       badge: 'Medalla',
       requiresLevel: 'Requiere Nivel',
+      world: 'Mundo',
     },
     nav: {
       home: 'Inicio',
@@ -573,6 +575,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       english: 'English',
       badge: 'Badge',
       requiresLevel: 'Niveau requis',
+      world: 'Monde',
     },
     nav: {
       home: 'Accueil',
@@ -853,6 +856,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       english: 'English',
       badge: 'Badge',
       requiresLevel: 'Requires Level',
+      world: 'World',
     },
     nav: {
       home: 'Home',

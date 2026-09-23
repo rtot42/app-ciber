@@ -19,7 +19,7 @@ interface MemoryMatchGameProps {
 export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
   const { language } = useLanguage();
 
-  const loc = {
+  const locData = {
     es: {
       tag: 'Mecánica 9 / Memoria',
       title: 'Parejas de Ciberseguridad',
@@ -62,20 +62,9 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onComplete, ag
         backup: 'Cloud Backup',
       } as Record<string, string>,
     },
-  }[language] || {
-    tag: 'Mecánica 9 / Memoria',
-    title: 'Parejas de Ciberseguridad',
-    pairsBadge: (curr: number, total: number) => `${curr} / ${total} parejas`,
-    mascot: 'Ciber dice: "Encuentra las 4 parejas de herramientas de seguridad digital para reforzar tu memoria defensiva."',
-    completeBtn: '¡Completar Desafío de Memoria!',
-    findMoreBtn: 'Encuentra las 4 parejas de cartas',
-    labels: {
-      shield: 'Antivirus',
-      key: '2FA Clave',
-      fish: 'Anti-Phishing',
-      backup: 'Copia Nube',
-    } as Record<string, string>,
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   const PAIRS_CONFIG = [
     { pairId: 'shield', icon: '🛡️' },
@@ -120,29 +109,29 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onComplete, ag
   const isAllMatched = matched.length === PAIRS_CONFIG.length;
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-pink-100 text-pink-700 flex items-center justify-center font-bold text-xl">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-pink-100 text-pink-700 flex items-center justify-center font-bold text-xl">
             🃏
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-pink-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-pink-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+        <span className="text-xs font-bold text-slate-600">
           {loc.pairsBadge(matched.length, PAIRS_CONFIG.length)}
         </span>
       </div>
 
       {/* Mascot advice */}
-      <div className="flex items-center gap-3 p-3 bg-pink-50/80 rounded-2xl border border-pink-100">
+      <div className="flex items-center gap-3.5 p-4 bg-pink-50/80 rounded-3xl border border-pink-100">
         <CiberMascot size="sm" expression={isAllMatched ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-pink-950 leading-snug">
+        <div className="text-xs sm:text-sm text-pink-950 leading-relaxed">
           {loc.mascot}
         </div>
       </div>

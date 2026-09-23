@@ -54,7 +54,7 @@ export const DragDropGame: React.FC<DragDropGameProps> = ({ onComplete, ageGroup
     ];
   };
 
-  const loc = {
+  const locData = {
     es: {
       tag: `Mecánica 3 • Nivel ${ageGroup} años`,
       title: 'Armador de Bloques Seguros',
@@ -110,27 +110,9 @@ export const DragDropGame: React.FC<DragDropGameProps> = ({ onComplete, ageGroup
         { id: 'b7', label: 'Lucas2026', isSafe: false, type: 'weak' as const },
       ],
     },
-  }[language] || {
-    tag: 'Mecánica 3 / Constructor',
-    title: 'Armador de Bloques Seguros',
-    blocksBadge: (n: number) => `${n} / 3 bloques`,
-    mascot: 'Ciber dice: "Toca bloques fuertes (palabras mágicas y símbolos) para depositarlos en tu bóveda secreta. ¡Evita las claves obvias!"',
-    warningWeak: (label: string) => `¡Cuidado! "${label}" es una contraseña típica muy fácil de adivinar.`,
-    vaultTitle: 'Tu Bóveda Acorazada (Toca bloques para agregarlos):',
-    vaultEmpty: '(Bóveda vacía. Selecciona bloques seguros abajo)',
-    availableTitle: 'Bloques de datos disponibles:',
-    completeBtn: '¡Cerrar Bóveda & Continuar!',
-    needMoreBtn: 'Deposita al menos 3 bloques seguros',
-    blocks: [
-      { id: 'b1', label: 'CastilloAzul', isSafe: true, type: 'word' as const },
-      { id: 'b2', label: '123456', isSafe: false, type: 'weak' as const },
-      { id: 'b3', label: '#99!', isSafe: true, type: 'symbol' as const },
-      { id: 'b4', label: 'password', isSafe: false, type: 'weak' as const },
-      { id: 'b5', label: 'DragonFuego', isSafe: true, type: 'word' as const },
-      { id: 'b6', label: '$77*', isSafe: true, type: 'symbol' as const },
-      { id: 'b7', label: 'Lucas2026', isSafe: false, type: 'weak' as const },
-    ],
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   const [vaultBlocks, setVaultBlocks] = useState<Block[]>([]);
   const [available, setAvailable] = useState<Block[]>(loc.blocks);
@@ -154,29 +136,29 @@ export const DragDropGame: React.FC<DragDropGameProps> = ({ onComplete, ageGroup
   const isVaultReady = vaultBlocks.length >= 3;
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
             <Package className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-indigo-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-indigo-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+        <span className="text-xs font-bold text-slate-600">
           {loc.blocksBadge(vaultBlocks.length)}
         </span>
       </div>
 
       {/* Mascot hint */}
-      <div className="flex items-center gap-3 p-3 bg-indigo-50/80 rounded-2xl border border-indigo-100">
+      <div className="flex items-center gap-3.5 p-4 bg-indigo-50/80 rounded-3xl border border-indigo-100">
         <CiberMascot size="sm" expression={isVaultReady ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-indigo-950 leading-snug">
+        <div className="text-xs sm:text-sm text-indigo-950 leading-relaxed">
           {loc.mascot}
         </div>
       </div>

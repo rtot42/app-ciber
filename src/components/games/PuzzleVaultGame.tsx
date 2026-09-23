@@ -13,7 +13,7 @@ interface PuzzleVaultGameProps {
 export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
   const { language } = useLanguage();
 
-  const loc = {
+  const locData = {
     es: {
       tag: 'Mecánica 10 / Bóveda',
       title: 'La Bóveda de Enigmas',
@@ -65,23 +65,9 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({ onComplete, ag
       completeBtn: 'Open Vault & Collect Reward!',
       lockedBtn: 'Solve the 3 vault clues',
     },
-  }[language] || {
-    tag: 'Mecánica 10 / Bóveda',
-    title: 'La Bóveda de Enigmas',
-    statusUnlocked: '¡Bóveda Abierta!',
-    statusLocked: 'Cerrada',
-    mascot: 'Ciber dice: "Resuelve las 3 pistas de ciberseguridad girando los cilindros para abrir la cerradura maestra."',
-    vaultUnlocked: '¡Combinación de Seguridad Correcta!',
-    vaultLocked: 'Alinea los 3 cilindros para desbloquear',
-    clue1: 'Pista 1: Longitud recomendada de contraseña:',
-    clue2: 'Pista 2: Protocolo web seguro con candado:',
-    clue3: 'Pista 3: ¿Qué tipo de verificación protege tu cuenta?',
-    options1: ['6', '8', '10', '16'],
-    options2: ['HTTP', 'FTP', 'HTTPS', 'DNS'],
-    options3: ['1 Paso', 'Doble Factor (2FA)', '3 Claves', 'Sin Clave'],
-    completeBtn: '¡Abrir Bóveda & Recoger Premio!',
-    lockedBtn: 'Resuelve las 3 pistas de la bóveda',
   };
+
+  const loc = locData[language] || locData.en || locData.es;
 
   // 3 dials
   const [dial1, setDial1] = useState(0); // Clue 1: 10
@@ -91,29 +77,29 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({ onComplete, ag
   const isUnlocked = dial1 === 2 && dial2 === 2 && dial3 === 1;
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
             <Lock className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-amber-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-amber-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <span className={`text-xs font-bold px-3 py-1 rounded-full ${isUnlocked ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
+        <span className={`text-xs font-bold ${isUnlocked ? 'text-emerald-700' : 'text-slate-600'}`}>
           {isUnlocked ? loc.statusUnlocked : loc.statusLocked}
         </span>
       </div>
 
       {/* Mascot advice */}
-      <div className="flex items-center gap-3 p-3 bg-amber-50/80 rounded-2xl border border-amber-100">
+      <div className="flex items-center gap-3.5 p-4 bg-amber-50/80 rounded-3xl border border-amber-100">
         <CiberMascot size="sm" expression={isUnlocked ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-amber-950 leading-snug">
+        <div className="text-xs sm:text-sm text-amber-950 leading-relaxed">
           {loc.mascot}
         </div>
       </div>

@@ -46,13 +46,13 @@ export const ParentGateScreen: React.FC<ParentGateScreenProps> = ({
       <div className="flex items-center justify-between">
         <button
           onClick={onCancel}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-slate-900 transition cursor-pointer text-xs font-bold shadow-xs"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 transition cursor-pointer text-xs font-bold shadow-xs"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>{t('parentGate.back')}</span>
         </button>
 
-        <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+        <span className="text-xs font-black uppercase tracking-wider text-amber-800">
           {t('parentGate.tag')}
         </span>
       </div>

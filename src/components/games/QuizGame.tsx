@@ -111,7 +111,7 @@ export const QuizGame: React.FC<QuizGameProps> = ({ onComplete, ageGroup = '8–
     },
   };
 
-  const currentQ = localizedQuestions[language] || localizedQuestions.es;
+  const currentQ = localizedQuestions[language] || localizedQuestions.en || localizedQuestions.es;
 
   const handleSelect = (idx: number) => {
     setSelectedIdx(idx);
@@ -121,29 +121,29 @@ export const QuizGame: React.FC<QuizGameProps> = ({ onComplete, ageGroup = '8–
   const isSuccess = selectedIdx !== null && currentQ.options[selectedIdx].isCorrect;
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-3">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
             <HelpCircle className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-sky-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-sky-600 tracking-wider">
               {currentQ.mechanicTag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{currentQ.subTitle}</h2>
+            <h2 className="text-base font-black text-slate-900">{currentQ.subTitle}</h2>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+        <span className="text-xs font-bold text-slate-600">
           {currentQ.quickBadge}
         </span>
       </div>
 
       {/* Mascot advice */}
-      <div className="flex items-center gap-3 p-3 bg-sky-50/80 rounded-2xl border border-sky-100">
+      <div className="flex items-center gap-3.5 p-4 bg-sky-50/80 rounded-3xl border border-sky-100">
         <CiberMascot size="sm" expression={isSuccess ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-sky-950 leading-snug">
+        <div className="text-xs sm:text-sm text-sky-950 leading-relaxed">
           {currentQ.mascotText}
         </div>
       </div>

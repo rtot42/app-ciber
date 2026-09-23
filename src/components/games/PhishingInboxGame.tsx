@@ -26,7 +26,7 @@ interface PhishingInboxGameProps {
 export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
   const { language } = useLanguage();
 
-  const loc = {
+  const locData = {
     es: {
       tag: 'Mecánica 4 / Mundo 3',
       title: 'Bandeja de Entrada Phishing',
@@ -392,6 +392,8 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({ onComplete
     ],
   };
 
+  const loc = locData[language] || locData.en || locData.es;
+
   const [selectedEmail, setSelectedEmail] = useState<EmailItem>(loc.emails[0]);
   const [analyzedEmails, setAnalyzedEmails] = useState<Record<string, 'safe' | 'phishing'>>({});
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -414,30 +416,30 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({ onComplete
   const allReviewed = completedCount >= 3;
 
   return (
-    <div className="flex-1 flex flex-col p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto space-y-4">
+    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
             <Mail className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[10px] uppercase font-extrabold text-amber-600 tracking-wider">
+            <div className="text-xs uppercase font-extrabold text-amber-600 tracking-wider">
               {loc.tag}
             </div>
-            <h2 className="text-sm font-black text-slate-900">{loc.title}</h2>
+            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
           </div>
         </div>
-        <div className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full bg-amber-50 text-amber-700">
+        <div className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200">
           <Search className="w-3.5 h-3.5" />
           <span>{loc.reviewedBadge(completedCount)}</span>
         </div>
       </div>
 
       {/* Mascot Advice */}
-      <div className="flex items-center gap-3 p-3 bg-amber-50/80 rounded-2xl border border-amber-100">
-        <CiberMascot size="sm" expression="thinking" />
-        <div className="text-xs text-amber-900 leading-snug">
+      <div className="flex items-center gap-3.5 p-4 bg-amber-50/80 rounded-3xl border border-amber-100">
+        <CiberMascot size="sm" expression="thinking" className="shrink-0" />
+        <div className="text-xs sm:text-sm text-amber-900 leading-relaxed">
           {loc.mascot}
         </div>
       </div>

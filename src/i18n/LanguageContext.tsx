@@ -17,9 +17,9 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const LANGUAGES_META: Array<{ id: Language; label: string; flag: string; short: string }> = [
+  { id: 'en', label: 'English', flag: '🇬🇧', short: 'EN' },
   { id: 'es', label: 'Español', flag: '🇪🇸', short: 'ES' },
   { id: 'fr', label: 'Français', flag: '🇫🇷', short: 'FR' },
-  { id: 'en', label: 'English', flag: '🇬🇧', short: 'EN' },
 ];
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -32,7 +32,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch {
       // safe fallback
     }
-    return 'es';
+    return 'en';
   });
 
   const setLanguage = (newLang: Language) => {
@@ -44,7 +44,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const currentTranslations = TRANSLATIONS[language] || TRANSLATIONS.es;
+  const currentTranslations = TRANSLATIONS[language] || TRANSLATIONS.en || TRANSLATIONS.es;
 
   // Helper function to get nested translation strings, e.g. t('home.greeting', { name: 'Lucas' })
   const t = (path: string, params?: Record<string, string | number>): string => {
@@ -55,16 +55,29 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (current && typeof current === 'object' && key in current) {
         current = current[key];
       } else {
-        // Fallback to Spanish if missing
-        let fallback: any = TRANSLATIONS.es;
+        // Fallback to English first, then Spanish if missing
+        let fallback: any = TRANSLATIONS.en;
         for (const fbKey of keys) {
           if (fallback && typeof fallback === 'object' && fbKey in fallback) {
             fallback = fallback[fbKey];
           } else {
-            fallback = path;
+            fallback = undefined;
             break;
           }
         }
+
+        if (typeof fallback !== 'string') {
+          fallback = TRANSLATIONS.es;
+          for (const fbKey of keys) {
+            if (fallback && typeof fallback === 'object' && fbKey in fallback) {
+              fallback = fallback[fbKey];
+            } else {
+              fallback = path;
+              break;
+            }
+          }
+        }
+
         current = fallback;
         break;
       }
