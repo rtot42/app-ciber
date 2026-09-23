@@ -1,0 +1,6 @@
+{
+  "name": "CiberKids",
+  "description": "Prototipo interactivo de aventura de ciberseguridad para niños de 8 a 14 años en iOS con misiones lúdicas, compañero Ciber y modo padres.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
