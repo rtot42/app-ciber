@@ -1,10 +1,16 @@
 workflows:
   ios-capacitor:
-    name: CiberKids iOS
+    name: CiberKids iOS App Store
     max_build_duration: 60
     instance_type: mac_mini_m2
 
+    integrations:
+      app_store_connect: CiberKids
+
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.rtot42.ciberkids
       node: 24
       xcode: latest
 
@@ -21,13 +27,20 @@ workflows:
         script: |
           npx cap sync ios
 
-      - name: Build iOS
+      - name: Set up iOS signing
         script: |
-          cd ios/App
-          xcodebuild \
-            -project App.xcodeproj \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+          xcode-project use-profiles
+
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/ios/App/App.xcodeproj" \
+            --scheme "App"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
