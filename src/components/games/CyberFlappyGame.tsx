@@ -475,7 +475,7 @@ export const CyberFlappyGame: React.FC<CyberFlappyGameProps> = ({
         ctx.stroke();
 
         ctx.fillStyle = '#fde047';
-        ctx.font = '900 8px system-ui, sans-serif';
+        ctx.font = '700 8px Nunito, system-ui, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(urlLabel.slice(0, 9), x + w / 2, collarY - 11.5);
@@ -616,7 +616,7 @@ export const CyberFlappyGame: React.FC<CyberFlappyGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -630,7 +630,7 @@ export const CyberFlappyGame: React.FC<CyberFlappyGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-2.5 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none pb-4">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -645,9 +645,9 @@ export const CyberFlappyGame: React.FC<CyberFlappyGameProps> = ({
         timeLeftSeconds={tierMeta.timeLimitSeconds}
       />
 
-      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-bold shrink-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-slate-500 text-xs">{copy.labels.shields}:</span>
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.shields}:</span>
           {Array.from({ length: config.maxHearts }).map((_, idx) => (
             <Heart
               key={idx}
@@ -662,29 +662,38 @@ export const CyberFlappyGame: React.FC<CyberFlappyGameProps> = ({
         </div>
       </div>
 
-      <div className="relative w-full max-w-[420px] mx-auto rounded-3xl overflow-hidden border-2 border-slate-300 bg-sky-900 shadow-lg shrink-0">
-        <canvas
-          ref={canvasRef}
-          onPointerDown={flap}
-          style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}
-          className="w-full h-auto block touch-none cursor-pointer"
-        />
+      <div
+        className="flex-1 min-h-[220px] w-full flex items-center justify-center"
+        style={{ containerType: 'size' }}
+      >
+        <div
+          style={{
+            width: `min(100cqw, calc(100cqh * ${CANVAS_W} / ${CANVAS_H}))`,
+            height: `min(100cqh, calc(100cqw * ${CANVAS_H} / ${CANVAS_W}))`,
+          }}
+          className="relative rounded-3xl overflow-hidden border-2 border-slate-300 bg-sky-900 shadow-lg"
+        >
+          <canvas
+            ref={canvasRef}
+            onPointerDown={flap}
+            className="w-full h-full block touch-none cursor-pointer"
+          />
 
         {phase === 'TITLE' && (
-          <div className="absolute inset-0 bg-slate-950/82 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-amber-200 shadow-lg flex items-center justify-center">
-              <Feather className="w-8 h-8 text-white" />
+          <div className="absolute inset-0 bg-slate-950/82 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-amber-200 shadow-lg flex items-center justify-center">
+              <Feather className="w-7 h-7 text-white" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg font-black">{copy.labels.startTitle}</h3>
-              <p className="text-xs sm:text-sm text-sky-100 leading-relaxed max-w-xs">
+              <h3 className="text-base sm:text-lg font-bold">{copy.labels.startTitle}</h3>
+              <p className="text-xs sm:text-sm text-sky-100 font-normal leading-relaxed max-w-xs">
                 {copy.labels.startDesc}
               </p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <Play className="w-5 h-5 fill-white" />
               <span>{copy.labels.playBtn}</span>
@@ -693,32 +702,33 @@ export const CyberFlappyGame: React.FC<CyberFlappyGameProps> = ({
         )}
 
         {phase === 'GAME_OVER' && (
-          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5">
-            <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
-              <ShieldAlert className="w-8 h-8 text-rose-400" />
+          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
+              <ShieldAlert className="w-7 h-7 text-rose-400" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg font-black text-rose-300">{copy.labels.gameOverTitle}</h3>
-              <p className="text-xs sm:text-sm text-slate-200 max-w-xs">{copy.labels.gameOverDesc}</p>
+              <h3 className="text-base sm:text-lg font-bold text-rose-300">{copy.labels.gameOverTitle}</h3>
+              <p className="text-xs sm:text-sm text-slate-200 font-normal max-w-xs">{copy.labels.gameOverDesc}</p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-cyan-500 text-white font-black text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-cyan-500 text-white font-bold text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>
             </button>
           </div>
         )}
+        </div>
       </div>
 
       <button
         type="button"
         onPointerDown={flap}
-        className="w-full max-w-[420px] mx-auto h-14 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 active:scale-[0.98] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-md cursor-pointer touch-none shrink-0"
+        className="w-full max-w-[420px] mx-auto h-13 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 active:scale-[0.98] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-md cursor-pointer touch-none shrink-0"
       >
-        <ArrowUp className="w-6 h-6 stroke-[2.75]" />
+        <ArrowUp className="w-5 h-5 stroke-[2.5]" />
         <span>{copy.labels.flap}</span>
       </button>
     </div>

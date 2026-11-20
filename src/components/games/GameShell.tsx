@@ -95,57 +95,57 @@ export const GameHud: React.FC<GameHudProps> = ({
   };
 
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 shadow-xs space-y-3 shrink-0">
+    <div className="bg-white border border-slate-200/80 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xs space-y-1.5 shrink-0">
       {/* Top Row: Icon + Title + Age Difficulty Descriptor */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className={`w-11 h-11 rounded-xl border flex items-center justify-center shrink-0 ${styles.iconBg}`}
+            className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${styles.iconBg}`}
           >
             {icon}
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
               <span className={styles.text}>{tier.name}</span>
               <span aria-hidden="true">·</span>
               <span className="tabular-nums">{tier.shortLabel}</span>
             </div>
-            <h2 className="text-base sm:text-lg font-black text-slate-900 truncate leading-tight">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 leading-tight break-words">
               {title}
             </h2>
             {subtitle && (
-              <p className="text-xs text-slate-500 truncate mt-0.5">{subtitle}</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-normal mt-0.5 leading-snug">{subtitle}</p>
             )}
           </div>
         </div>
 
         {/* Right Telemetry Metrics (Tabular Numerals, Unboxed) */}
-        <div className="flex items-center gap-3 shrink-0 text-right">
+        <div className="flex items-center gap-2.5 shrink-0 text-right">
           {timeLeftSeconds !== null && (
             <div
-              className={`flex items-center gap-1 text-xs sm:text-sm font-black tabular-nums ${
+              className={`flex items-center gap-1 text-xs sm:text-sm font-bold tabular-nums ${
                 timeLeftSeconds <= 15 ? 'text-rose-600' : 'text-slate-700'
               }`}
             >
-              <Clock className="w-4 h-4" />
+              <Clock className="w-3.5 h-3.5" />
               <span>{formatTime(timeLeftSeconds)}</span>
             </div>
           )}
           {streak > 1 && (
-            <div className="flex items-center gap-1 text-xs sm:text-sm font-black text-orange-600 tabular-nums">
-              <Flame className="w-4 h-4 fill-orange-500 text-orange-500" />
+            <div className="flex items-center gap-1 text-xs sm:text-sm font-bold text-orange-600 tabular-nums">
+              <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
               <span>x{streak}</span>
             </div>
           )}
-          <div className="text-xs sm:text-sm font-black text-slate-900 tabular-nums">
-            {score} <span className="text-slate-400 font-bold text-[11px]">PTS</span>
+          <div className="text-xs sm:text-sm font-bold text-slate-900 tabular-nums">
+            {score} <span className="text-slate-400 font-semibold text-[11px]">PTS</span>
           </div>
         </div>
       </div>
 
       {/* Progress & Precision Strip */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs font-bold text-slate-500 tabular-nums">
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-[11px] sm:text-xs font-semibold text-slate-500 tabular-nums">
           <span>
             {language === 'fr'
               ? `Étape ${Math.min(currentStep, totalSteps)} sur ${totalSteps}`
@@ -160,10 +160,10 @@ export const GameHud: React.FC<GameHudProps> = ({
                 <span>{accuracy}%</span>
               </span>
             )}
-            <span className="text-slate-700 font-extrabold">{progressPct}%</span>
+            <span className="text-slate-700 font-bold">{progressPct}%</span>
           </div>
         </div>
-        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full bg-gradient-to-r ${styles.bar} transition-all duration-300`}
             style={{ width: `${progressPct}%` }}
@@ -229,11 +229,11 @@ export const GameVictorySummary: React.FC<GameVictorySummaryProps> = ({
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.2 }}
-      className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-md space-y-5 my-auto"
+      className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-md space-y-4 my-auto"
     >
       {/* Header + Mascot */}
-      <div className="flex flex-col items-center text-center space-y-3">
-        <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-emerald-700">
+      <div className="flex flex-col items-center text-center space-y-2.5">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-700">
           <Award className="w-4 h-4 text-emerald-600" />
           <span>{labels.done}</span>
           <span aria-hidden="true">·</span>
@@ -242,12 +242,12 @@ export const GameVictorySummary: React.FC<GameVictorySummaryProps> = ({
 
         <CiberMascot size="md" expression="celebrating" />
 
-        <h3 className="text-xl sm:text-2xl font-black text-slate-900 text-balance leading-snug">
+        <h3 className="text-lg sm:text-xl font-bold text-slate-900 text-balance leading-snug">
           {title}
         </h3>
 
         {/* Stars Row */}
-        <div className="flex items-center justify-center gap-2 pt-1">
+        <div className="flex items-center justify-center gap-2 pt-0.5">
           {[1, 2, 3].map((idx) => (
             <motion.div
               key={idx}
@@ -256,7 +256,7 @@ export const GameVictorySummary: React.FC<GameVictorySummaryProps> = ({
               transition={{ delay: idx * 0.1 }}
             >
               <Star
-                className={`w-9 h-9 ${
+                className={`w-8 h-8 ${
                   idx <= stats.stars
                     ? 'fill-amber-400 text-amber-500 drop-shadow-xs'
                     : 'fill-slate-100 text-slate-300'
@@ -268,35 +268,35 @@ export const GameVictorySummary: React.FC<GameVictorySummaryProps> = ({
       </div>
 
       {/* Clean 3-column metrics strip */}
-      <div className="grid grid-cols-3 divide-x divide-slate-100 border border-slate-100 rounded-2xl bg-slate-50/70 py-3 text-center">
+      <div className="grid grid-cols-3 divide-x divide-slate-100 border border-slate-100 rounded-2xl bg-slate-50/70 py-2.5 text-center">
         <div>
-          <div className="text-lg sm:text-xl font-black text-emerald-600 tabular-nums">
+          <div className="text-lg font-bold text-emerald-600 tabular-nums">
             {stats.accuracy}%
           </div>
-          <div className="text-[11px] font-bold text-slate-500">{labels.accuracy}</div>
+          <div className="text-[11px] font-semibold text-slate-500">{labels.accuracy}</div>
         </div>
         <div>
-          <div className="text-lg sm:text-xl font-black text-cyan-600 tabular-nums">
+          <div className="text-lg font-bold text-cyan-600 tabular-nums">
             {stats.score}
           </div>
-          <div className="text-[11px] font-bold text-slate-500">{labels.score}</div>
+          <div className="text-[11px] font-semibold text-slate-500">{labels.score}</div>
         </div>
         <div>
-          <div className="text-lg sm:text-xl font-black text-orange-600 tabular-nums">
+          <div className="text-lg font-bold text-orange-600 tabular-nums">
             x{stats.streakMax || 1}
           </div>
-          <div className="text-[11px] font-bold text-slate-500">{labels.streak}</div>
+          <div className="text-[11px] font-semibold text-slate-500">{labels.streak}</div>
         </div>
       </div>
 
       {/* Takeaway callout */}
-      <div className="p-4 rounded-2xl bg-cyan-50/80 border border-cyan-100 flex items-start gap-3">
+      <div className="p-3.5 rounded-2xl bg-cyan-50/80 border border-cyan-100 flex items-start gap-2.5">
         <ShieldCheck className="w-5 h-5 text-cyan-700 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
-          <div className="text-xs font-black uppercase tracking-wider text-cyan-800">
+          <div className="text-xs font-bold uppercase tracking-wider text-cyan-800">
             {labels.takeawayTitle}
           </div>
-          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
             {takeaway}
           </p>
         </div>
@@ -307,7 +307,7 @@ export const GameVictorySummary: React.FC<GameVictorySummaryProps> = ({
         <button
           type="button"
           onClick={onReplay}
-          className="sm:w-1/3 py-3.5 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] whitespace-nowrap"
+          className="sm:w-1/3 min-h-[46px] py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98]"
         >
           <RotateCcw className="w-4 h-4" />
           <span>{labels.replay}</span>
@@ -316,7 +316,7 @@ export const GameVictorySummary: React.FC<GameVictorySummaryProps> = ({
         <button
           type="button"
           onClick={() => onContinue(stats)}
-          className="sm:w-2/3 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] whitespace-nowrap"
+          className="sm:w-2/3 min-h-[46px] py-3 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-bold text-sm sm:text-base shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98]"
         >
           <span>{labels.continue}</span>
           <ArrowRight className="w-5 h-5" />

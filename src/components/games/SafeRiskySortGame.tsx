@@ -316,7 +316,7 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -335,7 +335,7 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({
       (choiceMade === 'risky' && !current.isSafe));
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -357,13 +357,13 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="bg-white rounded-3xl p-5 sm:p-6 shadow-xs border border-slate-200/80 space-y-4 flex-1 flex flex-col justify-between min-h-[210px]"
+          className="bg-white rounded-3xl p-5 sm:p-6 shadow-xs border border-slate-200/80 gap-4 flex-1 min-h-[190px] flex flex-col justify-center"
         >
           <div className="space-y-2.5">
-            <div className="text-xs font-black uppercase tracking-wider text-emerald-700">
+            <div className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
               {current.category}
             </div>
-            <p className="text-base sm:text-lg font-black text-slate-900 leading-snug">
+            <p className="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
               "{current.text}"
             </p>
           </div>
@@ -378,11 +378,11 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({
                   : 'bg-amber-50 border-amber-200 text-amber-950'
               }`}
             >
-              <div className="font-black flex items-center gap-1.5">
+              <div className="font-bold flex items-center gap-1.5">
                 {isAnswerCorrect ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 ) : (
-                  <XCircle className="w-4 h-4 text-amber-600" />
+                  <XCircle className="w-4 h-4 text-amber-600 shrink-0" />
                 )}
                 <span>
                   {isAnswerCorrect ? copy.labels.correctLabel : copy.labels.wrongLabel}
@@ -396,22 +396,22 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({
 
       {/* Action Buttons */}
       {!choiceMade ? (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 shrink-0">
           <button
             type="button"
             onClick={() => handleSort('safe')}
-            className="py-4 px-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 text-emerald-800 font-black text-sm sm:text-base flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
+            className="py-3.5 min-h-[64px] px-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 text-emerald-800 font-bold text-sm flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
           >
-            <ShieldCheck className="w-6 h-6 text-emerald-600" />
+            <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>{copy.labels.safeBtn}</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleSort('risky')}
-            className="py-4 px-4 rounded-2xl bg-rose-50 hover:bg-rose-100 border-2 border-rose-300 text-rose-800 font-black text-sm sm:text-base flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
+            className="py-3.5 min-h-[64px] px-3 rounded-2xl bg-rose-50 hover:bg-rose-100 border-2 border-rose-300 text-rose-800 font-bold text-sm flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
           >
-            <AlertTriangle className="w-6 h-6 text-rose-600" />
+            <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0" />
             <span>{copy.labels.riskyBtn}</span>
           </button>
         </div>
@@ -419,7 +419,7 @@ export const SafeRiskySortGame: React.FC<SafeRiskySortGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

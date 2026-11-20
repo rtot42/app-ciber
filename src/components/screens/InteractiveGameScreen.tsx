@@ -196,24 +196,28 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
       : 'Dificultad:';
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col bg-slate-50 text-slate-800 select-none relative overflow-x-hidden">
+    <div
+      className="flex-1 min-h-0 w-full max-w-full flex flex-col bg-slate-50 text-slate-800 select-none relative overflow-x-hidden"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
       {/* Top Header */}
-      <div className="px-3.5 py-2.5 bg-white border-b border-slate-100 flex items-center justify-between gap-2 shrink-0 z-20 shadow-xs w-full">
+      <div className="px-3 py-1.5 bg-white border-b border-slate-100 flex items-center justify-between gap-2 shrink-0 z-20 shadow-xs w-full">
         <button
           type="button"
           onClick={onExitGame}
-          className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-500 hover:text-slate-800 transition cursor-pointer active:scale-95 shrink-0"
+          aria-label={t('gameScreen.back')}
+          className="min-w-[40px] min-h-[40px] px-2 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition cursor-pointer active:scale-95 shrink-0"
         >
           <ArrowLeft className="w-4.5 h-4.5" />
           <span className="hidden sm:inline">{t('gameScreen.back')}</span>
         </button>
 
-        {/* 17-Game Selector Dropdown */}
+        {/* 25-Game Selector Dropdown */}
         <div className="relative flex-1 flex justify-center min-w-0">
           <button
             type="button"
             onClick={() => setShowMechanicPicker((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold transition cursor-pointer border border-slate-200/60 max-w-full"
+            className="min-h-[38px] flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold transition cursor-pointer border border-slate-200/60 max-w-full"
           >
             <span className="text-sm shrink-0">{activeMeta.icon}</span>
             <span className="truncate">{activeMeta.label}</span>
@@ -221,10 +225,10 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
           </button>
 
           {showMechanicPicker && (
-            <div className="absolute top-11 left-1/2 -translate-x-1/2 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl p-2 z-50 max-h-80 overflow-y-auto">
-              <div className="px-2.5 py-1.5 text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <div className="absolute top-11 left-1/2 -translate-x-1/2 w-[min(18rem,calc(100vw-2rem))] bg-white border border-slate-200 rounded-2xl shadow-2xl p-2 z-50 max-h-80 overflow-y-auto">
+              <div className="px-2.5 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                 <span>{t('gameScreen.allMechanics')}</span>
-                <span className="text-cyan-700">25</span>
+                <span className="text-cyan-700 tabular-nums">25</span>
               </div>
               <div className="space-y-1 mt-1">
                 {gameMechanics.map((gm) => (
@@ -235,7 +239,7 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
                       setActiveGameType(gm.type);
                       setShowMechanicPicker(false);
                     }}
-                    className={`w-full text-left px-2.5 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer ${
+                    className={`w-full min-h-[40px] text-left px-2.5 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer ${
                       activeGameType === gm.type
                         ? 'bg-cyan-50 text-cyan-700 font-bold border border-cyan-200'
                         : 'text-slate-700 hover:bg-slate-50 font-medium'
@@ -255,7 +259,7 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
           <button
             type="button"
             onClick={handleToggleSound}
-            className="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center transition cursor-pointer hover:bg-slate-200 active:scale-95"
+            className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center transition cursor-pointer hover:bg-slate-200 active:scale-95"
             aria-label="Toggle audio"
           >
             {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -263,21 +267,22 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
           <button
             type="button"
             onClick={() => setShowHint(!showHint)}
-            className="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center transition cursor-pointer hover:bg-cyan-100 active:scale-95"
+            className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center transition cursor-pointer hover:bg-cyan-100 active:scale-95"
             title={t('gameScreen.hintTitle')}
+            aria-label={t('gameScreen.hintTitle')}
           >
-            <HelpCircle className="w-4.5 h-4.5" />
+            <HelpCircle className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* 3-Tier Age Difficulty Switcher Strip */}
-      <div className="px-3.5 py-2 bg-slate-100/90 border-b border-slate-200/70 flex items-center justify-between gap-2 shrink-0 z-10">
-        <span className="text-[11px] font-extrabold text-slate-500 flex items-center gap-1 shrink-0">
+      <div className="px-3 py-1 bg-slate-100/90 border-b border-slate-200/70 flex items-center justify-between gap-2 shrink-0 z-10">
+        <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1 shrink-0">
           <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-700" />
           <span className="hidden xs:inline">{difficultyBarLabel}</span>
         </span>
-        <div className="grid grid-cols-3 gap-1 flex-1 max-w-md bg-white/80 p-1 rounded-xl border border-slate-200/80">
+        <div className="grid grid-cols-3 gap-1 flex-1 max-w-md bg-white/85 p-0.5 rounded-xl border border-slate-200/80">
           {AGE_TIERS.map((tierAge) => {
             const isActive = selectedAgeGroup === tierAge;
             return (
@@ -285,7 +290,7 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
                 key={tierAge}
                 type="button"
                 onClick={() => handleSwitchAge(tierAge)}
-                className={`py-1.5 px-2 rounded-lg text-[11px] sm:text-xs font-black transition cursor-pointer truncate ${
+                className={`min-h-[30px] py-1 px-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition cursor-pointer truncate ${
                   isActive
                     ? tierAge === '13–14'
                       ? 'bg-purple-600 text-white shadow-xs'
@@ -306,13 +311,13 @@ export const InteractiveGameScreen: React.FC<InteractiveGameScreenProps> = ({
       {showHint && (
         <div className="bg-sky-50 border-b border-sky-200 p-3 px-4 flex items-center gap-3 z-30 shadow-sm">
           <CiberMascot size="sm" expression="thinking" className="shrink-0" />
-          <div className="text-xs text-sky-950 flex-1">
+          <div className="text-xs text-sky-950 flex-1 leading-relaxed font-medium">
             <span className="font-bold">{t('gameScreen.hintTitle')}</span> {t('gameScreen.hintText')}
           </div>
           <button
             type="button"
             onClick={() => setShowHint(false)}
-            className="text-xs font-bold text-sky-700 hover:text-sky-900 px-2 py-1 cursor-pointer"
+            className="min-h-[38px] text-xs font-bold text-sky-700 hover:text-sky-900 px-2.5 py-1 cursor-pointer"
           >
             {t('gameScreen.understood')}
           </button>

@@ -71,7 +71,7 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
   return (
     <div
       id="cyber-tip-of-the-day"
-      className={`shrink-0 w-full rounded-3xl bg-white border border-slate-100 shadow-sm p-4 sm:p-5 relative overflow-hidden transition-all duration-300 ${className}`}
+      className={`shrink-0 w-full rounded-2xl sm:rounded-3xl bg-white border border-slate-100 shadow-sm p-4 relative overflow-hidden transition-all duration-300 ${className}`}
     >
       {/* Decorative top accent line with category color */}
       <div
@@ -79,20 +79,20 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
         style={{ backgroundColor: currentTip.badgeColor }}
       />
 
-      {/* Card Header: Badge, Mascot & Daily Indicator */}
-      <div className="flex items-center justify-between gap-2 mb-3.5">
-        <div className="flex items-center gap-2 flex-wrap">
+      {/* Card Header: Badge, Date & Compact Mascot */}
+      <div className="flex items-center justify-between gap-2.5 mb-3">
+        <div className="flex flex-col items-start gap-1.5 min-w-0 flex-1">
           <motion.div
-            whileHover={{ scale: 1.04 }}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider text-white shadow-2xs"
+            whileHover={{ scale: 1.03 }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-white shadow-2xs max-w-full"
             style={{ backgroundColor: currentTip.badgeColor }}
           >
-            <span>{currentTip.categoryIcon}</span>
-            <span>{currentTip.categoryLabel[langKey]}</span>
+            <span className="shrink-0">{currentTip.categoryIcon}</span>
+            <span className="truncate">{currentTip.categoryLabel[langKey]}</span>
           </motion.div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 text-slate-700 text-xs font-bold">
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100/90 text-slate-600 text-xs font-semibold">
+            <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             <span>
               {isDailyDefault
                 ? language === 'fr'
@@ -109,13 +109,13 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center shrink-0">
           <motion.div
             animate={{ y: [0, -3, 0] }}
             transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
           >
             <CiberMascot
-              size="md"
+              size="sm"
               expression={hasAcknowledged ? 'excited' : 'happy'}
               className="shrink-0"
             />
@@ -131,30 +131,30 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="space-y-3"
+          className="space-y-2.5"
         >
-          {/* Tip Title with Generous Mobile Spacing */}
-          <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-snug">
+          {/* Tip Title */}
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug">
             {currentTip.title[langKey]}
           </h3>
 
           {/* Tip Advice Text */}
-          <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+          <p className="text-sm text-slate-600 leading-relaxed font-medium">
             {currentTip.advice[langKey]}
           </p>
 
-          {/* Golden Rule Callout Box with Clean Breathing Room */}
+          {/* Golden Rule Callout Box */}
           <motion.div
             initial={{ scale: 0.98, opacity: 0.9 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/90 border border-amber-200 flex items-start gap-3 shadow-2xs"
+            className="p-3 sm:p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 flex items-start gap-2.5 shadow-2xs"
           >
-            <span className="text-lg shrink-0 select-none">⭐</span>
-            <div>
-              <span className="text-xs font-black uppercase tracking-wider text-amber-800 block mb-0.5">
+            <span className="text-base shrink-0 select-none mt-0.5">⭐</span>
+            <div className="min-w-0">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 block mb-0.5">
                 {language === 'fr' ? 'Règle d’Or' : language === 'en' ? 'Golden Rule' : 'Regla de Oro'}
               </span>
-              <p className="text-xs sm:text-sm font-bold text-amber-950 leading-relaxed">
+              <p className="text-xs sm:text-sm font-semibold text-amber-950 leading-relaxed">
                 {currentTip.goldenRule[langKey]}
               </p>
             </div>
@@ -162,22 +162,22 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
         </motion.div>
       </AnimatePresence>
 
-      {/* Bottom Interactive Controls with Mobile Tap Feedback */}
-      <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between gap-3">
+      {/* Bottom Interactive Controls */}
+      <div className="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
         {/* Shuffle / Next Tip Button */}
         <motion.button
           type="button"
           whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.94 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleNextTip}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold transition cursor-pointer"
+          className="min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold transition cursor-pointer"
           title="Ver otro consejo"
         >
           <motion.div
             animate={isRotating ? { rotate: 360 } : { rotate: 0 }}
             transition={{ duration: 0.45, ease: 'easeInOut' }}
           >
-            <Dices className="w-4.5 h-4.5 text-slate-500" />
+            <Dices className="w-4 h-4 text-slate-500" />
           </motion.div>
           <span>
             {language === 'fr'
@@ -191,10 +191,10 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
         {/* Acknowledge / Got it Button */}
         <motion.button
           type="button"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.94 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleAcknowledge}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black transition cursor-pointer shadow-md ${
+          className={`min-h-[44px] flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shadow-sm ${
             hasAcknowledged
               ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
               : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/20'
@@ -202,7 +202,7 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
         >
           {hasAcknowledged ? (
             <>
-              <Check className="w-4.5 h-4.5 text-emerald-700 stroke-[3]" />
+              <Check className="w-4 h-4 text-emerald-700 stroke-[2.5]" />
               <span>
                 {language === 'fr'
                   ? 'Bien compris !'
@@ -213,7 +213,7 @@ export const CyberTipOfTheDay: React.FC<CyberTipOfTheDayProps> = ({
             </>
           ) : (
             <>
-              <Lightbulb className="w-4.5 h-4.5" />
+              <Lightbulb className="w-4 h-4" />
               <span>
                 {language === 'fr'
                   ? 'J’applique'

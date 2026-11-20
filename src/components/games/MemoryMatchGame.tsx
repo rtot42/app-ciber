@@ -232,7 +232,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.ui.title}
           takeaway={copy.ui.takeaway}
@@ -246,7 +246,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 pb-4">
       <GameHud
         title={copy.ui.title}
         subtitle={copy.ui.subtitle}
@@ -260,12 +260,12 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({
         accuracy={moves > 0 ? efficiency : undefined}
       />
 
-      <div className="text-xs font-bold text-slate-500 text-right tabular-nums px-1">
-        {copy.ui.movesLabel} <strong className="text-slate-800">{moves}</strong>
+      <div className="text-xs font-semibold text-slate-500 text-right tabular-nums px-1 shrink-0">
+        {copy.ui.movesLabel} <strong className="font-bold text-slate-800">{moves}</strong>
       </div>
 
       {/* Adaptive Card Grid */}
-      <div className="grid grid-cols-4 gap-2 sm:gap-2.5">
+      <div className="flex-1 min-h-[260px] grid grid-cols-4 auto-rows-fr gap-2 sm:gap-3">
         {deck.map((card) => {
           const isRevealed = flipped.includes(card.id) || matched.includes(card.pairId);
           const isSolved = matched.includes(card.pairId);
@@ -276,7 +276,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({
               type="button"
               whileTap={{ scale: 0.95 }}
               onClick={() => handleCardClick(card)}
-              className={`min-h-[86px] sm:min-h-[96px] rounded-2xl border-2 transition-all flex flex-col items-center justify-center p-1.5 cursor-pointer shadow-xs text-center ${
+              className={`h-full min-h-[76px] rounded-2xl border-2 transition-all flex flex-col items-center justify-center p-2 cursor-pointer shadow-xs text-center ${
                 isSolved
                   ? 'bg-emerald-50 border-emerald-400'
                   : isRevealed
@@ -285,14 +285,14 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({
               }`}
             >
               {isRevealed ? (
-                <div className="flex flex-col items-center gap-1">
+                <div className="flex flex-col items-center gap-1 min-w-0 w-full">
                   {renderIcon(card.iconKey)}
-                  <span className="text-[10px] sm:text-[11px] font-black text-slate-800 leading-tight line-clamp-2">
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight break-words">
                     {card.label}
                   </span>
                 </div>
               ) : (
-                <span className="text-sm sm:text-base font-black opacity-75">CK</span>
+                <span className="text-sm sm:text-base font-bold opacity-80">CK</span>
               )}
             </motion.button>
           );

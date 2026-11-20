@@ -224,7 +224,7 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -238,7 +238,7 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -252,7 +252,7 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
       />
 
       {/* Social Profile Audit Board */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-3">
+      <div className="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-xs flex flex-col justify-center gap-2.5 sm:gap-3">
         {copy.items.map((item) => {
           const isHidden = redactedMap[item.id] ?? false;
           const isCorrect = submitted && isHidden === item.isRisk;
@@ -262,7 +262,7 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
             <motion.div
               key={item.id}
               layout
-              className={`p-3.5 rounded-2xl border transition ${
+              className={`p-3 rounded-2xl border transition ${
                 isCorrect
                   ? 'bg-emerald-50/80 border-emerald-200'
                   : isWrong
@@ -272,13 +272,13 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
                   : 'bg-slate-50 border-slate-200'
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 space-y-1">
-                  <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+              <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2.5">
+                <div className="min-w-0 space-y-0.5 flex-1">
+                  <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                     {item.field}
                   </div>
                   <div
-                    className={`text-sm font-black leading-snug ${
+                    className={`text-sm font-bold leading-snug break-words ${
                       isHidden ? 'line-through text-slate-400' : 'text-slate-900'
                     }`}
                   >
@@ -287,31 +287,31 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
                 </div>
 
                 {/* Toggle Hide vs Keep */}
-                <div className="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl shrink-0">
+                <div className="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl shrink-0 ml-auto">
                   <button
                     type="button"
                     disabled={submitted}
                     onClick={() => toggleItem(item.id, false)}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1 transition cursor-pointer min-h-[36px] ${
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer min-h-[38px] ${
                       !isHidden
                         ? 'bg-cyan-600 text-white'
                         : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    <Eye className="w-3.5 h-3.5" />
+                    <Eye className="w-3.5 h-3.5 shrink-0" />
                     <span className="hidden sm:inline">{copy.labels.keepBtn}</span>
                   </button>
                   <button
                     type="button"
                     disabled={submitted}
                     onClick={() => toggleItem(item.id, true)}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1 transition cursor-pointer min-h-[36px] ${
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer min-h-[38px] ${
                       isHidden
                         ? 'bg-slate-900 text-white'
                         : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    <EyeOff className="w-3.5 h-3.5" />
+                    <EyeOff className="w-3.5 h-3.5 shrink-0" />
                     <span>{copy.labels.hideBtn}</span>
                   </button>
                 </div>
@@ -338,7 +338,7 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
         <button
           type="button"
           onClick={handleSubmit}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <ShieldCheck className="w-5 h-5" />
           <span>{copy.labels.auditBtn}</span>
@@ -347,7 +347,7 @@ export const DigitalFootprintGame: React.FC<DigitalFootprintGameProps> = ({
         <button
           type="button"
           onClick={handleFinish}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>
             {language === 'fr'

@@ -25,8 +25,11 @@ export const ChildBottomNav: React.FC<ChildBottomNavProps> = ({
   ];
 
   return (
-    <nav className="w-full shrink-0 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-2 sm:px-4 pt-2.5 pb-3.5 sm:py-3 z-30 shadow-xs">
-      <div className="flex items-center justify-around max-w-2xl mx-auto">
+    <nav
+      className="w-full shrink-0 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-2 sm:px-4 pt-1.5 z-30 shadow-xs"
+      style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))' }}
+    >
+      <div className="grid grid-cols-5 gap-1 max-w-2xl mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive =
@@ -37,32 +40,36 @@ export const ChildBottomNav: React.FC<ChildBottomNavProps> = ({
             <button
               key={tab.id}
               onClick={() => onNavigate(tab.id)}
-              className={`flex flex-col items-center gap-1 relative px-3 sm:px-4.5 py-1.5 rounded-2xl transition-all cursor-pointer ${
+              className={`min-h-[46px] min-w-0 flex flex-col items-center justify-center gap-0.5 relative px-1 py-1.5 rounded-xl transition-all cursor-pointer ${
                 isActive
-                  ? 'text-cyan-700 font-black'
-                  : 'text-slate-400 hover:text-slate-600'
+                  ? 'text-cyan-700 font-bold'
+                  : 'text-slate-500 hover:text-slate-700 font-semibold'
               }`}
             >
               {isActive && (
-                <div className="absolute inset-0 bg-cyan-50/90 rounded-2xl -z-10" />
+                <div className="absolute inset-0 bg-cyan-50/90 rounded-xl -z-10" />
               )}
-              <div className="relative">
+              <div className="relative flex items-center justify-center">
                 <Icon
-                  className={`w-7 h-7 transition-transform ${
-                    isActive ? 'scale-110 stroke-[2.7] text-cyan-600' : 'stroke-[2.1]'
+                  className={`w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform ${
+                    isActive ? 'scale-105 stroke-[2.4] text-cyan-600' : 'stroke-[2]'
                   }`}
                 />
                 {tab.badge !== undefined && tab.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 bg-amber-500 text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white shadow-2xs">
+                  <span className="absolute -top-1.5 -right-2 bg-amber-500 text-white text-[10px] font-bold min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center ring-2 ring-white shadow-2xs tabular-nums">
                     {tab.badge}
                   </span>
                 )}
               </div>
-              <span className={`text-xs sm:text-sm tracking-tight ${isActive ? 'font-black text-cyan-700' : 'font-bold text-slate-500'}`}>
+              <span
+                className={`text-[11px] sm:text-xs leading-tight tracking-tight truncate max-w-full px-0.5 ${
+                  isActive ? 'font-bold text-cyan-700' : 'font-semibold text-slate-500'
+                }`}
+              >
                 {tab.label}
               </span>
               {isActive && (
-                <div className="w-2 h-2 rounded-full bg-cyan-500 shadow-2xs" />
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-2xs" />
               )}
             </button>
           );
@@ -92,8 +99,11 @@ export const ParentBottomNav: React.FC<ParentBottomNavProps> = ({
   ];
 
   return (
-    <nav className="w-full shrink-0 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-2 sm:px-4 pt-2 pb-3 sm:py-2.5 z-30 shadow-xs">
-      <div className="flex items-center justify-around max-w-2xl mx-auto">
+    <nav
+      className="w-full shrink-0 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-2 sm:px-4 pt-1.5 z-30 shadow-xs"
+      style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))' }}
+    >
+      <div className="grid grid-cols-4 gap-1 max-w-2xl mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -101,14 +111,16 @@ export const ParentBottomNav: React.FC<ParentBottomNavProps> = ({
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center gap-1 px-3 sm:px-4 py-1.5 rounded-2xl transition cursor-pointer ${
+              className={`min-h-[46px] min-w-0 flex flex-col items-center justify-center gap-0.5 px-1.5 py-1.5 rounded-xl transition cursor-pointer ${
                 isActive
-                  ? 'text-cyan-700 font-extrabold bg-cyan-50/80'
-                  : 'text-slate-400 hover:text-slate-600'
+                  ? 'text-cyan-700 font-bold bg-cyan-50/90'
+                  : 'text-slate-500 hover:text-slate-700 font-semibold'
               }`}
             >
-              <Icon className={`w-6 h-6 ${isActive ? 'stroke-[2.6]' : 'stroke-2'}`} />
-              <span className="text-xs font-semibold">{tab.label}</span>
+              <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.4]' : 'stroke-2'}`} />
+              <span className="text-[11px] sm:text-xs leading-tight truncate max-w-full">
+                {tab.label}
+              </span>
             </button>
           );
         })}

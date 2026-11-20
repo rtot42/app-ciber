@@ -4,7 +4,11 @@ import { MessageCircle, RefreshCw, Sparkles, Clock, Compass, ShieldQuestion } fr
 import { useLanguage } from '../../i18n/LanguageContext';
 import { CONVERSATION_TOPICS } from '../../data/parentGuidesData';
 
-export const ConversationStarterCard: React.FC = () => {
+interface ConversationStarterCardProps {
+  ageGroup?: string;
+}
+
+export const ConversationStarterCard: React.FC<ConversationStarterCardProps> = () => {
   const { language } = useLanguage();
   const topics = CONVERSATION_TOPICS[language] || CONVERSATION_TOPICS.es;
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,20 +21,20 @@ export const ConversationStarterCard: React.FC = () => {
 
   return (
     <div className="p-4 rounded-3xl bg-linear-to-br from-sky-50/90 via-cyan-50/60 to-white border border-sky-100 shadow-sm space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs font-black text-sky-900">
-          <div className="w-7 h-7 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-2xs">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 text-xs font-bold text-sky-900 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-2xs shrink-0">
             <MessageCircle className="w-4 h-4" />
           </div>
-          <div>
-            <span className="block text-xs font-black">
+          <div className="min-w-0">
+            <span className="block text-xs font-bold">
               {language === 'fr'
                 ? 'Sujet de Discussion en Famille'
                 : language === 'en'
                 ? 'Family Conversation Prompt'
                 : 'Tema para Conversar en Familia'}
             </span>
-            <span className="text-[10px] text-sky-700 font-medium">
+            <span className="text-[11px] text-sky-700 font-medium tabular-nums">
               {language === 'fr'
                 ? `Thème ${currentIndex + 1} sur ${topics.length} • ${currentTopic.category}`
                 : language === 'en'
@@ -42,10 +46,10 @@ export const ConversationStarterCard: React.FC = () => {
 
         <button
           onClick={handleNext}
-          className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white hover:bg-sky-100 text-sky-700 border border-sky-200/80 text-[11px] font-bold transition shadow-2xs cursor-pointer"
+          className="flex items-center gap-1.5 min-h-[36px] px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 text-sky-700 border border-sky-200/80 text-xs font-bold transition shadow-2xs cursor-pointer shrink-0"
           title="Siguiente tema"
         >
-          <RefreshCw className="w-3 h-3" />
+          <RefreshCw className="w-3.5 h-3.5" />
           <span>
             {language === 'fr' ? 'Autre' : language === 'en' ? 'Next' : 'Rotar'}
           </span>
@@ -62,10 +66,10 @@ export const ConversationStarterCard: React.FC = () => {
           className="space-y-2.5"
         >
           <div className="p-3.5 rounded-2xl bg-white border border-sky-200/70 shadow-2xs space-y-1.5">
-            <span className="text-[10px] font-black uppercase tracking-wider text-sky-600 block">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-600 block">
               {language === 'fr' ? 'La question à poser :' : language === 'en' ? 'Suggested question to ask:' : 'Pregunta sugerida para iniciar la charla:'}
             </span>
-            <blockquote className="text-xs text-slate-800 font-bold italic leading-relaxed">
+            <blockquote className="text-xs sm:text-sm text-slate-800 font-semibold italic leading-relaxed">
               "{currentTopic.quote}"
             </blockquote>
           </div>

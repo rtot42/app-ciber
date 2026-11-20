@@ -608,7 +608,7 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -622,7 +622,7 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-2.5 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none pb-4">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -638,9 +638,9 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
       />
 
       {/* Energy & Computer Shield Bar */}
-      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-bold shrink-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-slate-500 text-xs">{copy.labels.shields}:</span>
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.shields}:</span>
           {Array.from({ length: config.maxHearts }).map((_, idx) => (
             <Heart
               key={idx}
@@ -670,7 +670,7 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
               key={u.kind}
               type="button"
               onClick={() => setSelectedTool(u.kind)}
-              className={`p-1.5 sm:p-2 rounded-xl border-2 text-center transition cursor-pointer flex flex-col items-center justify-center ${
+              className={`min-h-[64px] p-1.5 rounded-xl border-2 text-center transition cursor-pointer flex flex-col items-center justify-center ${
                 active
                   ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-200 shadow-xs'
                   : affordable
@@ -679,10 +679,10 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
               }`}
             >
               <DefenseSpriteSvg kind={u.kind} className="w-7 h-7 sm:w-8 sm:h-8" />
-              <span className="text-[10px] font-black text-slate-800 truncate w-full mt-0.5">
+              <span className="text-[10px] font-bold text-slate-800 truncate w-full mt-0.5">
                 {u.name}
               </span>
-              <span className="text-[10px] font-extrabold text-amber-700 tabular-nums flex items-center gap-0.5">
+              <span className="text-[10px] font-semibold text-amber-700 tabular-nums flex items-center gap-0.5">
                 {cost}
                 <Zap className="w-2.5 h-2.5 text-amber-500 fill-amber-400" />
               </span>
@@ -693,7 +693,7 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
         <button
           type="button"
           onClick={() => setSelectedTool('remove')}
-          className={`p-1.5 sm:p-2 rounded-xl border-2 text-center transition cursor-pointer flex flex-col items-center justify-center ${
+          className={`min-h-[64px] p-1.5 rounded-xl border-2 text-center transition cursor-pointer flex flex-col items-center justify-center ${
             selectedTool === 'remove'
               ? 'bg-rose-50 border-rose-500 ring-2 ring-rose-200'
               : 'bg-white border-slate-200 hover:border-rose-300'
@@ -702,22 +702,22 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-rose-100 flex items-center justify-center">
             <Trash2 className="w-4 h-4 text-rose-600" />
           </div>
-          <span className="text-[10px] font-black text-slate-800 mt-0.5">
+          <span className="text-[10px] font-bold text-slate-800 mt-0.5">
             {copy.labels.recycle}
           </span>
-          <span className="text-[10px] font-extrabold text-emerald-700">+25</span>
+          <span className="text-[10px] font-semibold text-emerald-700 tabular-nums">+25</span>
         </button>
       </div>
 
       {/* Cyber-Garden Tactical Lane Battlefield */}
-      <div className="relative bg-gradient-to-b from-slate-900 to-emerald-950 rounded-3xl border-2 border-emerald-700/80 p-2.5 shadow-xl shrink-0 overflow-hidden">
-        <div className="flex gap-1.5">
+      <div className="relative flex-1 min-h-[240px] flex flex-col justify-between bg-gradient-to-b from-slate-900 to-emerald-950 rounded-3xl border-2 border-emerald-700/80 p-2.5 shadow-xl overflow-hidden">
+        <div className="flex-1 min-h-0 flex gap-1.5">
           {/* Protected PC Core Firewall Edge */}
           <div className="w-3 sm:w-4 rounded-xl bg-gradient-to-b from-cyan-500/40 via-emerald-400/50 to-cyan-500/40 border border-cyan-300/60 flex items-center justify-center shrink-0">
             <div className="w-1 h-4/5 rounded-full bg-cyan-300/80 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
           </div>
 
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 min-h-0 flex flex-col gap-1.5">
             {Array.from({ length: config.lanes }).map((_, r) => {
               const laneEnemies = enemies.filter((e) => e.row === r);
               const laneBolts = bolts.filter((b) => b.row === r);
@@ -725,7 +725,7 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
               return (
                 <div
                   key={r}
-                  className="relative grid grid-cols-6 gap-1 h-14 sm:h-16 bg-emerald-950/60 rounded-xl p-1 border border-emerald-700/60 overflow-hidden"
+                  className="relative flex-1 min-h-[52px] grid grid-cols-6 gap-1 bg-emerald-950/60 rounded-xl p-1 border border-emerald-700/60 overflow-hidden"
                 >
                   {/* Subtle glowing lane circuit trace */}
                   <div className="pointer-events-none absolute inset-x-2 top-1/2 h-[2px] -translate-y-1/2 bg-emerald-500/15" />
@@ -807,7 +807,7 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
         </div>
 
         {/* Left Protected Core Indicator */}
-        <div className="mt-2 flex items-center justify-between text-[11px] font-bold text-emerald-200 px-1">
+        <div className="mt-2 flex items-center justify-between text-[11px] font-semibold text-emerald-200 px-1">
           <span className="flex items-center gap-1 text-cyan-300">
             <Shield className="w-3.5 h-3.5" /> PC CORE
           </span>
@@ -815,20 +815,20 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
         </div>
 
         {phase === 'TITLE' && (
-          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5 z-20">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 border-2 border-emerald-200 shadow-lg flex items-center justify-center">
-              <Shield className="w-8 h-8 text-white" />
+          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3 z-20">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 border-2 border-emerald-200 shadow-lg flex items-center justify-center">
+              <Shield className="w-7 h-7 text-white" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg font-black">{copy.labels.startTitle}</h3>
-              <p className="text-xs sm:text-sm text-sky-100 leading-relaxed max-w-xs">
+              <h3 className="text-base sm:text-lg font-bold">{copy.labels.startTitle}</h3>
+              <p className="text-xs sm:text-sm text-sky-100 font-normal leading-relaxed max-w-xs">
                 {copy.labels.startDesc}
               </p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-black text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <Play className="w-5 h-5 fill-white" />
               <span>{copy.labels.playBtn}</span>
@@ -837,18 +837,18 @@ export const CyberPvzGame: React.FC<CyberPvzGameProps> = ({
         )}
 
         {phase === 'GAME_OVER' && (
-          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5 z-20">
-            <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
-              <ShieldAlert className="w-8 h-8 text-rose-400" />
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3 z-20">
+            <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
+              <ShieldAlert className="w-7 h-7 text-rose-400" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg font-black text-rose-300">{copy.labels.gameOverTitle}</h3>
-              <p className="text-xs sm:text-sm text-slate-200 max-w-xs">{copy.labels.gameOverDesc}</p>
+              <h3 className="text-base sm:text-lg font-bold text-rose-300">{copy.labels.gameOverTitle}</h3>
+              <p className="text-xs sm:text-sm text-slate-200 font-normal max-w-xs">{copy.labels.gameOverDesc}</p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-cyan-500 text-white font-black text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-cyan-500 text-white font-bold text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>

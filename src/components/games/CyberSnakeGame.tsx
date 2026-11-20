@@ -623,7 +623,7 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
               ctx.restore();
 
               ctx.fillStyle = '#ffffff';
-              ctx.font = `900 ${Math.max(8, Math.round(cell * 0.25))}px system-ui, sans-serif`;
+              ctx.font = `700 ${Math.max(8, Math.round(cell * 0.25))}px Nunito, system-ui, sans-serif`;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
               ctx.fillText('!', cx, cy + 0.5);
@@ -671,7 +671,7 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
             ctx.stroke();
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = `900 ${Math.max(7, Math.round(cell * 0.24))}px system-ui, sans-serif`;
+            ctx.font = `700 ${Math.max(7, Math.round(cell * 0.24))}px Nunito, system-ui, sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('✓', sx, sy + 0.5);
@@ -742,7 +742,7 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -756,7 +756,7 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-2.5 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -771,9 +771,9 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
         timeLeftSeconds={timeLeft}
       />
 
-      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold shrink-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-slate-500 text-xs">{copy.labels.shields}:</span>
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.shields}:</span>
           {Array.from({ length: config.maxHearts }).map((_, idx) => (
             <Heart
               key={idx}
@@ -786,7 +786,7 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
 
         <div className="flex items-center gap-1.5 text-emerald-700">
           <Shield className="w-4 h-4 text-emerald-600" />
-          <span className="text-slate-500 font-bold text-xs">{copy.labels.targetPrefix}</span>
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.targetPrefix}</span>
           <span>{activeSafeLabel}</span>
         </div>
 
@@ -796,7 +796,7 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
       </div>
 
       <div
-        className={`rounded-xl px-3.5 py-2 text-xs font-bold border flex items-center gap-2 shrink-0 ${
+        className={`rounded-xl px-3.5 py-2 text-xs font-semibold border flex items-center gap-2 shrink-0 ${
           statusTone === 'good'
             ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
             : statusTone === 'warn'
@@ -805,11 +805,21 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
         }`}
       >
         <ShieldAlert className="w-4 h-4 shrink-0" />
-        <span className="truncate">{statusBanner}</span>
+        <span className="leading-snug">{statusBanner}</span>
       </div>
 
-      <div className="relative w-full max-w-[374px] mx-auto aspect-square rounded-3xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-lg shrink-0">
-        <canvas
+      <div
+        className="flex-1 min-h-[210px] w-full flex items-center justify-center"
+        style={{ containerType: 'size' }}
+      >
+        <div
+          style={{
+            width: 'min(100cqw, 100cqh)',
+            height: 'min(100cqw, 100cqh)',
+          }}
+          className="relative rounded-3xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-lg"
+        >
+          <canvas
           ref={canvasRef}
           onPointerDown={(e) => {
             swipeStartRef.current = { x: e.clientX, y: e.clientY };
@@ -827,20 +837,20 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
         />
 
         {phase === 'TITLE' && (
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5">
-            <div className="w-14 h-14 rounded-3xl bg-emerald-500/20 border border-emerald-300/40 flex items-center justify-center text-3xl">
+          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+            <div className="w-13 h-13 rounded-3xl bg-emerald-500/20 border border-emerald-300/40 flex items-center justify-center text-3xl">
               🐍
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg sm:text-xl font-black">{copy.labels.startTitle}</h3>
-              <p className="text-xs sm:text-sm text-sky-100 leading-relaxed max-w-xs">
+              <h3 className="text-base sm:text-lg font-bold">{copy.labels.startTitle}</h3>
+              <p className="text-xs sm:text-sm text-sky-100 font-normal leading-relaxed max-w-xs">
                 {copy.labels.startDesc}
               </p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-white font-black text-sm sm:text-base shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-white font-bold text-sm sm:text-base shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <Play className="w-5 h-5 fill-white" />
               <span>{copy.labels.playBtn}</span>
@@ -849,24 +859,25 @@ export const CyberSnakeGame: React.FC<CyberSnakeGameProps> = ({
         )}
 
         {phase === 'GAME_OVER' && (
-          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5">
+          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
             <div className="text-4xl">🦠💥</div>
             <div className="space-y-1">
-              <h3 className="text-lg sm:text-xl font-black text-rose-300">
+              <h3 className="text-base sm:text-lg font-bold text-rose-300">
                 {copy.labels.gameOverTitle}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-200 max-w-xs">{copy.labels.gameOverDesc}</p>
+              <p className="text-xs sm:text-sm text-slate-200 font-normal max-w-xs">{copy.labels.gameOverDesc}</p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-white font-black text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-white font-bold text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>
             </button>
           </div>
         )}
+        </div>
       </div>
 
       <div className="w-full max-w-xs mx-auto grid grid-cols-3 gap-2 pt-0.5 shrink-0 select-none">

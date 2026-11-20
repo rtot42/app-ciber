@@ -114,35 +114,35 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
     <div className="space-y-4">
       {/* Age Group Cognitive Diagnostic */}
       <div className="p-4 rounded-3xl bg-linear-to-br from-indigo-50/90 via-sky-50/70 to-white border border-indigo-100 shadow-sm space-y-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-xs">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-xs shrink-0">
               <Brain className="w-5 h-5" />
             </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600">
+            <div className="min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
                 {language === 'fr' ? 'Diagnostic Pédagogique' : language === 'en' ? 'Pedagogical Diagnostic' : 'Diagnóstico Pedagógico'}
               </span>
-              <h3 className="text-sm font-black text-slate-900 leading-tight">
+              <h3 className="text-sm font-bold text-slate-900 leading-tight">
                 {ageData.stageTitle}
               </h3>
             </div>
           </div>
-          <span className="px-2.5 py-1 rounded-full bg-white/90 border border-indigo-200/60 text-[10px] font-bold text-indigo-700 shadow-2xs">
+          <span className="px-2.5 py-1 rounded-full bg-white/90 border border-indigo-200/60 text-[11px] font-semibold text-indigo-700 shadow-2xs shrink-0 tabular-nums">
             {profile.ageGroup} {language === 'fr' ? 'ans' : language === 'en' ? 'yrs' : 'años'}
           </span>
         </div>
 
-        <p className="text-xs text-slate-600 leading-relaxed">
+        <p className="text-xs text-slate-600 font-normal leading-relaxed">
           {ageData.cognitiveTraits}
         </p>
 
         <div className="p-3 rounded-2xl bg-white/80 border border-indigo-100/80 space-y-1.5">
-          <div className="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+          <div className="text-[11px] font-semibold text-slate-800 flex items-center gap-1.5">
             <Compass className="w-3.5 h-3.5 text-indigo-600" />
             <span>{language === 'fr' ? 'Priorités d\'apprentissage à cet âge :' : language === 'en' ? 'Key development challenges for this age:' : 'Prioridades formativas a esta edad:'}</span>
           </div>
-          <ul className="text-[11px] text-slate-600 space-y-1 pl-1">
+          <ul className="text-[11px] text-slate-600 font-normal space-y-1 pl-1">
             {ageData.keyChallenges.map((ch, idx) => (
               <li key={idx} className="flex items-start gap-1.5">
                 <span className="text-indigo-500 font-bold">•</span>
@@ -162,18 +162,18 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
 
       {/* Competencies Matrix */}
       <div className="p-4 rounded-3xl bg-white border border-slate-100 shadow-sm space-y-3.5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
               {language === 'fr' ? 'Matrice des 6 Compétences Clés' : language === 'en' ? 'Key 6 Cybersecurity Competencies' : 'Matriz de las 6 Competencias Clave'}
             </h3>
-            <p className="text-[10px] text-slate-500">
+            <p className="text-[11px] text-slate-500 font-normal">
               {language === 'fr' ? 'Évaluation continue basée sur ses choix dans les défis' : language === 'en' ? 'Real-time assessment derived from in-game decision making' : 'Evaluación continua basada en sus elecciones durante las misiones'}
             </p>
           </div>
-          <div className="text-right">
-            <span className="text-base font-black text-slate-900">{overallAvg}%</span>
-            <span className="text-[9px] text-slate-400 block uppercase font-bold">
+          <div className="text-right shrink-0">
+            <span className="text-base font-bold text-slate-900 tabular-nums">{overallAvg}%</span>
+            <span className="text-[10px] text-slate-400 block uppercase font-semibold">
               {language === 'fr' ? 'Moyenne' : language === 'en' ? 'Overall' : 'Promedio'}
             </span>
           </div>
@@ -210,20 +210,20 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
                 <button
                   type="button"
                   onClick={() => setExpandedSkill(isExpanded ? null : comp.id)}
-                  className="w-full text-left flex items-center justify-between cursor-pointer"
+                  className="w-full min-h-[40px] text-left flex items-center justify-between cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5 flex-1 pr-2">
-                    <span className="text-base">{comp.icon}</span>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-bold text-slate-800">
+                  <div className="flex items-center gap-2.5 flex-1 pr-2 min-w-0">
+                    <span className="text-base shrink-0">{comp.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="text-xs font-semibold text-slate-800 truncate">
                           {comp.name}
                         </span>
-                        <div className="flex items-center gap-1.5">
-                          <span className={`px-2 py-0.5 rounded-md text-[9px] font-black border ${statusColor}`}>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${statusColor}`}>
                             {statusLabel}
                           </span>
-                          <span className="text-xs font-black text-slate-700">
+                          <span className="text-xs font-bold text-slate-700 tabular-nums">
                             {comp.score}%
                           </span>
                         </div>
@@ -236,7 +236,7 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
                       </div>
                     </div>
                   </div>
-                  <div className="text-slate-400 pl-1">
+                  <div className="text-slate-400 pl-1 shrink-0">
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4" />
                     ) : (
@@ -247,13 +247,13 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
 
                 {isExpanded && (
                   <div className="mt-3 pt-2.5 border-t border-slate-200/70 space-y-2 text-xs">
-                    <p className="text-slate-600 text-[11px] leading-relaxed">
+                    <p className="text-slate-600 text-[11px] font-normal leading-relaxed">
                       {comp.advice}
                     </p>
                     <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 flex items-start gap-2">
                       <Sparkles className="w-3.5 h-3.5 text-cyan-600 shrink-0 mt-0.5" />
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-cyan-800 block">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-800 block">
                           {language === 'fr' ? 'Action recommandée à la maison :' : language === 'en' ? 'Recommended family action:' : 'Acción recomendada en el hogar:'}
                         </span>
                         <span className="text-[11px] font-semibold text-slate-800">
@@ -271,22 +271,22 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
 
       {/* Suggested Joint Mission */}
       <div className="p-4 rounded-3xl bg-amber-50/80 border border-amber-200/70 shadow-xs flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-amber-400 text-amber-950 flex items-center justify-center font-black text-xl shrink-0 shadow-2xs">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-2xl bg-amber-400 text-amber-950 flex items-center justify-center font-bold text-xl shrink-0 shadow-2xs">
             ⭐
           </div>
-          <div>
-            <span className="text-[9px] font-black uppercase tracking-wider text-amber-800 block">
+          <div className="min-w-0">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 block">
               {language === 'fr' ? 'Mission Familiale Recommandée' : language === 'en' ? 'Recommended Joint Mission' : 'Misión Familiar Recomendada'}
             </span>
-            <div className="text-xs font-black text-slate-900">
+            <div className="text-xs font-bold text-slate-900">
               {language === 'fr'
                 ? 'Mundo 1: ¿Qué compartirías en redes?'
                 : language === 'en'
                 ? 'World 1: What would you share online?'
                 : 'Mundo 1: ¿Qué compartirías en redes?'}
             </div>
-            <p className="text-[10px] text-slate-600">
+            <p className="text-[11px] text-slate-600 font-normal">
               {language === 'fr'
                 ? 'Idéale pour repérer ensemble les indices cachés sur une photo scolaire'
                 : language === 'en'
@@ -299,7 +299,7 @@ export const ParentPedagogyTracker: React.FC<ParentPedagogyTrackerProps> = ({
         {onExploreWorld && (
           <button
             onClick={onExploreWorld}
-            className="p-2.5 rounded-2xl bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 transition shadow-2xs cursor-pointer shrink-0"
+            className="w-10 h-10 rounded-2xl bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 flex items-center justify-center transition shadow-2xs cursor-pointer shrink-0"
             title="Ir a misiones"
           >
             <ArrowRight className="w-4 h-4" />

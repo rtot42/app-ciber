@@ -568,7 +568,7 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -582,7 +582,7 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -597,13 +597,13 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
       />
 
       {/* Community Health Meter */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-2xs space-y-1.5">
-        <div className="flex items-center justify-between text-xs font-bold">
+      <div className="bg-white rounded-2xl border border-slate-200 p-3 sm:p-3.5 shadow-2xs space-y-1.5 shrink-0">
+        <div className="flex items-center justify-between text-xs font-semibold">
           <span className="text-slate-600 flex items-center gap-1.5">
             <MessageCircleHeart className="w-4 h-4 text-indigo-600" />
             <span>{copy.labels.climateLabel}</span>
           </span>
-          <span className="font-black text-indigo-700 tabular-nums">{climate}%</span>
+          <span className="font-bold text-indigo-700 tabular-nums">{climate}%</span>
         </div>
         <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
           <div
@@ -621,17 +621,17 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-4"
+        className="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs flex flex-col justify-center gap-3.5"
       >
-        <div className="flex items-center justify-between text-xs font-bold text-slate-500">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-500">
           <span>{current.channel}</span>
           <span className="flex items-center gap-1 text-rose-600">
-            <Flag className="w-3.5 h-3.5" />
+            <Flag className="w-3.5 h-3.5 shrink-0" />
             <span>{current.author}</span>
           </span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900 text-white text-sm sm:text-base font-bold leading-relaxed">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-900 text-white text-sm sm:text-base font-semibold leading-relaxed">
           {current.message}
         </div>
 
@@ -645,7 +645,7 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
                 type="button"
                 disabled={!!selectedAction}
                 onClick={() => handleAction(act)}
-                className={`w-full text-left p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 active:scale-[0.98] ${
+                className={`w-full text-left p-3.5 min-h-[50px] rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 active:scale-[0.98] ${
                   showState
                     ? act.isBest
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-950'
@@ -655,7 +655,7 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
                     : 'bg-slate-50 hover:bg-indigo-50/70 border-slate-200 hover:border-indigo-300 text-slate-800'
                 }`}
               >
-                <span className="text-xs sm:text-sm font-bold leading-snug">{act.label}</span>
+                <span className="text-xs sm:text-sm font-semibold leading-snug">{act.label}</span>
                 {showState && (isChosen || act.isBest) && (
                   <div className="shrink-0">
                     {act.isBest ? (
@@ -674,7 +674,7 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-4 rounded-2xl border text-xs sm:text-sm flex items-start gap-2.5 ${
+            className={`p-3.5 rounded-2xl border text-xs sm:text-sm flex items-start gap-2.5 ${
               selectedAction.isBest
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
                 : 'bg-amber-50 border-amber-200 text-amber-950'
@@ -690,7 +690,7 @@ export const CyberBullyShieldGame: React.FC<CyberBullyShieldGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

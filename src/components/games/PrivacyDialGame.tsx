@@ -290,7 +290,7 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -304,7 +304,7 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -318,7 +318,7 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
       />
 
       {/* Interactive Dials */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4">
+      <div className="flex-1 min-h-0 bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 flex flex-col justify-center gap-3.5">
         {copy.dials.map((dial) => {
           const curr = values[dial.id];
           const isDialSafe = dial.requiredSafe.includes(curr);
@@ -326,17 +326,17 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
 
           return (
             <div key={dial.id} className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-700 gap-2">
-                <span className="flex items-center gap-1.5">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-700 gap-2">
+                <span className="flex items-center gap-1.5 min-w-0">
                   {isDialSafe ? (
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                   ) : (
                     <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
                   )}
-                  <span>{dial.label}</span>
+                  <span className="leading-snug">{dial.label}</span>
                 </span>
                 <span
-                  className={`text-[11px] uppercase font-black shrink-0 ${
+                  className={`text-[11px] uppercase font-bold shrink-0 ${
                     isDialSafe ? 'text-emerald-700' : 'text-rose-600'
                   }`}
                 >
@@ -350,15 +350,15 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
                     key={level}
                     type="button"
                     onClick={() => handleSetDial(dial.id, level)}
-                    className={`py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                    className={`py-2.5 min-h-[42px] rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer ${
                       curr === level
                         ? 'bg-white text-slate-900 shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    {level === 'public' && <Globe className="w-3.5 h-3.5" />}
-                    {level === 'friends' && <Users className="w-3.5 h-3.5" />}
-                    {level === 'private' && <Lock className="w-3.5 h-3.5" />}
+                    {level === 'public' && <Globe className="w-3.5 h-3.5 shrink-0" />}
+                    {level === 'friends' && <Users className="w-3.5 h-3.5 shrink-0" />}
+                    {level === 'private' && <Lock className="w-3.5 h-3.5 shrink-0" />}
                     <span>{labelsMap[level]}</span>
                   </button>
                 ))}
@@ -369,19 +369,19 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
       </div>
 
       {/* Live Stranger Preview */}
-      <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80 space-y-2.5">
-        <div className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+      <div className="bg-white rounded-3xl p-3.5 shadow-xs border border-slate-200/80 space-y-2 shrink-0">
+        <div className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
           <Eye className="w-4 h-4 text-sky-600" />
           <span>{copy.labels.previewTitle}</span>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 text-xs space-y-2">
+        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 text-xs space-y-2">
           {copy.dials.map((dial) => {
             const isDialSafe = dial.requiredSafe.includes(values[dial.id]);
             return (
               <div key={dial.id} className="flex items-center justify-between gap-2">
                 <span className="text-slate-600">{dial.questionLabel}</span>
-                <span className={`font-black shrink-0 ${isDialSafe ? 'text-emerald-700' : 'text-rose-600'}`}>
+                <span className={`font-bold shrink-0 ${isDialSafe ? 'text-emerald-700' : 'text-rose-600'}`}>
                   {isDialSafe ? dial.strangerSafeLabel : dial.strangerRiskLabel}
                 </span>
               </div>
@@ -391,7 +391,7 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
       </div>
 
       {showError && (
-        <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-bold text-amber-950 flex items-start gap-2">
+        <div className="p-3 rounded-2xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-semibold text-amber-950 flex items-start gap-2 shrink-0">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <span>{copy.labels.errorFeedback}</span>
         </div>
@@ -400,7 +400,7 @@ export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
       <button
         type="button"
         onClick={handleVerify}
-        className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] ${
+        className={`w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] ${
           allSafe
             ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white shadow-lg shadow-sky-500/20 hover:from-sky-400 hover:to-cyan-500'
             : 'bg-slate-800 text-white hover:bg-slate-900'

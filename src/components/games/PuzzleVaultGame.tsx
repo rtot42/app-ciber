@@ -215,7 +215,7 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -229,7 +229,7 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -243,19 +243,19 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({
       />
 
       {/* Cryptex Lock Core Graphic */}
-      <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
+      <div className="bg-white rounded-3xl p-3.5 shadow-xs border border-slate-200/80 flex items-center justify-between gap-3 shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
           <div
-            className={`w-14 h-14 rounded-2xl border-2 flex items-center justify-center transition-all shrink-0 ${
+            className={`w-12 h-12 rounded-2xl border-2 flex items-center justify-center transition-all shrink-0 ${
               isUnlocked
                 ? 'border-emerald-500 bg-emerald-50 text-emerald-600'
                 : 'border-amber-300 bg-amber-50 text-amber-600'
             }`}
           >
-            {isUnlocked ? <Unlock className="w-7 h-7" /> : <Lock className="w-7 h-7" />}
+            {isUnlocked ? <Unlock className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
           </div>
-          <div>
-            <div className="text-sm font-black text-slate-900">
+          <div className="min-w-0">
+            <div className="text-sm font-bold text-slate-900 leading-snug">
               {isUnlocked ? copy.labels.vaultUnlocked : copy.labels.vaultLocked(alignedCount, copy.clues.length)}
             </div>
             <div className="flex items-center gap-1.5 mt-1">
@@ -274,17 +274,17 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({
       </div>
 
       {/* Rotating Tumblers */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4">
+      <div className="flex-1 min-h-0 bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 flex flex-col justify-center gap-4">
         {copy.clues.map((clue, cIdx) => (
           <div key={clue.id} className="space-y-1.5">
-            <div className="text-xs font-bold text-slate-700">{clue.prompt}</div>
-            <div className="grid grid-cols-4 gap-1.5 p-1 bg-slate-100 rounded-2xl">
+            <div className="text-xs sm:text-sm font-semibold text-slate-700 leading-snug">{clue.prompt}</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 bg-slate-100 rounded-2xl">
               {clue.options.map((opt, oIdx) => (
                 <button
                   key={opt}
                   type="button"
                   onClick={() => setDial(cIdx, oIdx)}
-                  className={`py-2.5 px-1 rounded-xl text-[11px] sm:text-xs font-black transition cursor-pointer truncate ${
+                  className={`py-2.5 px-2 min-h-[44px] rounded-xl text-xs font-bold transition cursor-pointer leading-tight ${
                     dials[cIdx] === oIdx
                       ? 'bg-white text-slate-900 shadow-xs ring-1 ring-amber-300'
                       : 'text-slate-500 hover:text-slate-800'
@@ -299,7 +299,7 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({
       </div>
 
       {errorHint && (
-        <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-bold text-amber-950 flex items-start gap-2">
+        <div className="p-3 rounded-2xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-semibold text-amber-950 flex items-start gap-2 shrink-0">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <span>{copy.labels.wrongMsg}</span>
         </div>
@@ -308,7 +308,7 @@ export const PuzzleVaultGame: React.FC<PuzzleVaultGameProps> = ({
       <button
         type="button"
         onClick={handleAttemptUnlock}
-        className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] ${
+        className={`w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] ${
           isUnlocked
             ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20'
             : 'bg-slate-800 text-white hover:bg-slate-900'

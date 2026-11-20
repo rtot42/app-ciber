@@ -575,25 +575,25 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
   return (
     <div className="flex-1 min-h-0 w-full max-w-full flex flex-col h-full bg-slate-50 text-slate-900 select-none overflow-hidden">
       {/* Top Header & Interactive Stepper */}
-      <header className="px-4 sm:px-6 pt-4 pb-3 bg-white/95 backdrop-blur-md border-b border-slate-100 shrink-0 z-20 space-y-3 w-full">
+      <header className="px-4 sm:px-5 pt-3 pb-2.5 bg-white/95 backdrop-blur-md border-b border-slate-100 shrink-0 z-20 space-y-2.5 w-full">
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-md transition-colors duration-300 shrink-0"
+              className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-sm transition-colors duration-300 shrink-0"
               style={{ backgroundColor: selectedColor }}
             >
-              <Shield className="w-6 h-6" />
+              <Shield className="w-5 h-5" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-cyan-700">
+                <span className="text-xs font-bold uppercase tracking-wider text-cyan-700">
                   {loc.stepLabel(currentStep)}
                 </span>
                 <span className="text-xs text-slate-400 font-medium hidden sm:inline">
                   • {loc.regTitle}
                 </span>
               </div>
-              <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-tight mt-0.5 truncate">
+              <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-snug mt-0.5">
                 {currentStep === 1 && loc.step1Header}
                 {currentStep === 2 && loc.step2Header}
                 {currentStep === 3 && loc.step3Header}
@@ -603,12 +603,12 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <CiberMascot size="md" expression={getMascotExpression()} />
+            <CiberMascot size="sm" expression={getMascotExpression()} />
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="h-2.5 w-full max-w-lg mx-auto bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-2 w-full max-w-lg mx-auto bg-slate-100 rounded-full overflow-hidden">
           <motion.div
             className="h-full rounded-full transition-all duration-300"
             style={{
@@ -620,7 +620,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
         </div>
 
         {/* Navigation Step Indicators */}
-        <div className="flex items-center justify-between pt-0.5 max-w-lg mx-auto w-full">
+        <div className="flex items-center justify-between gap-1.5 pt-0.5 max-w-lg mx-auto w-full">
           {loc.stepItems.map((item) => {
             const isCompleted = item.step < currentStep;
             const isCurrent = item.step === currentStep;
@@ -629,7 +629,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 key={item.step}
                 type="button"
                 onClick={() => jumpToStep(item.step as 1 | 2 | 3 | 4)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+                className={`flex items-center justify-center gap-1.5 min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   isCurrent
                     ? 'bg-slate-900 text-white shadow-xs'
                     : isCompleted
@@ -639,16 +639,16 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
               >
                 <span>{item.icon}</span>
                 <span className="hidden sm:inline text-xs">{item.label}</span>
-                {isCompleted && <Check className="w-3.5 h-3.5 text-cyan-600 stroke-[3]" />}
+                {isCompleted && <Check className="w-3.5 h-3.5 text-cyan-600 stroke-[2.5]" />}
               </button>
             );
           })}
         </div>
       </header>
 
-      {/* Main Spacious Scrollable Viewport */}
-      <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-6 py-6 scrollbar-none w-full">
-        <div className="w-full max-w-lg mx-auto pb-24">
+      {/* Main Scrollable Viewport */}
+      <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-5 py-5 scrollbar-none w-full">
+        <div className="w-full max-w-lg mx-auto pb-6">
           <AnimatePresence mode="wait" custom={direction}>
             {/* STEP 1: GUARDIAN */}
             {currentStep === 1 && (
@@ -661,26 +661,26 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 exit="exit"
                 className="space-y-6"
               >
-                {/* Header with generous spacing */}
-                <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
+                {/* Header */}
+                <div className="text-center space-y-1 px-2">
+                  <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider block">
                     {loc.step1SubTag}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
                     {loc.step1Title}
                   </h2>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step1Desc}
                   </p>
                 </div>
 
                 {/* Hero Spotlight of Selected Guardian */}
-                <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center gap-5 relative overflow-hidden">
+                <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-100 flex items-center gap-4 relative overflow-hidden">
                   <div
-                    className="w-26 h-26 sm:w-30 sm:h-30 rounded-3xl flex items-center justify-center text-5xl sm:text-6xl relative shadow-inner shrink-0 transition-transform duration-300"
+                    className="w-22 h-22 sm:w-24 sm:h-24 rounded-3xl flex items-center justify-center text-4xl sm:text-5xl relative shadow-inner shrink-0 transition-transform duration-300"
                     style={{
                       backgroundColor: `${selectedColor}18`,
-                      border: `3px solid ${selectedColor}`,
+                      border: `2.5px solid ${selectedColor}`,
                     }}
                   >
                     <motion.span
@@ -690,51 +690,51 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                       {currentAvatarData.icon}
                     </motion.span>
                     <div
-                      className="absolute -bottom-2 px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-black text-white shadow-xs"
+                      className="absolute -bottom-2 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold text-white shadow-xs"
                       style={{ backgroundColor: selectedColor }}
                     >
                       {loc.level1Badge}
                     </div>
                   </div>
 
-                  <div className="flex-1 min-w-0 space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl sm:text-2xl font-black text-slate-900 truncate">
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">
                         {currentAvatarData.name}
                       </h3>
-                      <span className="text-xs font-black text-cyan-700 uppercase tracking-wider">
+                      <span className="text-xs font-semibold text-cyan-700 uppercase tracking-wider">
                         • {currentGuardianDetail.tag}
                       </span>
                     </div>
-                    <p className="text-sm font-extrabold text-cyan-600">
+                    <p className="text-xs sm:text-sm font-semibold text-cyan-600">
                       {currentGuardianDetail.role}
                     </p>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
                       {currentGuardianDetail.description}
                     </p>
                   </div>
                 </div>
 
                 {/* Superpower Showcase Box */}
-                <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-100 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-100 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <Sparkles className="w-5 h-5 text-cyan-600 shrink-0" />
-                    <div>
-                      <span className="text-[11px] font-black uppercase tracking-wider text-cyan-800 block">
+                    <div className="min-w-0">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-800 block">
                         {loc.specialPowerLabel}
                       </span>
-                      <span className="text-sm font-black text-slate-900">
+                      <span className="text-xs sm:text-sm font-bold text-slate-900">
                         {currentGuardianDetail.superpower}
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs sm:text-sm font-black text-cyan-700">
+                  <span className="text-xs font-bold text-cyan-700 shrink-0">
                     {loc.selectedBadge}
                   </span>
                 </div>
 
-                {/* Grid of Guardian Options - Much larger and more tactile */}
-                <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-1">
+                {/* Grid of Guardian Options */}
+                <div className="grid grid-cols-3 gap-2.5 sm:gap-3.5 pt-1">
                   {AVATAR_OPTIONS.map((avatar) => {
                     const isSelected = avatar.id === selectedAvatar;
                     const detail = loc.guardians[avatar.id];
@@ -744,29 +744,29 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                         key={avatar.id}
                         type="button"
                         onClick={() => setSelectedAvatar(avatar.id)}
-                        className={`p-3.5 sm:p-4.5 rounded-3xl text-center transition-all cursor-pointer flex flex-col items-center gap-2 relative ${
+                        className={`p-3 sm:p-3.5 rounded-2xl text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 relative ${
                           isSelected
-                            ? 'bg-white shadow-lg ring-4 ring-cyan-500 border-2 border-cyan-400 scale-[1.03]'
-                            : 'bg-white/90 hover:bg-white border-2 border-slate-100 hover:border-slate-200 shadow-2xs'
+                            ? 'bg-white shadow-md ring-3 ring-cyan-500 border border-cyan-400'
+                            : 'bg-white/95 hover:bg-white border border-slate-200/80 hover:border-slate-300 shadow-2xs'
                         }`}
                       >
                         {isSelected && (
-                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-cyan-500 text-white flex items-center justify-center shadow-xs">
+                          <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-cyan-500 text-white flex items-center justify-center shadow-xs">
                             <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         )}
                         <div
-                          className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl transition-all shadow-inner"
+                          className="w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl transition-all shadow-inner"
                           style={{
                             backgroundColor: isSelected ? `${selectedColor}25` : '#f1f5f9',
                           }}
                         >
                           <span>{avatar.icon}</span>
                         </div>
-                        <span className="text-sm sm:text-base font-black text-slate-900 truncate w-full">
+                        <span className="text-xs sm:text-sm font-bold text-slate-900 leading-tight w-full">
                           {avatar.name}
                         </span>
-                        <span className="text-xs text-cyan-700 font-bold line-clamp-1">
+                        <span className="text-[11px] text-cyan-700 font-semibold leading-tight line-clamp-1">
                           {detail?.role}
                         </span>
                       </button>
@@ -788,33 +788,33 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 className="space-y-6"
               >
                 {/* Header */}
-                <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
+                <div className="text-center space-y-1 px-2">
+                  <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider block">
                     {loc.step2SubTag}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
                     {loc.step2Title}
                   </h2>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step2Desc}
                   </p>
                 </div>
 
                 {/* Aura Preview Guardian Spotlight */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center relative overflow-hidden space-y-3">
+                <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center relative overflow-hidden space-y-2.5">
                   <div
-                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center text-6xl relative transition-all duration-300"
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl flex items-center justify-center text-5xl relative transition-all duration-300"
                     style={{
                       backgroundColor: `${selectedColor}18`,
-                      border: `3px solid ${selectedColor}`,
-                      boxShadow: `0 0 25px ${currentAura.glow}`,
+                      border: `2.5px solid ${selectedColor}`,
+                      boxShadow: `0 0 22px ${currentAura.glow}`,
                     }}
                   >
                     <span>{currentAvatarData.icon}</span>
                   </div>
 
                   <div className="space-y-1">
-                    <h3 className="text-lg sm:text-xl font-black text-slate-900">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900">
                       {currentAura.name}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-500 max-w-xs leading-relaxed">
@@ -833,31 +833,31 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                         key={aura.id}
                         type="button"
                         onClick={() => setSelectedColor(aura.hex)}
-                        className={`w-full p-4 sm:p-4.5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                        className={`w-full p-3.5 sm:p-4 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-white border-slate-900 shadow-md ring-2 ring-slate-900'
                             : 'bg-white hover:bg-slate-50 border-slate-100 hover:border-slate-200 shadow-2xs'
                         }`}
                       >
-                        <div className="flex items-center gap-3.5">
+                        <div className="flex items-center gap-3">
                           <div
                             className="w-9 h-9 rounded-xl shrink-0 shadow-xs flex items-center justify-center text-white"
                             style={{ backgroundColor: aura.hex }}
                           >
-                            {isSelected && <Check className="w-5 h-5 stroke-[3]" />}
+                            {isSelected && <Check className="w-5 h-5 stroke-[2.5]" />}
                           </div>
                           <div>
-                            <span className="text-sm sm:text-base font-black text-slate-900 block">
+                            <span className="text-sm sm:text-base font-bold text-slate-900 block">
                               {aura.name}
                             </span>
-                            <span className="text-xs text-slate-500 font-bold">
+                            <span className="text-xs text-slate-500 font-semibold">
                               {aura.power}
                             </span>
                           </div>
                         </div>
 
                         <span
-                          className="w-3.5 h-3.5 rounded-full"
+                          className="w-3.5 h-3.5 rounded-full shrink-0"
                           style={{ backgroundColor: aura.hex }}
                         />
                       </button>
@@ -876,23 +876,23 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="space-y-6"
+                className="space-y-5"
               >
                 {/* Header */}
-                <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
+                <div className="text-center space-y-1 px-2">
+                  <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider block">
                     {loc.step3SubTag}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
                     {loc.step3Title}
                   </h2>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step3Desc}
                   </p>
                 </div>
 
-                {/* Age Cards with Generous Spacing */}
-                <div className="space-y-4">
+                {/* Age Cards */}
+                <div className="space-y-3.5">
                   {loc.ageGroups.map((ageGroup) => {
                     const isSelected = ageGroup.id === selectedAge;
 
@@ -901,47 +901,47 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                         key={ageGroup.id}
                         type="button"
                         onClick={() => setSelectedAge(ageGroup.id)}
-                        className={`w-full p-5 sm:p-6 rounded-3xl border text-left transition-all cursor-pointer relative overflow-hidden space-y-3 ${
+                        className={`w-full p-4 sm:p-5 rounded-3xl border text-left transition-all cursor-pointer relative overflow-hidden space-y-2.5 ${
                           isSelected
-                            ? 'bg-white shadow-lg ring-4 ring-cyan-500 border-transparent'
+                            ? 'bg-white shadow-lg ring-3 ring-cyan-500 border-transparent'
                             : 'bg-white hover:bg-slate-50 border-slate-100 hover:border-slate-200 shadow-2xs'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-3.5">
-                            <span className="text-3xl sm:text-4xl">{ageGroup.icon}</span>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-lg sm:text-xl font-black text-slate-900">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className="text-3xl shrink-0">{ageGroup.icon}</span>
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                <h3 className="text-base sm:text-lg font-bold text-slate-900">
                                   {ageGroup.title}
                                 </h3>
-                                <span className={`text-xs font-black ${ageGroup.accent}`}>
+                                <span className={`text-xs font-bold ${ageGroup.accent}`}>
                                   • {ageGroup.rankBadge}
                                 </span>
                               </div>
-                              <span className="text-xs sm:text-sm font-bold text-slate-500 block mt-0.5">
+                              <span className="text-xs sm:text-sm font-semibold text-slate-500 block mt-0.5">
                                 {ageGroup.subtitle}
                               </span>
                             </div>
                           </div>
 
                           <div
-                            className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${
+                            className={`w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                               isSelected
                                 ? 'bg-cyan-500 border-cyan-500 text-white'
                                 : 'border-slate-300 bg-white'
                             }`}
                           >
-                            {isSelected && <Check className="w-4 h-4 stroke-[3]" />}
+                            {isSelected && <Check className="w-4 h-4 stroke-[2.5]" />}
                           </div>
                         </div>
 
-                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
                           {ageGroup.desc}
                         </p>
 
                         {/* Distinct feature points */}
-                        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold text-slate-600">
+                        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-slate-600">
                           {ageGroup.points.map((pt, pIdx) => (
                             <span key={pIdx} className="flex items-center gap-1.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
@@ -965,29 +965,29 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="space-y-6"
+                className="space-y-5"
               >
                 {/* Header */}
-                <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
+                <div className="text-center space-y-1 px-2">
+                  <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider block">
                     {loc.step4SubTag}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
                     {loc.step4Title}
                   </h2>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step4Desc}
                   </p>
                 </div>
 
                 {/* Nickname Input & Randomizer Card */}
-                <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 space-y-4">
-                  <div className="flex items-center justify-between text-sm font-bold text-slate-700">
+                <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-100 space-y-3.5">
+                  <div className="flex items-center justify-between text-sm font-semibold text-slate-700">
                     <span>{loc.step4Header}</span>
                     <button
                       type="button"
                       onClick={handleRandomizeNick}
-                      className="flex items-center gap-1.5 text-cyan-600 hover:text-cyan-700 cursor-pointer font-black active:scale-95 transition"
+                      className="flex items-center gap-1.5 min-h-[36px] px-2 text-cyan-600 hover:text-cyan-700 cursor-pointer font-bold active:scale-95 transition"
                     >
                       <motion.div
                         animate={isSpinningDice ? { rotate: 360 } : { rotate: 0 }}
@@ -1007,9 +1007,9 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                       value={nickname}
                       onChange={(e) => setNickname(e.target.value)}
                       placeholder={loc.inputPlaceholder}
-                      className="w-full px-4.5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-cyan-500 focus:bg-white text-lg sm:text-xl font-black text-slate-900 outline-none transition"
+                      className="w-full pl-4 pr-16 py-3.5 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-cyan-500 focus:bg-white text-base sm:text-lg font-bold text-slate-900 outline-none transition"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-mono font-bold">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 tabular-nums font-bold">
                       {nickname.length}/18
                     </div>
                   </div>
@@ -1019,7 +1019,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                     <motion.div
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs sm:text-sm font-bold text-amber-900 leading-relaxed"
+                      className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs sm:text-sm font-semibold text-amber-900 leading-relaxed"
                     >
                       {privacyWarning}
                     </motion.div>
@@ -1027,13 +1027,13 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 </div>
 
                 {/* Rules of Safe Nickname Card */}
-                <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 space-y-3">
-                  <div className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase tracking-wider text-slate-700">
-                    <Lock className="w-4.5 h-4.5 text-cyan-600" />
+                <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-100 space-y-2.5">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-700">
+                    <Lock className="w-4 h-4 text-cyan-600" />
                     <span>{loc.rulesTitle}</span>
                   </div>
 
-                  <ul className="space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                       <span>{loc.rule1}</span>
@@ -1054,40 +1054,43 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
         </div>
       </main>
 
-      {/* Bottom Sticky Action Controls with Ample Padding */}
-      <footer className="px-5 py-4 bg-white/95 backdrop-blur-md border-t border-slate-100 shrink-0 z-20">
+      {/* Bottom Sticky Action Controls with Safe Area Inset */}
+      <footer
+        className="px-4 sm:px-5 pt-3 bg-white/95 backdrop-blur-md border-t border-slate-100 shrink-0 z-20"
+        style={{ paddingBottom: 'max(0.875rem, env(safe-area-inset-bottom, 0px))' }}
+      >
         <div className="w-full max-w-lg mx-auto flex items-center justify-between gap-3">
           {currentStep > 1 ? (
             <button
               type="button"
               onClick={goToPrevStep}
-              className="px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm sm:text-base font-bold transition cursor-pointer active:scale-95 flex items-center gap-2"
+              className="min-h-[46px] px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm sm:text-base font-bold transition cursor-pointer active:scale-95 flex items-center gap-2"
             >
               <ArrowLeft className="w-4.5 h-4.5" />
               <span>{loc.backBtn}</span>
             </button>
           ) : (
-            <div className="w-20" />
+            <div className="w-16" />
           )}
 
           {currentStep < 4 ? (
             <button
               type="button"
               onClick={goToNextStep}
-              className="px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-base sm:text-lg font-black tracking-wide shadow-lg shadow-cyan-500/25 transition cursor-pointer active:scale-95 flex items-center gap-2"
+              className="min-h-[46px] px-6 sm:px-7 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm sm:text-base font-bold tracking-wide shadow-lg shadow-cyan-500/25 transition cursor-pointer active:scale-95 flex items-center gap-2"
             >
               <span>{loc.nextBtn}</span>
-              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+              <ArrowRight className="w-5 h-5 stroke-[2.25]" />
             </button>
           ) : (
             <button
               type="button"
               disabled={isFinishing || !nickname.trim()}
               onClick={handleFinalSubmit}
-              className="px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-50 text-white text-base sm:text-lg font-black tracking-wide shadow-lg shadow-emerald-500/25 transition cursor-pointer active:scale-95 flex items-center gap-2"
+              className="min-h-[46px] px-6 sm:px-7 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-50 text-white text-sm sm:text-base font-bold tracking-wide shadow-lg shadow-emerald-500/25 transition cursor-pointer active:scale-95 flex items-center gap-2"
             >
               <span>{isFinishing ? loc.savingBtn : loc.finishBtn}</span>
-              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+              <ArrowRight className="w-5 h-5 stroke-[2.25]" />
             </button>
           )}
         </div>

@@ -428,7 +428,7 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -447,7 +447,7 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
       (verdict === 'safe' && !current.isPhishing));
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -467,101 +467,103 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4"
+        className="flex-1 min-h-0 bg-white rounded-3xl p-4 sm:p-6 shadow-xs border border-slate-200/80 flex flex-col justify-between gap-3.5"
       >
-        <div className="border-b border-slate-100 pb-3 space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-sm font-black text-slate-900">{current.senderName}</span>
-            <span className="text-xs text-slate-400 font-mono tabular-nums">{current.date}</span>
-          </div>
-
-          <div
-            className={`text-xs font-mono px-3 py-2 rounded-xl border break-all flex items-center justify-between gap-2 ${
-              headerHighlighted
-                ? 'bg-amber-50 border-amber-300 text-amber-950'
-                : 'bg-slate-50 border-slate-200 text-slate-600'
-            }`}
-          >
-            <div>
-              <span className="text-slate-400">{copy.labels.fromLabel} </span>
-              <strong className="text-slate-900">{current.senderEmail}</strong>
+        <div className="space-y-3">
+          <div className="border-b border-slate-100 pb-3 space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-bold text-slate-900">{current.senderName}</span>
+              <span className="text-xs text-slate-400 font-medium tabular-nums shrink-0">{current.date}</span>
             </div>
-            {!headerHighlighted && !verdict && (
-              <button
-                type="button"
-                onClick={() => {
-                  playGameSound('tap');
-                  setHeaderHighlighted(true);
-                }}
-                className="shrink-0 px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 text-[11px] font-bold flex items-center gap-1 cursor-pointer"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>{copy.labels.inspectHeadersBtn}</span>
-              </button>
-            )}
-          </div>
 
-          <h3 className="text-base font-black text-slate-900 leading-snug">{current.subject}</h3>
-        </div>
-
-        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
-          {current.fullBody}
-        </p>
-
-        {!verdict && headerHighlighted && (
-          <div className="text-xs text-amber-800 bg-amber-50/70 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2 font-medium">
-            <Search className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>{copy.labels.clueHint}</span>
-          </div>
-        )}
-
-        {/* Reveal forensic clues ONLY AFTER voting */}
-        <AnimatePresence>
-          {verdict && (
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`p-4 rounded-2xl border space-y-2 ${
-                isAnswerCorrect
-                  ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
-                  : 'bg-amber-50 border-amber-200 text-amber-950'
+            <div
+              className={`text-xs font-mono px-3 py-2 rounded-xl border break-all flex flex-wrap items-center justify-between gap-2 ${
+                headerHighlighted
+                  ? 'bg-amber-50 border-amber-300 text-amber-950'
+                  : 'bg-slate-50 border-slate-200 text-slate-600'
               }`}
             >
-              <div className="font-black text-sm flex items-center gap-1.5">
-                {isAnswerCorrect ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                ) : (
-                  <XCircle className="w-4 h-4 text-amber-600" />
-                )}
-                <span>
-                  {isAnswerCorrect ? copy.labels.correctPrefix : copy.labels.wrongPrefix}
-                </span>
+              <div>
+                <span className="text-slate-400">{copy.labels.fromLabel} </span>
+                <strong className="font-bold text-slate-900">{current.senderEmail}</strong>
               </div>
-              <p className="text-xs sm:text-sm font-medium leading-relaxed">
-                {current.explanation}
-              </p>
-              <div className="pt-1 border-t border-black/10 space-y-1">
-                <div className="text-[11px] font-black uppercase tracking-wider opacity-75">
-                  {copy.labels.cluesTitle}
-                </div>
-                {current.clues.map((clue, i) => (
-                  <div key={i} className="text-xs flex items-start gap-1.5 font-medium">
-                    <span>•</span>
-                    <span>{clue}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+              {!headerHighlighted && !verdict && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    playGameSound('tap');
+                    setHeaderHighlighted(true);
+                  }}
+                  className="font-sans shrink-0 px-2.5 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>{copy.labels.inspectHeadersBtn}</span>
+                </button>
+              )}
+            </div>
+
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">{current.subject}</h3>
+          </div>
+
+          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
+            {current.fullBody}
+          </p>
+
+          {!verdict && headerHighlighted && (
+            <div className="text-xs text-amber-800 bg-amber-50/70 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2 font-medium">
+              <Search className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>{copy.labels.clueHint}</span>
+            </div>
           )}
-        </AnimatePresence>
+
+          {/* Reveal forensic clues ONLY AFTER voting */}
+          <AnimatePresence>
+            {verdict && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`p-3.5 rounded-2xl border space-y-2 ${
+                  isAnswerCorrect
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                    : 'bg-amber-50 border-amber-200 text-amber-950'
+                }`}
+              >
+                <div className="font-bold text-sm flex items-center gap-1.5">
+                  {isAnswerCorrect ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                  )}
+                  <span>
+                    {isAnswerCorrect ? copy.labels.correctPrefix : copy.labels.wrongPrefix}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm font-medium leading-relaxed">
+                  {current.explanation}
+                </p>
+                <div className="pt-1 border-t border-black/10 space-y-1">
+                  <div className="text-[11px] font-semibold uppercase tracking-wider opacity-75">
+                    {copy.labels.cluesTitle}
+                  </div>
+                  {current.clues.map((clue, i) => (
+                    <div key={i} className="text-xs flex items-start gap-1.5 font-medium">
+                      <span>•</span>
+                      <span>{clue}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Verdict Action Buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-1">
           <button
             type="button"
             disabled={!!verdict}
             onClick={() => handleVote('safe')}
-            className={`py-3.5 px-3 rounded-2xl border-2 font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] ${
+            className={`py-3.5 min-h-[52px] px-3 rounded-2xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] ${
               verdict === 'safe'
                 ? !current.isPhishing
                   ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
@@ -569,7 +571,7 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
                 : 'bg-emerald-50/70 hover:bg-emerald-100 border-emerald-200 text-emerald-800'
             }`}
           >
-            <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>{copy.labels.safeBtn}</span>
           </button>
 
@@ -577,7 +579,7 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
             type="button"
             disabled={!!verdict}
             onClick={() => handleVote('phishing')}
-            className={`py-3.5 px-3 rounded-2xl border-2 font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] ${
+            className={`py-3.5 min-h-[52px] px-3 rounded-2xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] ${
               verdict === 'phishing'
                 ? current.isPhishing
                   ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
@@ -585,7 +587,7 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
                 : 'bg-rose-50/70 hover:bg-rose-100 border-rose-200 text-rose-800'
             }`}
           >
-            <AlertTriangle className="w-5 h-5 text-rose-600" />
+            <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0" />
             <span>{copy.labels.phishBtn}</span>
           </button>
         </div>
@@ -595,7 +597,7 @@ export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

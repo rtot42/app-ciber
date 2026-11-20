@@ -56,7 +56,7 @@ export function drawFloatingTextsVfx(ctx: CanvasRenderingContext2D, texts: Float
     const alpha = Math.max(0, Math.min(1, t.life / 0.75));
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.font = '900 13px system-ui, -apple-system, sans-serif';
+    ctx.font = '700 13px Nunito, system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'center';
     ctx.lineWidth = 3;
     ctx.strokeStyle = 'rgba(15, 23, 42, 0.85)';
@@ -162,7 +162,7 @@ export function drawFirewallBlock(
 
   // Symbol
   ctx.fillStyle = used ? '#cbd5e1' : '#ffffff';
-  ctx.font = `900 ${Math.round(h * 0.56)}px system-ui, sans-serif`;
+  ctx.font = `700 ${Math.round(h * 0.56)}px Nunito, system-ui, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(used ? '✓' : '?', x + w / 2, y + h / 2 + 1);

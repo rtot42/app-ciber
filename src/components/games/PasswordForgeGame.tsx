@@ -336,7 +336,7 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -350,7 +350,7 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -363,201 +363,203 @@ export const PasswordForgeGame: React.FC<PasswordForgeGameProps> = ({
         streak={streak}
       />
 
-      {/* Interactive Password Display Box */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              {copy.labels.digitalLock}
+      <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5">
+        {/* Interactive Password Display Box */}
+        <div className="bg-white rounded-3xl p-3.5 sm:p-4 shadow-xs border border-slate-200/80 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                {copy.labels.digitalLock}
+              </div>
+              <div className="text-sm font-bold text-purple-800 leading-snug">
+                {copy.stageTargets[stage]}
+              </div>
             </div>
-            <div className="text-sm font-black text-purple-800">
-              {copy.stageTargets[stage]}
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={handleGenerateMagic}
-              className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 transition cursor-pointer"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>{copy.labels.combineBtn}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="text-slate-500 hover:text-slate-700 cursor-pointer p-2 rounded-xl bg-slate-100"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-
-        <input
-          type={showPassword ? 'text' : 'password'}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={copy.labels.placeholder}
-          className="w-full text-base sm:text-lg font-mono font-bold tracking-wider py-3 px-4 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-purple-500 focus:bg-white text-slate-900 outline-none transition"
-        />
-
-        {(hasWeakPattern || isReused) && (
-          <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>{isReused ? copy.labels.reuseWarning : copy.labels.weakWarning}</span>
-          </div>
-        )}
-
-        {/* Live Crack Time & Entropy */}
-        <div className="space-y-1.5 pt-1">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-bold tabular-nums">
-            <span className="text-slate-600 flex items-center gap-1.5">
-              <span>{copy.labels.armorLevel}</span>
-              <span
-                className={
-                  hasWeakPattern || isReused || basePassed < 2
-                    ? 'text-rose-600 font-black'
-                    : basePassed < 4
-                    ? 'text-amber-600 font-black'
-                    : 'text-emerald-600 font-black'
-                }
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={handleGenerateMagic}
+                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 min-h-[38px] rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 transition cursor-pointer"
               >
-                {strengthLabel}
-              </span>
-            </span>
-            <div className="flex items-center gap-3 text-[11px] text-slate-500">
-              {ageGroup !== '8–10' && (
-                <span className="flex items-center gap-1">
-                  <Cpu className="w-3.5 h-3.5 text-purple-600" />
-                  {copy.labels.entropyLabel} <strong className="text-slate-800">{entropyBits} bits</strong>
-                </span>
-              )}
-              <span>
-                {copy.labels.timeToBreak} <strong className="text-slate-800">{crackTime}</strong>
-              </span>
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>{copy.labels.combineBtn}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-slate-500 hover:text-slate-700 cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center rounded-xl bg-slate-100"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
-          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden p-0.5">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${meterPercent}%` }}
-              className={`h-full rounded-full ${strengthColor} transition-all duration-300`}
-            />
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={copy.labels.placeholder}
+            className="w-full text-base sm:text-lg font-mono font-bold tracking-wider py-2.5 px-3.5 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-purple-500 focus:bg-white text-slate-900 outline-none transition"
+          />
+
+          {(hasWeakPattern || isReused) && (
+            <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{isReused ? copy.labels.reuseWarning : copy.labels.weakWarning}</span>
+            </div>
+          )}
+
+          {/* Live Crack Time & Entropy */}
+          <div className="space-y-1.5 pt-1">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold tabular-nums">
+              <span className="text-slate-600 flex items-center gap-1.5">
+                <span>{copy.labels.armorLevel}</span>
+                <span
+                  className={
+                    hasWeakPattern || isReused || basePassed < 2
+                      ? 'text-rose-600 font-bold'
+                      : basePassed < 4
+                      ? 'text-amber-600 font-bold'
+                      : 'text-emerald-600 font-bold'
+                  }
+                >
+                  {strengthLabel}
+                </span>
+              </span>
+              <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500">
+                {ageGroup !== '8–10' && (
+                  <span className="flex items-center gap-1">
+                    <Cpu className="w-3.5 h-3.5 text-purple-600" />
+                    {copy.labels.entropyLabel} <strong className="text-slate-800">{entropyBits} bits</strong>
+                  </span>
+                )}
+                <span>
+                  {copy.labels.timeToBreak} <strong className="text-slate-800">{crackTime}</strong>
+                </span>
+              </div>
+            </div>
+
+            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden p-0.5">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${meterPercent}%` }}
+                className={`h-full rounded-full ${strengthColor} transition-all duration-300`}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Criteria Checklist */}
-      <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80 grid grid-cols-2 gap-2 text-xs">
-        {[
-          { ok: hasLength && !hasWeakPattern, label: `${copy.labels.reqLength} (${password.length})` },
-          { ok: hasUpper && hasLower, label: copy.labels.reqUpperLower },
-          { ok: hasNumber, label: copy.labels.reqNumber },
-          { ok: hasSymbol, label: copy.labels.reqSymbol },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className={`flex items-center gap-2 p-2.5 rounded-xl border font-bold ${
-              item.ok
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                : 'bg-slate-50 text-slate-500 border-slate-200'
-            }`}
-          >
+        {/* Criteria Checklist */}
+        <div className="bg-white rounded-3xl p-3.5 shadow-xs border border-slate-200/80 grid grid-cols-2 gap-2 text-xs">
+          {[
+            { ok: hasLength && !hasWeakPattern, label: `${copy.labels.reqLength} (${password.length})` },
+            { ok: hasUpper && hasLower, label: copy.labels.reqUpperLower },
+            { ok: hasNumber, label: copy.labels.reqNumber },
+            { ok: hasSymbol, label: copy.labels.reqSymbol },
+          ].map((item, idx) => (
             <div
-              className={`w-4 h-4 rounded-full flex items-center justify-center text-white shrink-0 ${
-                item.ok ? 'bg-emerald-500' : 'bg-slate-300'
+              key={idx}
+              className={`flex items-center gap-2 p-2.5 rounded-xl border font-semibold ${
+                item.ok
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                  : 'bg-slate-50 text-slate-500 border-slate-200'
               }`}
             >
-              <Check className="w-2.5 h-2.5 stroke-[3]" />
+              <div
+                className={`w-4 h-4 rounded-full flex items-center justify-center text-white shrink-0 ${
+                  item.ok ? 'bg-emerald-500' : 'bg-slate-300'
+                }`}
+              >
+                <Check className="w-2.5 h-2.5 stroke-[3]" />
+              </div>
+              <span className="leading-tight break-words">{item.label}</span>
             </div>
-            <span className="truncate">{item.label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Pro Stage 2FA Toggle (13-14) */}
-      {needsTwoFa && (
-        <button
-          type="button"
-          onClick={() => {
-            playGameSound('tap');
-            setTwoFaEnabled((v) => !v);
-          }}
-          className={`w-full p-4 rounded-2xl border-2 text-left flex items-center justify-between gap-3 transition cursor-pointer ${
-            twoFaEnabled
-              ? 'bg-emerald-50 border-emerald-400 text-emerald-950'
-              : 'bg-amber-50 border-amber-300 text-amber-950 hover:bg-amber-100/70'
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <Smartphone className="w-6 h-6 text-purple-600 shrink-0" />
-            <div>
-              <div className="text-xs sm:text-sm font-black">{copy.labels.twoFaTitle}</div>
-              <div className="text-[11px] text-slate-600">{copy.labels.twoFaDesc}</div>
-            </div>
-          </div>
-          <span
-            className={`px-3 py-1.5 rounded-xl text-xs font-black ${
-              twoFaEnabled ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border border-slate-300'
-            }`}
-          >
-            {twoFaEnabled ? 'ON' : 'OFF'}
-          </span>
-        </button>
-      )}
-
-      {/* Quick Add Building Blocks */}
-      <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80 space-y-2">
-        <div className="text-xs font-bold text-slate-700">{copy.labels.quickAddTitle}</div>
-        <div className="flex flex-wrap gap-1.5">
-          {copy.words.map((word) => (
-            <button
-              key={word}
-              type="button"
-              onClick={() => addSnippet(word)}
-              className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-purple-100 hover:text-purple-700 transition cursor-pointer active:scale-95"
-            >
-              +{word}
-            </button>
           ))}
-          {sampleSymbols.map((sym) => (
-            <button
-              key={sym}
-              type="button"
-              onClick={() => addSnippet(sym)}
-              className="px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-200 transition cursor-pointer active:scale-95"
-            >
-              +{sym}
-            </button>
-          ))}
+        </div>
+
+        {/* Pro Stage 2FA Toggle (13-14) */}
+        {needsTwoFa && (
           <button
             type="button"
-            onClick={() => addSnippet(String(Math.floor(42 + Math.random() * 55)))}
-            className="px-3 py-1.5 text-xs font-bold rounded-xl bg-cyan-50 text-cyan-800 hover:bg-cyan-100 transition cursor-pointer active:scale-95"
+            onClick={() => {
+              playGameSound('tap');
+              setTwoFaEnabled((v) => !v);
+            }}
+            className={`w-full p-3.5 rounded-2xl border-2 text-left flex items-center justify-between gap-3 transition cursor-pointer ${
+              twoFaEnabled
+                ? 'bg-emerald-50 border-emerald-400 text-emerald-950'
+                : 'bg-amber-50 border-amber-300 text-amber-950 hover:bg-amber-100/70'
+            }`}
           >
-            +42
+            <div className="flex items-center gap-3 min-w-0">
+              <Smartphone className="w-6 h-6 text-purple-600 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs sm:text-sm font-bold leading-snug">{copy.labels.twoFaTitle}</div>
+                <div className="text-[11px] text-slate-600 leading-snug">{copy.labels.twoFaDesc}</div>
+              </div>
+            </div>
+            <span
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
+                twoFaEnabled ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border border-slate-300'
+              }`}
+            >
+              {twoFaEnabled ? 'ON' : 'OFF'}
+            </span>
           </button>
-        </div>
-      </div>
+        )}
 
-      {/* Mascot + Action CTA */}
-      <div className="flex items-center gap-3 p-3.5 bg-purple-50/70 rounded-2xl border border-purple-100">
-        <CiberMascot size="sm" expression={isStageValid ? 'celebrating' : 'thinking'} className="shrink-0" />
-        <p className="text-xs font-medium text-purple-950 leading-snug">
-          {isStageValid
-            ? stage < totalStages - 1
-              ? copy.labels.forgeNextBtn
-              : copy.labels.forgeFinalBtn
-            : copy.labels.needMoreBtn}
-        </p>
+        {/* Quick Add Building Blocks */}
+        <div className="bg-white rounded-3xl p-3.5 shadow-xs border border-slate-200/80 space-y-2">
+          <div className="text-xs font-semibold text-slate-700">{copy.labels.quickAddTitle}</div>
+          <div className="flex flex-wrap gap-1.5">
+            {copy.words.map((word) => (
+              <button
+                key={word}
+                type="button"
+                onClick={() => addSnippet(word)}
+                className="px-3 py-1.5 min-h-[36px] text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-purple-100 hover:text-purple-700 transition cursor-pointer active:scale-95"
+              >
+                +{word}
+              </button>
+            ))}
+            {sampleSymbols.map((sym) => (
+              <button
+                key={sym}
+                type="button"
+                onClick={() => addSnippet(sym)}
+                className="px-3 py-1.5 min-h-[36px] text-xs font-semibold rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-200 transition cursor-pointer active:scale-95"
+              >
+                +{sym}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => addSnippet(String(Math.floor(42 + Math.random() * 55)))}
+              className="px-3 py-1.5 min-h-[36px] text-xs font-semibold rounded-xl bg-cyan-50 text-cyan-800 hover:bg-cyan-100 transition cursor-pointer active:scale-95"
+            >
+              +42
+            </button>
+          </div>
+        </div>
+
+        {/* Mascot + Action CTA */}
+        <div className="flex items-center gap-3 p-3 bg-purple-50/70 rounded-2xl border border-purple-100">
+          <CiberMascot size="sm" expression={isStageValid ? 'celebrating' : 'thinking'} className="shrink-0" />
+          <p className="text-xs font-medium text-purple-950 leading-snug">
+            {isStageValid
+              ? stage < totalStages - 1
+                ? copy.labels.forgeNextBtn
+                : copy.labels.forgeFinalBtn
+              : copy.labels.needMoreBtn}
+          </p>
+        </div>
       </div>
 
       <button
         type="button"
         onClick={handleSubmitStage}
         disabled={!isStageValid}
-        className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer ${
+        className={`w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer ${
           isStageValid
             ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25 hover:from-purple-400 hover:to-indigo-500 active:scale-[0.98]'
             : 'bg-slate-200 text-slate-400 cursor-not-allowed'

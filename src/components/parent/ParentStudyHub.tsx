@@ -93,45 +93,45 @@ export const ParentStudyHub: React.FC = () => {
   return (
     <div className="space-y-3.5">
       {/* Sub-tab Navigation */}
-      <div className="p-1 rounded-2xl bg-slate-200/70 flex items-center text-xs font-bold">
+      <div className="p-1 rounded-2xl bg-slate-200/70 flex items-center text-xs font-semibold">
         <button
           onClick={() => setActiveSubTab('guides')}
-          className={`flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 min-h-[40px] py-2 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer ${
             activeSubTab === 'guides'
-              ? 'bg-white text-slate-900 shadow-xs font-black'
+              ? 'bg-white text-slate-900 shadow-xs font-bold'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <BookOpen className="w-3.5 h-3.5 text-cyan-600" />
-          <span>
+          <BookOpen className="w-3.5 h-3.5 text-cyan-600 shrink-0" />
+          <span className="truncate">
             {language === 'fr'
               ? 'Guides Pédagogiques'
               : language === 'en'
               ? 'Parent Study Guides'
               : 'Guías de Estudio'}
           </span>
-          <span className="px-1.5 py-0.2 rounded-full bg-cyan-100 text-cyan-800 text-[10px]">
+          <span className="px-1.5 py-0.5 rounded-full bg-cyan-100 text-cyan-800 text-[10px] tabular-nums">
             {guides.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveSubTab('agreement')}
-          className={`flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 min-h-[40px] py-2 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer ${
             activeSubTab === 'agreement'
-              ? 'bg-white text-slate-900 shadow-xs font-black'
+              ? 'bg-white text-slate-900 shadow-xs font-bold'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <FileText className="w-3.5 h-3.5 text-emerald-600" />
-          <span>
+          <FileText className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span className="truncate">
             {language === 'fr'
               ? 'Pacte Numérique Familial'
               : language === 'en'
               ? 'Family Digital Pact'
               : 'Pacto Familiar Digital'}
           </span>
-          <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px]">
+          <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] tabular-nums">
             {agreementCount}/{agreementItems.length}
           </span>
         </button>
@@ -153,12 +153,12 @@ export const ParentStudyHub: React.FC = () => {
                   ? 'Search guide (Roblox, password, deepfake)...'
                   : 'Buscar guía (Robux, contraseña, deepfake, fotos)...'
               }
-              className="w-full pl-9 pr-3.5 py-2.5 rounded-2xl bg-white border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden focus:border-cyan-500 shadow-2xs"
+              className="w-full min-h-[44px] pl-9 pr-9 py-2.5 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-hidden focus:border-cyan-500 shadow-2xs"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -171,7 +171,7 @@ export const ParentStudyHub: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition cursor-pointer border ${
+                className={`min-h-[36px] px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition cursor-pointer border ${
                   selectedCategory === cat.id
                     ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                     : 'bg-white text-slate-600 border-slate-200/80 hover:bg-slate-50'
@@ -211,13 +211,13 @@ export const ParentStudyHub: React.FC = () => {
                   className="p-4 rounded-3xl bg-white border border-slate-100 hover:border-slate-300 transition shadow-xs space-y-2.5 cursor-pointer group"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-start gap-3 flex-1">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
                       <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
                         {getIconComponent(guide.category)}
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-100">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-100">
                             {guide.category}
                           </span>
                           <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
@@ -225,7 +225,7 @@ export const ParentStudyHub: React.FC = () => {
                             {guide.readTime}
                           </span>
                         </div>
-                        <h3 className="text-xs font-black text-slate-900 group-hover:text-cyan-700 transition leading-snug">
+                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-cyan-700 transition leading-snug">
                           {guide.title}
                         </h3>
                       </div>
@@ -233,15 +233,15 @@ export const ParentStudyHub: React.FC = () => {
                     <ChevronRight className="w-4 h-4 text-slate-400 shrink-0 mt-1 group-hover:translate-x-0.5 transition" />
                   </div>
 
-                  <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-normal leading-relaxed line-clamp-2">
                     {guide.summary}
                   </p>
 
-                  <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px]">
-                    <span className="text-slate-400 italic">
+                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 text-[11px]">
+                    <span className="text-slate-400 italic truncate">
                       ⭐ {guide.goldenRule.slice(0, 45)}...
                     </span>
-                    <span className="font-black text-cyan-600 flex items-center gap-0.5">
+                    <span className="font-bold text-cyan-600 flex items-center gap-0.5 shrink-0">
                       {language === 'fr' ? 'Lire la fiche' : language === 'en' ? 'Read full guide' : 'Leer guía completa'}
                       <ChevronRight className="w-3 h-3" />
                     </span>
@@ -255,20 +255,20 @@ export const ParentStudyHub: React.FC = () => {
         /* Family Digital Agreement Tab */
         <div className="space-y-3.5">
           <div className="p-4 rounded-3xl bg-linear-to-br from-emerald-50/90 via-teal-50/50 to-white border border-emerald-100 shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-2xs font-bold">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-2xs font-bold shrink-0">
                   🤝
                 </div>
-                <div>
-                  <h3 className="text-xs font-black text-emerald-950">
+                <div className="min-w-0">
+                  <h3 className="text-xs sm:text-sm font-bold text-emerald-950">
                     {language === 'fr'
                       ? 'Pacte Familial de Sécurité Numérique'
                       : language === 'en'
                       ? 'Family Digital Safety Pact'
                       : 'Pacto Familiar de Internet Seguro'}
                   </h3>
-                  <span className="text-[10px] text-emerald-700 font-medium">
+                  <span className="text-[11px] text-emerald-700 font-medium">
                     {language === 'fr'
                       ? 'Des engagements réciproques parents-enfants'
                       : language === 'en'
@@ -278,17 +278,17 @@ export const ParentStudyHub: React.FC = () => {
                 </div>
               </div>
 
-              <div className="text-right">
-                <span className="text-xs font-black text-emerald-800">
+              <div className="text-right shrink-0">
+                <span className="text-xs font-bold text-emerald-800 tabular-nums">
                   {agreementCount}/{agreementItems.length}
                 </span>
-                <span className="text-[9px] text-emerald-600 block">
+                <span className="text-[10px] text-emerald-600 block">
                   {language === 'fr' ? 'validés' : language === 'en' ? 'signed' : 'acordados'}
                 </span>
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 font-normal leading-relaxed">
               {language === 'fr'
                 ? 'Ce pacte repose sur la confiance et l\'écoute mutuelle, loin des interdictions strictes. Cochez ensemble les règles adoptées dans votre foyer.'
                 : language === 'en'
@@ -324,19 +324,19 @@ export const ParentStudyHub: React.FC = () => {
                         : 'border-slate-300 bg-white'
                     }`}
                   >
-                    {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    {isChecked && <Check className="w-3.5 h-3.5 stroke-[2.5]" />}
                   </div>
 
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-slate-900">
+                  <div className="flex-1 space-y-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-slate-900">
                         {item.title}
                       </span>
-                      <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-md">
+                      <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-md shrink-0">
                         {badgeLabel}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-600 font-normal leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -350,7 +350,12 @@ export const ParentStudyHub: React.FC = () => {
       {/* Guide Details Modal */}
       <AnimatePresence>
         {selectedGuide && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-0 sm:p-4">
+          <div
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-xs px-0 sm:px-4"
+            style={{
+              paddingTop: 'max(1rem, env(safe-area-inset-top, 0px))',
+            }}
+          >
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -359,28 +364,28 @@ export const ParentStudyHub: React.FC = () => {
             >
               {/* Modal Header */}
               <div className="p-4 bg-slate-50 border-b border-slate-100 flex items-start justify-between shrink-0">
-                <div className="flex items-start gap-3 flex-1 pr-2">
+                <div className="flex items-start gap-3 flex-1 pr-2 min-w-0">
                   <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
                     {getIconComponent(selectedGuide.category)}
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[9px] font-black uppercase text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-200">
+                      <span className="text-[10px] font-bold uppercase text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-200">
                         {selectedGuide.category}
                       </span>
-                      <span className="text-[10px] text-slate-400 flex items-center gap-1 font-medium">
+                      <span className="text-[11px] text-slate-400 flex items-center gap-1 font-medium">
                         <Clock className="w-3 h-3" />
                         {selectedGuide.readTime}
                       </span>
                     </div>
-                    <h2 className="text-sm font-black text-slate-900 leading-tight">
+                    <h2 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
                       {selectedGuide.title}
                     </h2>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedGuide(null)}
-                  className="w-8 h-8 rounded-full bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-500 cursor-pointer shrink-0"
+                  className="w-10 h-10 rounded-full bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-500 cursor-pointer shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -400,14 +405,14 @@ export const ParentStudyHub: React.FC = () => {
                         : 'El Riesgo Real para los Niños'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-rose-950 leading-relaxed font-medium">
+                  <p className="text-xs text-rose-950 leading-relaxed font-normal">
                     {selectedGuide.realRisk}
                   </p>
                 </div>
 
                 {/* Key Concepts */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                     <Lightbulb className="w-4 h-4 text-amber-500" />
                     <span>
                       {language === 'fr'
@@ -421,7 +426,7 @@ export const ParentStudyHub: React.FC = () => {
                     {selectedGuide.keyConcepts.map((kc, idx) => (
                       <div
                         key={idx}
-                        className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-[11px] text-slate-700 font-medium leading-relaxed"
+                        className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs text-slate-700 font-normal leading-relaxed"
                       >
                         {kc}
                       </div>
@@ -431,7 +436,7 @@ export const ParentStudyHub: React.FC = () => {
 
                 {/* Practical Steps / Checklist */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-cyan-600" />
                     <span>
                       {language === 'fr'
@@ -445,9 +450,9 @@ export const ParentStudyHub: React.FC = () => {
                     {selectedGuide.practicalSteps.map((step, idx) => (
                       <div
                         key={idx}
-                        className="p-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 flex items-start gap-2.5 text-[11px] text-slate-800 leading-relaxed"
+                        className="p-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 flex items-start gap-2.5 text-xs text-slate-800 font-normal leading-relaxed"
                       >
-                        <span className="w-4 h-4 rounded-full bg-cyan-600 text-white flex items-center justify-center text-[9px] font-black shrink-0 mt-0.5">
+                        <span className="w-5 h-5 rounded-full bg-cyan-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 tabular-nums">
                           {idx + 1}
                         </span>
                         <span>{step}</span>
@@ -458,14 +463,14 @@ export const ParentStudyHub: React.FC = () => {
 
                 {/* Conversation Starter */}
                 <div className="p-3.5 rounded-2xl bg-sky-50/80 border border-sky-200 space-y-1">
-                  <span className="text-[10px] font-black uppercase text-sky-800 block">
+                  <span className="text-[11px] font-bold uppercase text-sky-800 block">
                     {language === 'fr'
                       ? 'Question à Poser à la Maison :'
                       : language === 'en'
                       ? 'Dinner Conversation Starter:'
                       : 'Pregunta para Iniciar la Charla en Familia:'}
                   </span>
-                  <p className="text-xs text-sky-950 font-bold italic leading-relaxed">
+                  <p className="text-xs text-sky-950 font-semibold italic leading-relaxed">
                     "{selectedGuide.familyPrompt}"
                   </p>
                 </div>
@@ -474,14 +479,14 @@ export const ParentStudyHub: React.FC = () => {
                 <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[10px] font-black uppercase text-amber-800 block">
+                    <span className="text-[11px] font-bold uppercase text-amber-800 block">
                       {language === 'fr'
                         ? 'La Règle d\'Or'
                         : language === 'en'
                         ? 'The Golden Rule'
                         : 'La Regla de Oro'}
                     </span>
-                    <p className="text-xs text-amber-950 font-black leading-snug">
+                    <p className="text-xs text-amber-950 font-bold leading-snug">
                       {selectedGuide.goldenRule}
                     </p>
                   </div>
@@ -489,10 +494,13 @@ export const ParentStudyHub: React.FC = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end">
+              <div
+                className="px-4 pt-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end shrink-0"
+                style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}
+              >
                 <button
                   onClick={() => setSelectedGuide(null)}
-                  className="w-full py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition cursor-pointer text-center"
+                  className="w-full min-h-[44px] py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition cursor-pointer text-center"
                 >
                   {language === 'fr' ? 'Fermer la fiche' : language === 'en' ? 'Close guide' : 'Entendido, Cerrar Guía'}
                 </button>

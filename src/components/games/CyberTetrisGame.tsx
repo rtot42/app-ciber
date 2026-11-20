@@ -628,7 +628,7 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -642,7 +642,7 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-2.5 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none pb-4">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -658,13 +658,13 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
       />
 
       {/* Lines counter + Visual Next-Piece Preview */}
-      <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2 flex items-center justify-between text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-bold shrink-0">
         <span className="text-purple-700 tabular-nums">
           {copy.labels.lines}: {linesCleared}/{config.targetLines}
         </span>
 
-        <div className="flex items-center gap-2.5">
-          <span className="text-slate-500 text-xs">{copy.labels.next}:</span>
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.next}:</span>
           <div className="flex items-center gap-2 bg-slate-900 px-2.5 py-1.5 rounded-xl border border-slate-700">
             <div className="flex flex-col gap-[2px]">
               {nextPiece.matrix.map((row, rIdx) => (
@@ -683,7 +683,7 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
               ))}
             </div>
             <span
-              className="text-[11px] font-black tracking-wide"
+              className="text-[11px] font-bold tracking-wide"
               style={{ color: nextPiece.hi }}
             >
               {nextPiece.label}
@@ -692,24 +692,33 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
         </div>
       </div>
 
-      <div className="relative w-full max-w-[252px] mx-auto rounded-2xl overflow-hidden border-2 border-slate-400 bg-slate-950 shadow-xl shrink-0">
-        <canvas
-          ref={canvasRef}
-          style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}
-          className="w-full h-auto block"
-        />
+      <div
+        className="flex-1 min-h-[220px] w-full flex items-center justify-center"
+        style={{ containerType: 'size' }}
+      >
+        <div
+          style={{
+            width: `min(100cqw, calc(100cqh * ${CANVAS_W} / ${CANVAS_H}))`,
+            height: `min(100cqh, calc(100cqw * ${CANVAS_H} / ${CANVAS_W}))`,
+          }}
+          className="relative rounded-2xl overflow-hidden border-2 border-slate-400 bg-slate-950 shadow-xl"
+        >
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full block"
+          />
 
         {phase === 'TITLE' && (
           <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 border-2 border-purple-200 shadow-lg flex items-center justify-center">
-              <Layers className="w-7 h-7 text-white" />
+            <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 border-2 border-purple-200 shadow-lg flex items-center justify-center">
+              <Layers className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-base font-black">{copy.labels.startTitle}</h3>
-            <p className="text-xs text-sky-100 leading-relaxed">{copy.labels.startDesc}</p>
+            <h3 className="text-base font-bold">{copy.labels.startTitle}</h3>
+            <p className="text-xs text-sky-100 font-normal leading-relaxed">{copy.labels.startDesc}</p>
             <button
               type="button"
               onClick={startGame}
-              className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-black text-xs sm:text-sm shadow-lg flex items-center gap-1.5 cursor-pointer active:scale-95 transition"
+              className="min-h-[42px] px-5 py-2 rounded-2xl bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold text-xs sm:text-sm shadow-lg flex items-center gap-1.5 cursor-pointer active:scale-95 transition"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>{copy.labels.playBtn}</span>
@@ -719,25 +728,26 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
 
         {phase === 'GAME_OVER' && (
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
-              <ShieldAlert className="w-7 h-7 text-rose-400" />
+            <div className="w-13 h-13 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
+              <ShieldAlert className="w-6 h-6 text-rose-400" />
             </div>
-            <h3 className="text-base font-black text-rose-300">{copy.labels.gameOverTitle}</h3>
-            <p className="text-xs text-slate-200">{copy.labels.gameOverDesc}</p>
+            <h3 className="text-base font-bold text-rose-300">{copy.labels.gameOverTitle}</h3>
+            <p className="text-xs text-slate-200 font-normal">{copy.labels.gameOverDesc}</p>
             <button
               type="button"
               onClick={startGame}
-              className="px-5 py-2.5 rounded-2xl bg-cyan-500 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer active:scale-95 transition"
+              className="min-h-[42px] px-5 py-2 rounded-2xl bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* Touch Arcade Controls */}
-      <div className="w-full max-w-sm mx-auto grid grid-cols-5 gap-2 shrink-0 select-none">
+      <div className="w-full max-w-md mx-auto grid grid-cols-5 gap-2 shrink-0 select-none">
         <button
           type="button"
           onPointerDown={() => moveHorizontal(-1)}
@@ -773,7 +783,7 @@ export const CyberTetrisGame: React.FC<CyberTetrisGameProps> = ({
         <button
           type="button"
           onPointerDown={hardDrop}
-          className="h-12 rounded-2xl bg-cyan-600 active:bg-cyan-500 text-white font-black text-xs flex items-center justify-center gap-1 shadow-xs cursor-pointer touch-none"
+          className="h-12 rounded-2xl bg-cyan-600 active:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-xs cursor-pointer touch-none"
         >
           <ChevronsDown className="w-4 h-4" />
           <span>{copy.labels.drop}</span>

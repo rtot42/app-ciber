@@ -631,7 +631,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -645,7 +645,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -665,28 +665,28 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-4"
+        className="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-xs flex flex-col justify-center gap-3.5"
       >
         <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-3xl shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-2xl shrink-0">
               {currentCase.emoji}
             </div>
             <div className="min-w-0">
-              <h3 className="text-base sm:text-lg font-black text-slate-900 truncate">
+              <h3 className="text-base font-bold text-slate-900 leading-snug break-words">
                 {currentCase.appName}
               </h3>
-              <div className="flex items-center gap-2 text-xs font-bold mt-0.5">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-semibold mt-0.5">
                 <span className="text-slate-500">{currentCase.category}</span>
                 <span aria-hidden="true">·</span>
                 {currentCase.verifiedPublisher ? (
                   <span className="text-emerald-700 flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
                     {copy.labels.verified}
                   </span>
                 ) : (
                   <span className="text-rose-600 flex items-center gap-1">
-                    <ShieldAlert className="w-3.5 h-3.5" />
+                    <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
                     {copy.labels.unverified}
                   </span>
                 )}
@@ -706,7 +706,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
             return (
               <div
                 key={perm.id}
-                className={`p-3.5 rounded-2xl border transition-colors ${
+                className={`p-3 rounded-2xl border transition-colors ${
                   isCorrect
                     ? 'bg-emerald-50/70 border-emerald-200'
                     : isWrong
@@ -714,23 +714,23 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
                     : 'bg-slate-50 border-slate-200/80'
                 }`}
               >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 shrink-0">
+                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                    <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 shrink-0">
                       {renderPermIcon(perm.icon)}
                     </div>
-                    <span className="text-sm font-bold text-slate-900 leading-snug">
+                    <span className="text-xs sm:text-sm font-semibold text-slate-900 leading-snug break-words">
                       {perm.label}
                     </span>
                   </div>
 
                   {/* Segmented Allow / Deny Switch */}
-                  <div className="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl shrink-0">
+                  <div className="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl shrink-0 ml-auto">
                     <button
                       type="button"
                       disabled={submitted}
                       onClick={() => togglePerm(perm.id, false)}
-                      className={`px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer min-h-[36px] ${
+                      className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[38px] ${
                         !val
                           ? 'bg-rose-600 text-white shadow-2xs'
                           : 'text-slate-500 hover:text-slate-800'
@@ -742,7 +742,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
                       type="button"
                       disabled={submitted}
                       onClick={() => togglePerm(perm.id, true)}
-                      className={`px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer min-h-[36px] ${
+                      className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[38px] ${
                         val
                           ? 'bg-emerald-600 text-white shadow-2xs'
                           : 'text-slate-500 hover:text-slate-800'
@@ -772,7 +772,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
 
         {/* Summary Feedback */}
         {submitted && (
-          <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-200 text-xs sm:text-sm font-bold text-sky-950">
+          <div className="p-3 rounded-2xl bg-sky-50 border border-sky-200 text-xs sm:text-sm font-semibold text-sky-950">
             {currentCase.permissions.every((p) => (decisions[p.id] ?? false) === p.needed)
               ? copy.labels.perfectMsg
               : copy.labels.partialMsg(
@@ -788,7 +788,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
         <button
           type="button"
           onClick={handleAudit}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <ShieldCheck className="w-5 h-5" />
           <span>{copy.labels.verifyBtn}</span>
@@ -797,7 +797,7 @@ export const AppPermissionsGame: React.FC<AppPermissionsGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

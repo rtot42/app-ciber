@@ -352,7 +352,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -371,7 +371,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
       (verdict === 'safe' && !current.isPhishing));
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -391,26 +391,26 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-5"
+        className="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs flex flex-col justify-center gap-4"
       >
         {/* Browser Header */}
-        <div className="flex items-center justify-between text-xs font-bold text-slate-500">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-500">
           <span className="flex items-center gap-1.5">
-            <Search className="w-4 h-4 text-amber-600" />
+            <Search className="w-4 h-4 text-amber-600 shrink-0" />
             <span>{copy.labels.browserTitle}</span>
           </span>
           <span className="text-slate-400">{current.context}</span>
         </div>
 
         {/* Realistic Address Bar */}
-        <div className="rounded-2xl bg-slate-900 p-4 text-white space-y-3">
-          <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-3 font-mono text-sm sm:text-base overflow-x-auto">
+        <div className="rounded-2xl bg-slate-900 p-3.5 sm:p-4 text-white space-y-3">
+          <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 font-mono text-xs sm:text-sm overflow-x-auto">
             {current.protocol === 'https://' ? (
               <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
             ) : (
               <Unlock className="w-4 h-4 text-rose-400 shrink-0" />
             )}
-            <div className="flex items-center flex-wrap gap-y-1">
+            <div className="flex items-center flex-wrap gap-y-1 break-all">
               <span
                 className={
                   current.protocol === 'http://' ? 'text-rose-300 font-bold' : 'text-emerald-300'
@@ -421,7 +421,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
               {current.subdomain && (
                 <span className="text-slate-300">{current.subdomain}</span>
               )}
-              <span className="text-amber-300 font-black underline decoration-amber-400/60 underline-offset-4">
+              <span className="text-amber-300 font-bold underline decoration-amber-400/60 underline-offset-4">
                 {current.domain}
               </span>
               <span className="text-slate-400">{current.path}</span>
@@ -431,37 +431,37 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
           {/* URL Anatomy Breakdown */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
             <div className="bg-slate-800/80 rounded-xl p-2 border border-slate-700/70">
-              <div className="text-slate-400 font-bold">{copy.labels.protocolTag}</div>
-              <div className="font-mono font-bold text-white truncate">{current.protocol}</div>
+              <div className="text-slate-400 font-semibold">{copy.labels.protocolTag}</div>
+              <div className="font-mono font-bold text-white break-all leading-tight mt-0.5">{current.protocol}</div>
             </div>
             <div className="bg-slate-800/80 rounded-xl p-2 border border-slate-700/70">
-              <div className="text-slate-400 font-bold">{copy.labels.subdomainTag}</div>
-              <div className="font-mono font-bold text-slate-200 truncate">
+              <div className="text-slate-400 font-semibold">{copy.labels.subdomainTag}</div>
+              <div className="font-mono font-bold text-slate-200 break-all leading-tight mt-0.5">
                 {current.subdomain || '—'}
               </div>
             </div>
             <div className="bg-slate-800/80 rounded-xl p-2 border border-amber-500/40">
-              <div className="text-amber-300 font-bold">{copy.labels.rootDomainTag}</div>
-              <div className="font-mono font-black text-amber-200 truncate">{current.domain}</div>
+              <div className="text-amber-300 font-semibold">{copy.labels.rootDomainTag}</div>
+              <div className="font-mono font-bold text-amber-200 break-all leading-tight mt-0.5">{current.domain}</div>
             </div>
             <div className="bg-slate-800/80 rounded-xl p-2 border border-slate-700/70">
-              <div className="text-slate-400 font-bold">{copy.labels.pathTag}</div>
-              <div className="font-mono font-bold text-slate-300 truncate">{current.path}</div>
+              <div className="text-slate-400 font-semibold">{copy.labels.pathTag}</div>
+              <div className="font-mono font-bold text-slate-300 break-all leading-tight mt-0.5">{current.path}</div>
             </div>
           </div>
         </div>
 
-        <div className="text-xs sm:text-sm font-bold text-slate-600 text-center">
+        <div className="text-xs sm:text-sm font-semibold text-slate-600 text-center">
           {copy.labels.segmentPrompt}
         </div>
 
         {/* Choice Buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
           <button
             type="button"
             disabled={!!verdict}
             onClick={() => handleDecision('safe')}
-            className={`py-4 px-3 rounded-2xl border-2 font-black text-sm flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97] ${
+            className={`py-3.5 min-h-[60px] px-3 rounded-2xl border-2 font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97] ${
               verdict === 'safe'
                 ? !current.isPhishing
                   ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
@@ -469,7 +469,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
                 : 'bg-emerald-50/70 hover:bg-emerald-100 border-emerald-200 text-emerald-800'
             }`}
           >
-            <ShieldCheck className="w-6 h-6 text-emerald-600" />
+            <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>{copy.labels.safeBtn}</span>
           </button>
 
@@ -477,7 +477,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
             type="button"
             disabled={!!verdict}
             onClick={() => handleDecision('phishing')}
-            className={`py-4 px-3 rounded-2xl border-2 font-black text-sm flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97] ${
+            className={`py-3.5 min-h-[60px] px-3 rounded-2xl border-2 font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.97] ${
               verdict === 'phishing'
                 ? current.isPhishing
                   ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
@@ -485,7 +485,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
                 : 'bg-rose-50/70 hover:bg-rose-100 border-rose-200 text-rose-800'
             }`}
           >
-            <AlertTriangle className="w-6 h-6 text-rose-600" />
+            <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0" />
             <span>{copy.labels.phishBtn}</span>
           </button>
         </div>
@@ -495,17 +495,17 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-4 rounded-2xl border text-xs sm:text-sm space-y-1 ${
+            className={`p-3.5 rounded-2xl border text-xs sm:text-sm space-y-1 ${
               isAnswerCorrect
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
                 : 'bg-amber-50 border-amber-200 text-amber-950'
             }`}
           >
-            <div className="font-black flex items-center gap-1.5">
+            <div className="font-bold flex items-center gap-1.5">
               {isAnswerCorrect ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               ) : (
-                <XCircle className="w-4 h-4 text-amber-600" />
+                <XCircle className="w-4 h-4 text-amber-600 shrink-0" />
               )}
               <span>{isAnswerCorrect ? copy.labels.correctLabel : copy.labels.wrongLabel}</span>
             </div>
@@ -518,7 +518,7 @@ export const UrlInspectorGame: React.FC<UrlInspectorGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

@@ -167,15 +167,15 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
   };
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none p-4 sm:p-6 space-y-5 sm:space-y-6 pb-28">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none px-4 sm:px-5 pt-3.5 pb-6 space-y-4">
       {/* Education Screen Header Card */}
-      <section className="shrink-0 w-full rounded-3xl p-5 sm:p-7 bg-gradient-to-br from-cyan-600 via-sky-600 to-blue-700 text-white shadow-sm relative overflow-hidden space-y-4">
-        <div className="absolute top-0 right-0 w-44 h-44 bg-white/10 rounded-full blur-2xl -mr-12 -mt-12 pointer-events-none" />
+      <section className="shrink-0 w-full rounded-2xl sm:rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-cyan-600 via-sky-600 to-blue-700 text-white shadow-sm relative overflow-hidden space-y-3.5">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
 
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs sm:text-sm font-bold text-white">
-              <GraduationCap className="w-4.5 h-4.5" />
+        <div className="relative z-10 flex items-start justify-between gap-3">
+          <div className="space-y-1.5 min-w-0 flex-1">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold text-white">
+              <GraduationCap className="w-4 h-4 shrink-0" />
               <span>
                 {language === 'fr'
                   ? 'Académie de Cybersécurité'
@@ -185,14 +185,14 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight">
               {language === 'fr'
                 ? 'Apprends les Réflexes Futés'
                 : language === 'es'
                 ? 'Aprende los Conceptos Clave'
                 : 'Learn Smart Cyber Skills'}
             </h1>
-            <p className="text-sm sm:text-base text-cyan-100 leading-relaxed max-w-sm font-medium">
+            <p className="text-xs sm:text-sm text-cyan-100 leading-relaxed max-w-sm font-medium">
               {language === 'fr'
                 ? 'Comprends les rouages d’Internet avec des métaphores simples et des règles claires.'
                 : language === 'es'
@@ -201,19 +201,19 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
             </p>
           </div>
 
-          <div className="shrink-0 text-center bg-white/15 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20">
-            <span className="block text-xl sm:text-2xl font-black text-white">
+          <div className="shrink-0 text-center bg-white/15 backdrop-blur-md rounded-2xl px-3 py-2.5 border border-white/20">
+            <span className="block text-lg sm:text-xl font-bold text-white tabular-nums">
               {completedConceptIds.length} / {CYBER_CONCEPTS_DATA.length}
             </span>
-            <span className="text-xs text-cyan-100 font-black uppercase tracking-wider">
+            <span className="text-[11px] text-cyan-100 font-bold uppercase tracking-wider">
               {language === 'fr' ? 'Appris' : language === 'es' ? 'Aprendidos' : 'Mastered'}
             </span>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="pt-2 border-t border-white/20 flex items-center justify-between gap-4">
-          <div className="flex-1 h-3 bg-white/20 rounded-full overflow-hidden">
+        <div className="pt-2 border-t border-white/20 flex items-center justify-between gap-3">
+          <div className="flex-1 h-2.5 bg-white/20 rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{
@@ -222,8 +222,8 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
               className="h-full bg-amber-400 rounded-full"
             />
           </div>
-          <span className="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5 shrink-0">
-            <Sparkles className="w-4 h-4" />
+          <span className="text-xs font-bold text-amber-300 flex items-center gap-1 shrink-0 tabular-nums">
+            <Sparkles className="w-3.5 h-3.5" />
             +{completedConceptIds.length * 15} XP
           </span>
         </div>
@@ -232,8 +232,8 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
       {/* Cyber Tip of the Day */}
       <section className="shrink-0 space-y-2 w-full">
         <div className="flex items-center gap-2 px-1">
-          <Lightbulb className="w-4.5 h-4.5 text-amber-500" />
-          <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-700">
+          <Lightbulb className="w-4 h-4 text-amber-500" />
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-700">
             {language === 'fr'
               ? 'Conseil Rapide du Jour'
               : language === 'es'
@@ -245,28 +245,28 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
       </section>
 
       {/* Topics Filter Category Row */}
-      <section className="shrink-0 space-y-3 w-full">
+      <section className="shrink-0 space-y-2.5 w-full">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-700">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-700">
             {language === 'fr'
               ? 'Leçons & Superpouvoirs'
               : language === 'es'
               ? 'Lecciones & Superpoderes'
               : 'Lessons & Superpowers'}
           </h2>
-          <span className="text-xs font-semibold text-slate-400">
+          <span className="text-xs font-semibold text-slate-400 tabular-nums">
             {filteredConcepts.length} {language === 'fr' ? 'sujets' : language === 'es' ? 'temas' : 'topics'}
           </span>
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none w-full">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none w-full">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`shrink-0 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer border ${
+                className={`shrink-0 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer border ${
                   isSelected
                     ? 'bg-cyan-600 border-cyan-600 text-white shadow-xs'
                     : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
@@ -280,7 +280,7 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
       </section>
 
       {/* Educational Concepts Cards List */}
-      <div className="shrink-0 space-y-5">
+      <div className="shrink-0 space-y-3.5">
         {filteredConcepts.map((concept, index) => {
           const isExpanded = expandedConceptId === concept.id;
           const isCompleted = completedConceptIds.includes(concept.id);
@@ -292,7 +292,7 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.04 }}
-              className={`rounded-3xl border transition-all overflow-hidden ${
+              className={`rounded-2xl sm:rounded-3xl border transition-all overflow-hidden ${
                 isCompleted
                   ? 'bg-white border-emerald-200/90 shadow-sm'
                   : 'bg-white border-slate-200/90 shadow-sm'
@@ -303,11 +303,11 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                 onClick={() =>
                   setExpandedConceptId(isExpanded ? null : concept.id)
                 }
-                className="p-5 sm:p-6 flex items-start justify-between gap-4 cursor-pointer hover:bg-slate-50/50 transition select-none"
+                className="p-4 flex items-start justify-between gap-3 cursor-pointer hover:bg-slate-50/50 transition select-none"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3 min-w-0 flex-1">
                   <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-xs relative"
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs relative"
                     style={{
                       backgroundColor: `${concept.categoryColor}18`,
                       border: `2px solid ${concept.categoryColor}40`,
@@ -315,16 +315,16 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                   >
                     {getConceptIcon(concept.icon)}
                     {isCompleted && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white text-xs">
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white text-[10px]">
+                        <Check className="w-3 h-3 stroke-[3]" />
                       </span>
                     )}
                   </div>
 
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-0.5 min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-x-1.5 text-[11px] sm:text-xs">
                       <span
-                        className="text-xs font-black uppercase tracking-wider"
+                        className="font-bold uppercase tracking-wider"
                         style={{ color: concept.categoryColor }}
                       >
                         {getText(concept.categoryLabel)}
@@ -332,8 +332,8 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                       {isCompleted && (
                         <>
                           <span className="text-slate-300">•</span>
-                          <span className="text-xs font-black text-emerald-600 flex items-center gap-1">
-                            <CheckCircle2 className="w-4 h-4" />
+                          <span className="font-bold text-emerald-600 flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                             {language === 'fr'
                               ? 'Appris'
                               : language === 'es'
@@ -344,7 +344,7 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                       )}
                     </div>
 
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                       {getText(concept.title)}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
@@ -363,13 +363,13 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
               </div>
 
               {/* Kid-Friendly Metaphor Highlight */}
-              <div className="px-5 pb-5 pt-0">
-                <div className="rounded-2xl p-4 bg-amber-50/70 border border-amber-200/70 flex items-start gap-3 text-xs text-amber-950">
-                  <span className="text-2xl shrink-0 leading-none">
+              <div className="px-4 pb-4 pt-0">
+                <div className="rounded-2xl p-3.5 bg-amber-50/75 border border-amber-200/70 flex items-start gap-2.5 text-xs text-amber-950">
+                  <span className="text-xl shrink-0 leading-none">
                     {concept.metaphor.emoji}
                   </span>
-                  <div className="space-y-1">
-                    <span className="font-black block text-amber-900 text-xs uppercase tracking-wide">
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="font-bold block text-amber-900 text-[11px] uppercase tracking-wide">
                       {language === 'fr'
                         ? 'La Métaphore Magique :'
                         : language === 'es'
@@ -391,11 +391,11 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="border-t border-slate-100 bg-slate-50/50 p-5 sm:p-6 space-y-5"
+                    className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-4"
                   >
                     {/* Clear Concept Explanation */}
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <div className="space-y-1.5">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                         <Shield className="w-4 h-4 text-cyan-600" />
                         <span>
                           {language === 'fr'
@@ -405,14 +405,14 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                             : 'Simple Explanation'}
                         </span>
                       </h4>
-                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white rounded-2xl p-4 border border-slate-200/80">
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white rounded-2xl p-3.5 border border-slate-200/80 font-medium">
                         {getText(concept.explanation)}
                       </p>
                     </div>
 
                     {/* Golden Rule of the Guardian */}
-                    <div className="rounded-2xl p-4 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/80 space-y-1.5">
-                      <div className="flex items-center gap-2 text-amber-900 font-black text-xs uppercase tracking-wider">
+                    <div className="rounded-2xl p-3.5 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/80 space-y-1">
+                      <div className="flex items-center gap-1.5 text-amber-900 font-bold text-xs uppercase tracking-wider">
                         <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                         <span>
                           {language === 'fr'
@@ -422,18 +422,18 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                             : 'Guardian Golden Rule'}
                         </span>
                       </div>
-                      <p className="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed pl-6">
+                      <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed pl-5.5">
                         {getText(concept.goldenRule)}
                       </p>
                     </div>
 
                     {/* Real-World Scenario */}
-                    <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-5 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-black uppercase tracking-wider text-cyan-700">
+                    <div className="rounded-2xl bg-white border border-slate-200 p-3.5 sm:p-4 space-y-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-cyan-700">
                           {getText(concept.realWorldScenario.context)}
                         </span>
-                        <span className="text-xs font-semibold text-slate-400">
+                        <span className="text-xs font-semibold text-slate-400 shrink-0">
                           {language === 'fr'
                             ? 'Cas Réel'
                             : language === 'es'
@@ -447,18 +447,18 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                           👉 {getText(concept.realWorldScenario.whatHappens)}
                         </p>
 
-                        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold text-xs sm:text-sm leading-relaxed">
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold text-xs sm:text-sm leading-relaxed">
                           🛡️ {getText(concept.realWorldScenario.smartAction)}
                         </div>
                       </div>
                     </div>
 
                     {/* Mini Quick Quiz for Comprehension */}
-                    <div className="rounded-2xl bg-white border border-slate-200 p-4 sm:p-5 space-y-4">
+                    <div className="rounded-2xl bg-white border border-slate-200 p-3.5 sm:p-4 space-y-3">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <Zap className="w-4 h-4 text-amber-500" />
-                          <span className="text-xs sm:text-sm font-black text-slate-900">
+                          <span className="text-xs sm:text-sm font-bold text-slate-900">
                             {language === 'fr'
                               ? 'Mini Quiz de Vérification'
                               : language === 'es'
@@ -466,7 +466,7 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                               : 'Quick Check Quiz'}
                           </span>
                         </div>
-                        <span className="text-xs font-black text-amber-700">
+                        <span className="text-xs font-bold text-amber-700 tabular-nums">
                           +{concept.xpReward} XP
                         </span>
                       </div>
@@ -475,7 +475,7 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                         {getText(concept.quickQuiz.question)}
                       </p>
 
-                      <div className="space-y-2.5">
+                      <div className="space-y-2">
                         {concept.quickQuiz.options.map((option) => {
                           const isSelected = userAnswer === option.id;
                           const showResult = Boolean(userAnswer);
@@ -499,7 +499,7 @@ export const EducationScreen: React.FC<EducationScreenProps> = ({
                                 onClick={() =>
                                   handleSelectAnswer(concept, option.id)
                                 }
-                                className={`w-full text-left p-3 rounded-xl border text-xs sm:text-sm font-medium transition cursor-pointer disabled:cursor-default flex items-start gap-2.5 ${buttonStyle}`}
+                                className={`w-full min-h-[44px] text-left p-3 rounded-xl border text-xs sm:text-sm font-medium transition cursor-pointer disabled:cursor-default flex items-start gap-2.5 ${buttonStyle}`}
                               >
                                 <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center shrink-0 mt-0.5 text-[10px]">
                                   {isSelected ? '✓' : ''}

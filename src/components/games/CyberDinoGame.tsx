@@ -681,7 +681,7 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -695,7 +695,7 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-2.5 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none pb-4">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -709,9 +709,9 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
         accuracy={accuracy}
       />
 
-      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm font-bold shrink-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-slate-500 text-xs">{copy.labels.shields}:</span>
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.shields}:</span>
           {Array.from({ length: config.maxHearts }).map((_, idx) => (
             <Heart
               key={idx}
@@ -730,27 +730,36 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
         </div>
       </div>
 
-      <div className="relative w-full max-w-[480px] mx-auto rounded-3xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-lg shrink-0">
-        <canvas
-          ref={canvasRef}
-          onPointerDown={triggerJump}
-          style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}
-          className="w-full h-auto block touch-none cursor-pointer"
-        />
+      <div
+        className="flex-1 min-h-[200px] w-full flex items-center justify-center"
+        style={{ containerType: 'size' }}
+      >
+        <div
+          style={{
+            width: `min(100cqw, calc(100cqh * ${CANVAS_W} / ${CANVAS_H}))`,
+            height: `min(100cqh, calc(100cqw * ${CANVAS_H} / ${CANVAS_W}))`,
+          }}
+          className="relative rounded-3xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-lg"
+        >
+          <canvas
+            ref={canvasRef}
+            onPointerDown={triggerJump}
+            className="w-full h-full block touch-none cursor-pointer"
+          />
 
         {phase === 'TITLE' && (
           <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 border-2 border-emerald-200 shadow-lg flex items-center justify-center">
-              <Zap className="w-7 h-7 text-white fill-white" />
+            <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 border-2 border-emerald-200 shadow-lg flex items-center justify-center">
+              <Zap className="w-6 h-6 text-white fill-white" />
             </div>
-            <h3 className="text-lg font-black">{copy.labels.startTitle}</h3>
-            <p className="text-xs sm:text-sm text-sky-100 max-w-sm leading-relaxed">
+            <h3 className="text-base sm:text-lg font-bold">{copy.labels.startTitle}</h3>
+            <p className="text-xs sm:text-sm text-sky-100 font-normal max-w-sm leading-relaxed">
               {copy.labels.startDesc}
             </p>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-black text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>{copy.labels.playBtn}</span>
@@ -760,25 +769,26 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
 
         {phase === 'GAME_OVER' && (
           <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
-              <ShieldAlert className="w-7 h-7 text-rose-400" />
+            <div className="w-13 h-13 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center">
+              <ShieldAlert className="w-6 h-6 text-rose-400" />
             </div>
-            <h3 className="text-lg font-black text-rose-300">{copy.labels.gameOverTitle}</h3>
-            <p className="text-xs sm:text-sm text-slate-200 max-w-xs">{copy.labels.gameOverDesc}</p>
+            <h3 className="text-base sm:text-lg font-bold text-rose-300">{copy.labels.gameOverTitle}</h3>
+            <p className="text-xs sm:text-sm text-slate-200 font-normal max-w-xs">{copy.labels.gameOverDesc}</p>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-2.5 rounded-2xl bg-cyan-500 text-white font-black text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-cyan-500 text-white font-bold text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* Large Jump & Duck Controls */}
-      <div className="w-full max-w-[480px] mx-auto grid grid-cols-2 gap-3 shrink-0 select-none">
+      <div className="w-full max-w-2xl mx-auto grid grid-cols-2 gap-3 shrink-0 select-none">
         {config.allowAerial ? (
           <button
             type="button"
@@ -786,13 +796,13 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
             onPointerUp={() => setDuck(false)}
             onPointerLeave={() => setDuck(false)}
             onPointerCancel={() => setDuck(false)}
-            className="h-14 rounded-2xl bg-white border-2 border-slate-200 active:bg-slate-100 text-slate-800 font-black text-sm flex items-center justify-center gap-2 shadow-sm cursor-pointer touch-none"
+            className="h-13 rounded-2xl bg-white border-2 border-slate-200 active:bg-slate-100 text-slate-800 font-bold text-sm flex items-center justify-center gap-2 shadow-sm cursor-pointer touch-none"
           >
             <ArrowDown className="w-5 h-5" />
             <span>{copy.labels.duck}</span>
           </button>
         ) : (
-          <div className="h-14 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 text-xs font-bold flex items-center justify-center">
+          <div className="h-13 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 text-xs font-bold tabular-nums flex items-center justify-center">
             {copy.labels.best}: {bestDistance}m
           </div>
         )}
@@ -800,9 +810,9 @@ export const CyberDinoGame: React.FC<CyberDinoGameProps> = ({
         <button
           type="button"
           onPointerDown={triggerJump}
-          className="h-14 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-600 active:scale-[0.98] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-md cursor-pointer touch-none"
+          className="h-13 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-600 active:scale-[0.98] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-md cursor-pointer touch-none"
         >
-          <ArrowUp className="w-6 h-6 stroke-[2.75]" />
+          <ArrowUp className="w-5 h-5 stroke-[2.5]" />
           <span>{copy.labels.jump}</span>
         </button>
       </div>

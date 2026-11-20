@@ -662,7 +662,7 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={scenario.title}
           takeaway={scenario.takeaway}
@@ -678,7 +678,7 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({
   const currentChoices = scenario.steps[step]?.choices || [];
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={scenario.title}
         subtitle={scenario.subtitle}
@@ -693,16 +693,16 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({
       />
 
       {/* Simulated Chat Thread */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 flex-1 flex flex-col justify-between min-h-[300px] space-y-3">
+      <div className="bg-white rounded-3xl p-3.5 sm:p-5 shadow-xs border border-slate-200/80 flex-1 min-h-[280px] flex flex-col justify-between gap-3">
         {/* Contact Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
+        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
               <ShieldAlert className="w-5 h-5 text-slate-500" />
             </div>
-            <div>
-              <div className="text-sm font-black text-slate-900">{scenario.contactName}</div>
-              <div className="text-xs text-slate-500">{scenario.contactSub}</div>
+            <div className="min-w-0">
+              <div className="text-sm font-bold text-slate-900 truncate">{scenario.contactName}</div>
+              <div className="text-xs text-slate-500 truncate">{scenario.contactSub}</div>
             </div>
           </div>
 
@@ -710,7 +710,7 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({
             type="button"
             onClick={handleEmergencyBlock}
             disabled={blockedEarly}
-            className="text-xs font-black px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 flex items-center gap-1.5 cursor-pointer active:scale-95 transition"
+            className="text-xs font-bold px-3 py-2 min-h-[38px] rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 flex items-center gap-1.5 cursor-pointer active:scale-95 transition shrink-0"
           >
             <UserX className="w-4 h-4" />
             <span>{scenario.blockBtn}</span>
@@ -733,12 +733,12 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({
               }`}
             >
               {m.sender === 'system' ? (
-                <div className="px-3 py-1 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-bold text-center">
+                <div className="px-3 py-1 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-semibold text-center">
                   {m.text}
                 </div>
               ) : (
                 <div
-                  className={`max-w-[85%] p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-[85%] p-3 rounded-2xl text-xs sm:text-sm leading-relaxed ${
                     m.sender === 'me'
                       ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-br-none shadow-xs'
                       : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200/70'
@@ -784,7 +784,7 @@ export const ChatSimGame: React.FC<ChatSimGameProps> = ({
                 key={i}
                 type="button"
                 onClick={() => handleChoose(c)}
-                className="w-full text-left p-3.5 rounded-2xl bg-slate-50 hover:bg-sky-50 border-2 border-slate-200 hover:border-sky-300 text-xs sm:text-sm font-bold text-slate-800 transition flex items-center justify-between gap-2 cursor-pointer active:scale-[0.98]"
+                className="w-full text-left p-3.5 min-h-[48px] rounded-2xl bg-slate-50 hover:bg-sky-50 border-2 border-slate-200 hover:border-sky-300 text-xs sm:text-sm font-semibold text-slate-800 transition flex items-center justify-between gap-2 cursor-pointer active:scale-[0.98]"
               >
                 <span className="leading-snug">{c.text}</span>
                 <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />

@@ -145,14 +145,18 @@ export const LevelUpCelebrationModal: React.FC<LevelUpCelebrationModalProps> = (
       role="dialog"
       aria-modal="true"
       aria-label={loc.banner}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-modal-backdrop select-none overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center px-3.5 bg-slate-950/80 backdrop-blur-md animate-modal-backdrop select-none overflow-y-auto"
+      style={{
+        paddingTop: 'max(1rem, env(safe-area-inset-top, 0px))',
+        paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))',
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       {/* Sunburst Rays Background (CSS Animation) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-35 sm:opacity-40">
-        <div className="w-[520px] h-[520px] sm:w-[650px] sm:h-[650px] rounded-full animate-sunburst bg-[radial-gradient(circle,rgba(245,158,11,0.45)_0%,rgba(14,165,233,0.35)_40%,transparent_75%)]" />
+        <div className="w-[460px] h-[460px] sm:w-[600px] sm:h-[600px] rounded-full animate-sunburst bg-[radial-gradient(circle,rgba(245,158,11,0.45)_0%,rgba(14,165,233,0.35)_40%,transparent_75%)]" />
       </div>
 
       {/* Floating CSS Particle Sparkles */}
@@ -196,17 +200,17 @@ export const LevelUpCelebrationModal: React.FC<LevelUpCelebrationModalProps> = (
       </div>
 
       {/* Main Celebratory Modal Card (CSS Keyframe Entrance) */}
-      <div className="relative w-full max-w-[390px] rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/98 to-slate-950 border-2 border-amber-400/50 shadow-2xl p-5 sm:p-6 text-white overflow-hidden animate-level-up-card z-10">
+      <div className="relative w-full max-w-[360px] rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/98 to-slate-950 border-2 border-amber-400/50 shadow-2xl p-4 sm:p-5 text-white overflow-hidden animate-level-up-card z-10">
         {/* Top Decorative Amber Glow Bar */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-yellow-300 to-cyan-400 shadow-sm" />
 
         {/* Close Button & Replay Chime Sound */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-1.5">
           <button
             type="button"
             onClick={playCelebratoryFanfare}
             title={loc.soundTooltip}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xs text-amber-300 transition cursor-pointer border border-amber-400/20"
+            className="min-h-[38px] flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-xs text-amber-300 transition cursor-pointer border border-amber-400/20"
           >
             <Volume2 className="w-3.5 h-3.5" />
             <span className="text-[11px] font-bold">Audio</span>
@@ -216,46 +220,46 @@ export const LevelUpCelebrationModal: React.FC<LevelUpCelebrationModalProps> = (
             type="button"
             onClick={onClose}
             aria-label={loc.closeAria}
-            className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 active:scale-90 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer border border-white/10"
+            className="w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700 active:scale-90 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer border border-white/10"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Celebratory Banner Ribbon (CSS Sway Animation) */}
-        <div className="text-center pt-1 animate-ribbon">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/60 text-amber-300 text-xs font-black tracking-wider uppercase mb-1.5 shadow-xs">
+        <div className="text-center pt-0.5 animate-ribbon">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/60 text-amber-300 text-xs font-bold tracking-wider uppercase mb-1 shadow-xs">
             <Crown className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-twinkle" />
             <span>{loc.banner}</span>
           </div>
 
-          <p className="text-xs text-slate-300 leading-relaxed px-1 mt-1">
+          <p className="text-xs text-slate-300 leading-relaxed px-1 mt-1 font-medium">
             {loc.subtitle}
           </p>
         </div>
 
         {/* Central Celebratory Emblem: Mascot + Pulsing Glow + Level Badge */}
-        <div className="relative flex flex-col items-center justify-center my-4 py-1">
+        <div className="relative flex flex-col items-center justify-center my-3 py-1">
           {/* Radial Glow Aura (CSS Pulse Animation) */}
-          <div className="absolute w-36 h-36 rounded-full bg-gradient-to-tr from-amber-500/40 via-yellow-400/30 to-cyan-400/35 blur-xl animate-pulse-glow pointer-events-none" />
+          <div className="absolute w-32 h-32 rounded-full bg-gradient-to-tr from-amber-500/40 via-yellow-400/30 to-cyan-400/35 blur-xl animate-pulse-glow pointer-events-none" />
 
           {/* Central 3D Shield Badge with Shine Sweep */}
-          <div className="relative w-28 h-28 rounded-3xl bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-1 shadow-xl border-2 border-yellow-200/90 flex items-center justify-center overflow-hidden">
+          <div className="relative w-24 h-24 rounded-3xl bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-1 shadow-xl border-2 border-yellow-200/90 flex items-center justify-center overflow-hidden">
             {/* Diagonal Light Sweep (CSS Keyframe Sweep) */}
             <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none animate-badge-shine" />
 
             {/* Inner Dark Badge Face */}
-            <div className="w-full h-full rounded-[22px] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center relative p-2 text-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-300/90">
+            <div className="w-full h-full rounded-[20px] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center relative p-2 text-center">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-300/90">
                 {loc.levelBadge}
               </span>
 
               {/* Bouncing Level Number (CSS Keyframe Bounce) */}
-              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-100 via-amber-300 to-yellow-500 tracking-tight leading-none my-0.5 animate-level-number drop-shadow-md">
+              <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-yellow-100 via-amber-300 to-yellow-500 tracking-tight leading-none my-0.5 animate-level-number drop-shadow-md tabular-nums">
                 {newLevel}
               </div>
 
-              <div className="flex items-center gap-1 text-[10px] font-bold text-cyan-300">
+              <div className="flex items-center gap-1 text-[10px] font-semibold text-cyan-300">
                 <Zap className="w-3 h-3 fill-cyan-400 text-cyan-400" />
                 <span>UPGRADED</span>
               </div>
@@ -263,38 +267,38 @@ export const LevelUpCelebrationModal: React.FC<LevelUpCelebrationModalProps> = (
           </div>
 
           {/* Cheering Mascot Floating Next to Badge */}
-          <div className="absolute -bottom-2 -right-2 sm:-right-4 drop-shadow-lg">
+          <div className="absolute -bottom-2 right-4 sm:right-2 drop-shadow-lg">
             <CiberMascot size="sm" expression="celebrating" />
           </div>
 
           {/* Level Transition Pill */}
-          <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-bold text-slate-300 shadow-2xs">
+          <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-bold text-slate-300 shadow-2xs tabular-nums">
             <span className="text-slate-400 font-medium">Nvl {oldLevel}</span>
             <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-amber-300 font-extrabold">Nvl {newLevel}</span>
+            <span className="text-amber-300 font-bold">Nvl {newLevel}</span>
           </div>
 
           {/* New Honorary Title */}
-          <h2 className="text-base sm:text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-cyan-200 mt-2 text-center tracking-tight">
+          <h2 className="text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-cyan-200 mt-1.5 text-center tracking-tight">
             "{newTitle}"
           </h2>
         </div>
 
         {/* Unlocked Rewards List (Staggered Slide Up) */}
-        <div className="mt-2 pt-3 border-t border-slate-800/90 space-y-2">
-          <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 px-1 mb-1">
-            <span className="uppercase tracking-wider text-amber-400 flex items-center gap-1">
+        <div className="mt-2 pt-2.5 border-t border-slate-800/90 space-y-2">
+          <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 px-1 mb-1">
+            <span className="uppercase tracking-wider text-amber-400 flex items-center gap-1 font-bold">
               <Sparkles className="w-3 h-3" />
               {loc.unlockedTitle}
             </span>
-            <span>+{bonusCoins} XP Valor</span>
+            <span className="tabular-nums">+{bonusCoins} XP Valor</span>
           </div>
 
           <div className="grid grid-cols-1 gap-2">
             {rewards.map((reward, idx) => (
               <div
                 key={reward.id}
-                className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-800/60 border border-slate-700/60 hover:border-amber-400/40 transition animate-reward-item"
+                className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-slate-800/60 border border-slate-700/60 hover:border-amber-400/40 transition animate-reward-item"
                 style={{ animationDelay: `${0.15 + idx * 0.1}s` }}
               >
                 <div className="w-8 h-8 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center shrink-0 text-amber-300">
@@ -307,10 +311,10 @@ export const LevelUpCelebrationModal: React.FC<LevelUpCelebrationModalProps> = (
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-black text-white truncate">
+                  <div className="text-xs font-bold text-white leading-snug">
                     {reward.title}
                   </div>
-                  <div className="text-[10px] text-slate-400 leading-tight truncate">
+                  <div className="text-[11px] text-slate-300 leading-snug">
                     {reward.desc}
                   </div>
                 </div>
@@ -324,7 +328,7 @@ export const LevelUpCelebrationModal: React.FC<LevelUpCelebrationModalProps> = (
         <button
           type="button"
           onClick={onClose}
-          className="w-full mt-4 py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-cyan-500 to-blue-600 hover:from-amber-400 hover:to-blue-500 active:scale-98 text-white font-black text-sm tracking-wide shadow-lg transition cursor-pointer flex items-center justify-center gap-2 animate-celebrate-btn"
+          className="w-full min-h-[46px] mt-3.5 py-2.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-cyan-500 to-blue-600 hover:from-amber-400 hover:to-blue-500 active:scale-98 text-white font-bold text-sm tracking-wide shadow-lg transition cursor-pointer flex items-center justify-center gap-2 animate-celebrate-btn"
         >
           <span>{loc.claimBtn}</span>
           <ArrowRight className="w-4 h-4" />

@@ -585,7 +585,7 @@ export const CyberPacmanGame: React.FC<CyberPacmanGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -599,7 +599,7 @@ export const CyberPacmanGame: React.FC<CyberPacmanGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-2.5 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none pb-4">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -614,7 +614,7 @@ export const CyberPacmanGame: React.FC<CyberPacmanGameProps> = ({
         timeLeftSeconds={timeLeft}
       />
 
-      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between gap-2 text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold shrink-0">
         <div className="flex items-center gap-1.5">
           <span className="text-slate-500 text-xs">{copy.labels.shields}:</span>
           {Array.from({ length: config.maxHearts }).map((_, idx) => (
@@ -628,7 +628,7 @@ export const CyberPacmanGame: React.FC<CyberPacmanGameProps> = ({
         </div>
 
         {powerLeft > 0 && (
-          <div className="flex items-center gap-1 text-cyan-700 text-xs font-black">
+          <div className="flex items-center gap-1 text-cyan-700 text-xs font-semibold tabular-nums">
             <Shield className="w-4 h-4 text-cyan-600" />
             <span>
               {copy.labels.powerOn} ({powerLeft}s)
@@ -641,30 +641,39 @@ export const CyberPacmanGame: React.FC<CyberPacmanGameProps> = ({
         </div>
       </div>
 
-      <div className="relative w-full max-w-[390px] mx-auto rounded-3xl overflow-hidden border-2 border-slate-300 bg-slate-950 shadow-lg shrink-0">
-        <canvas
-          ref={canvasRef}
-          style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}
-          onPointerDown={(e) => {
-            swipeRef.current = { x: e.clientX, y: e.clientY };
+      <div
+        className="flex-1 min-h-[210px] w-full flex items-center justify-center"
+        style={{ containerType: 'size' }}
+      >
+        <div
+          style={{
+            width: `min(100cqw, calc(100cqh * ${CANVAS_W} / ${CANVAS_H}))`,
+            height: `min(100cqh, calc(100cqw * ${CANVAS_H} / ${CANVAS_W}))`,
           }}
-          onPointerUp={(e) => {
-            if (!swipeRef.current) return;
-            const dx = e.clientX - swipeRef.current.x;
-            const dy = e.clientY - swipeRef.current.y;
-            swipeRef.current = null;
-            if (Math.max(Math.abs(dx), Math.abs(dy)) < 16) return;
-            if (Math.abs(dx) > Math.abs(dy)) setDirection(dx > 0 ? 'RIGHT' : 'LEFT');
-            else setDirection(dy > 0 ? 'DOWN' : 'UP');
-          }}
-          className="w-full h-auto block touch-none"
-        />
+          className="relative rounded-3xl overflow-hidden border-2 border-slate-300 bg-slate-950 shadow-lg"
+        >
+          <canvas
+            ref={canvasRef}
+            onPointerDown={(e) => {
+              swipeRef.current = { x: e.clientX, y: e.clientY };
+            }}
+            onPointerUp={(e) => {
+              if (!swipeRef.current) return;
+              const dx = e.clientX - swipeRef.current.x;
+              const dy = e.clientY - swipeRef.current.y;
+              swipeRef.current = null;
+              if (Math.max(Math.abs(dx), Math.abs(dy)) < 16) return;
+              if (Math.abs(dx) > Math.abs(dy)) setDirection(dx > 0 ? 'RIGHT' : 'LEFT');
+              else setDirection(dy > 0 ? 'DOWN' : 'UP');
+            }}
+            className="w-full h-full block touch-none"
+          />
 
         {phase === 'TITLE' && (
-          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5">
-            <div className="text-4xl">👻</div>
+          <div className="absolute inset-0 bg-slate-950/88 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+            <div className="text-3xl">👻</div>
             <div className="space-y-1">
-              <h3 className="text-lg font-black">{copy.labels.startTitle}</h3>
+              <h3 className="text-base sm:text-lg font-bold">{copy.labels.startTitle}</h3>
               <p className="text-xs sm:text-sm text-sky-100 leading-relaxed max-w-xs">
                 {copy.labels.startDesc}
               </p>
@@ -672,31 +681,32 @@ export const CyberPacmanGame: React.FC<CyberPacmanGameProps> = ({
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-black text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="px-5 py-2.5 min-h-[44px] rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold text-sm shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
-              <Play className="w-5 h-5 fill-white" />
+              <Play className="w-4 h-4 fill-white" />
               <span>{copy.labels.playBtn}</span>
             </button>
           </div>
         )}
 
         {phase === 'GAME_OVER' && (
-          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-3.5">
-            <div className="text-4xl">👾💥</div>
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+            <div className="text-3xl">👾💥</div>
             <div className="space-y-1">
-              <h3 className="text-lg font-black text-rose-300">{copy.labels.gameOverTitle}</h3>
+              <h3 className="text-base sm:text-lg font-bold text-rose-300">{copy.labels.gameOverTitle}</h3>
               <p className="text-xs sm:text-sm text-slate-200 max-w-xs">{copy.labels.gameOverDesc}</p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-cyan-500 text-white font-black text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="px-5 py-2.5 min-h-[44px] rounded-2xl bg-cyan-500 text-white font-bold text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>
             </button>
           </div>
         )}
+        </div>
       </div>
 
       <div className="w-full max-w-xs mx-auto grid grid-cols-3 gap-2 shrink-0 select-none">

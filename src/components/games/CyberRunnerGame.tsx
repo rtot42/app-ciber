@@ -1153,7 +1153,7 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.title}
           takeaway={copy.takeaway}
@@ -1167,7 +1167,7 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-3 sm:p-5 bg-slate-50 space-y-3 overflow-y-auto scrollbar-none">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-3.5 bg-slate-50 gap-2 overflow-y-auto overflow-x-hidden scrollbar-none">
       <GameHud
         title={copy.title}
         subtitle={copy.subtitle}
@@ -1182,9 +1182,9 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
         timeLeftSeconds={timeLeft}
       />
 
-      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex items-center justify-between gap-2 text-xs sm:text-sm font-black shrink-0">
+      <div className="bg-white border border-slate-200 rounded-2xl px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold shrink-0">
         <div className="flex items-center gap-1.5 text-rose-600">
-          <span className="text-slate-500 text-xs">{copy.labels.hearts}:</span>
+          <span className="text-slate-500 font-semibold text-xs">{copy.labels.hearts}:</span>
           {Array.from({ length: maxHearts }).map((_, idx) => (
             <Heart
               key={idx}
@@ -1196,7 +1196,7 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
         </div>
 
         {shieldActive && (
-          <div className="flex items-center gap-1 text-cyan-700 font-black text-xs">
+          <div className="flex items-center gap-1 text-cyan-700 font-bold text-xs">
             <Shield className="w-4 h-4 text-cyan-600" />
             <span>{copy.labels.shieldActive}</span>
           </div>
@@ -1213,27 +1213,36 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
         </div>
       </div>
 
-      <div className="relative w-full max-w-2xl mx-auto rounded-3xl overflow-hidden border-2 border-slate-200 bg-sky-200 shadow-lg shrink-0">
-        <canvas
-          ref={canvasRef}
-          style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}
-          className="w-full h-auto block touch-none"
-        />
+      <div
+        className="flex-1 min-h-[200px] w-full flex items-center justify-center"
+        style={{ containerType: 'size' }}
+      >
+        <div
+          style={{
+            width: `min(100cqw, calc(100cqh * ${CANVAS_W} / ${CANVAS_H}))`,
+            height: `min(100cqh, calc(100cqw * ${CANVAS_H} / ${CANVAS_W}))`,
+          }}
+          className="relative rounded-3xl overflow-hidden border-2 border-slate-200 bg-sky-200 shadow-lg"
+        >
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full block touch-none"
+          />
 
         {phase === 'TITLE' && (
-          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-4">
-            <div className="w-16 h-16 rounded-3xl bg-cyan-500/20 border border-cyan-300/40 flex items-center justify-center text-4xl">
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+            <div className="w-14 h-14 rounded-3xl bg-cyan-500/20 border border-cyan-300/40 flex items-center justify-center text-3xl">
               🕹️
             </div>
             <div className="space-y-1 max-w-sm">
-              <h3 className="text-lg sm:text-xl font-black">{copy.labels.startTitle}</h3>
-              <p className="text-xs sm:text-sm text-sky-100 leading-relaxed">{copy.labels.startDesc}</p>
+              <h3 className="text-base sm:text-lg font-bold">{copy.labels.startTitle}</h3>
+              <p className="text-xs sm:text-sm text-sky-100 font-normal leading-relaxed">{copy.labels.startDesc}</p>
             </div>
-            <p className="text-[11px] text-amber-200 font-bold">{copy.labels.controlsHint}</p>
+            <p className="text-[11px] text-amber-200 font-semibold">{copy.labels.controlsHint}</p>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-black text-sm sm:text-base shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-bold text-sm sm:text-base shadow-lg flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <Play className="w-5 h-5 fill-white" />
               <span>{copy.labels.playBtn}</span>
@@ -1242,13 +1251,13 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
         )}
 
         {phase === 'GATE' && activeQuestion && (
-          <div className="absolute inset-0 bg-slate-900/85 backdrop-blur-xs flex flex-col items-center justify-center p-4 z-20">
-            <div className="w-full max-w-md bg-white text-slate-900 rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xl">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-700">
+          <div className="absolute inset-0 bg-slate-900/85 backdrop-blur-xs flex flex-col items-center justify-center p-3 sm:p-4 z-20 overflow-y-auto">
+            <div className="w-full max-w-md bg-white text-slate-900 rounded-2xl p-4 space-y-2.5 shadow-2xl">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700">
                 <ShieldAlert className="w-4 h-4 text-amber-600" />
                 <span>{copy.labels.gateTitle}</span>
               </div>
-              <p className="text-sm sm:text-base font-black text-slate-900 leading-snug">
+              <p className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                 {activeQuestion.prompt}
               </p>
 
@@ -1259,7 +1268,7 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
                     type="button"
                     disabled={!!gateFeedback}
                     onClick={() => handleAnswerGate(idx as 0 | 1)}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition cursor-pointer ${
+                    className={`w-full min-h-[44px] text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold transition cursor-pointer ${
                       gateFeedback
                         ? idx === activeQuestion.correctIdx
                           ? 'bg-emerald-50 border-emerald-400 text-emerald-900'
@@ -1275,7 +1284,7 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
               {gateFeedback && (
                 <div className="space-y-2 pt-1">
                   <div
-                    className={`p-2.5 rounded-xl text-xs font-bold leading-relaxed ${
+                    className={`p-2.5 rounded-xl text-xs font-semibold leading-relaxed ${
                       gateFeedback.correct
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                         : 'bg-amber-50 text-amber-900 border border-amber-200'
@@ -1286,7 +1295,7 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
                   <button
                     type="button"
                     onClick={handleResumeAfterGate}
-                    className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs sm:text-sm cursor-pointer active:scale-95 transition"
+                    className="w-full min-h-[42px] py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm cursor-pointer active:scale-95 transition"
                   >
                     {language === 'fr' ? 'Continuer' : language === 'en' ? 'Continue' : 'Continuar'}
                   </button>
@@ -1297,27 +1306,28 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
         )}
 
         {phase === 'GAME_OVER' && (
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-xs flex flex-col items-center justify-center p-5 text-center text-white space-y-4">
+          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3.5">
             <div className="text-4xl">🛡️💥</div>
             <div className="space-y-1 max-w-sm">
-              <h3 className="text-lg sm:text-xl font-black text-rose-300">
+              <h3 className="text-base sm:text-lg font-bold text-rose-300">
                 {copy.labels.gameOverTitle}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-200">{copy.labels.gameOverDesc}</p>
+              <p className="text-xs sm:text-sm text-slate-200 font-normal">{copy.labels.gameOverDesc}</p>
             </div>
             <button
               type="button"
               onClick={startGame}
-              className="px-6 py-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-white font-black text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
+              className="min-h-[44px] px-6 py-2.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-white font-bold text-sm flex items-center gap-2 cursor-pointer active:scale-95 transition"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{copy.labels.retryBtn}</span>
             </button>
           </div>
         )}
+        </div>
       </div>
 
-      <div className="w-full max-w-2xl mx-auto flex items-center justify-between gap-3 pt-1 shrink-0 select-none">
+      <div className="w-full max-w-2xl mx-auto flex items-center justify-between gap-3 pt-0.5 shrink-0 select-none">
         <div className="flex items-center gap-2.5">
           <button
             type="button"
@@ -1326,9 +1336,9 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
             onPointerLeave={() => setTouchKey('left', false)}
             onPointerCancel={() => setTouchKey('left', false)}
             aria-label="Move left"
-            className="w-16 h-14 rounded-2xl bg-white border-2 border-slate-200 active:bg-cyan-50 active:border-cyan-400 text-slate-800 flex items-center justify-center shadow-sm cursor-pointer touch-none"
+            className="w-15 h-13 rounded-2xl bg-white border-2 border-slate-200 active:bg-cyan-50 active:border-cyan-400 text-slate-800 flex items-center justify-center shadow-sm cursor-pointer touch-none"
           >
-            <ArrowLeft className="w-7 h-7" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <button
             type="button"
@@ -1337,9 +1347,9 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
             onPointerLeave={() => setTouchKey('right', false)}
             onPointerCancel={() => setTouchKey('right', false)}
             aria-label="Move right"
-            className="w-16 h-14 rounded-2xl bg-white border-2 border-slate-200 active:bg-cyan-50 active:border-cyan-400 text-slate-800 flex items-center justify-center shadow-sm cursor-pointer touch-none"
+            className="w-15 h-13 rounded-2xl bg-white border-2 border-slate-200 active:bg-cyan-50 active:border-cyan-400 text-slate-800 flex items-center justify-center shadow-sm cursor-pointer touch-none"
           >
-            <ArrowRight className="w-7 h-7" />
+            <ArrowRight className="w-6 h-6" />
           </button>
         </div>
 
@@ -1349,9 +1359,9 @@ export const CyberRunnerGame: React.FC<CyberRunnerGameProps> = ({
           onPointerUp={() => setTouchKey('jump', false)}
           onPointerLeave={() => setTouchKey('jump', false)}
           onPointerCancel={() => setTouchKey('jump', false)}
-          className="px-7 h-14 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-600 active:scale-95 text-white font-black text-sm sm:text-base flex items-center gap-2 shadow-md cursor-pointer touch-none"
+          className="px-6 h-13 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-600 active:scale-95 text-white font-bold text-sm sm:text-base flex items-center gap-2 shadow-md cursor-pointer touch-none"
         >
-          <ArrowUp className="w-6 h-6 stroke-[2.75]" />
+          <ArrowUp className="w-5 h-5 stroke-[2.5]" />
           <span>{copy.labels.jump}</span>
         </button>
       </div>

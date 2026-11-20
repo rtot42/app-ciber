@@ -371,7 +371,7 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -385,7 +385,7 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -404,18 +404,18 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-3.5"
+        className="flex-1 min-h-0 bg-white rounded-3xl p-4 sm:p-6 shadow-xs border border-slate-200/80 flex flex-col justify-center gap-3.5"
       >
-        <div className="text-xs font-black uppercase tracking-wider text-rose-600">
+        <div className="text-xs font-semibold uppercase tracking-wider text-rose-600">
           {current.title}
         </div>
         <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-2xl border border-slate-100 font-medium">
           {current.scenario}
         </p>
 
-        <h3 className="text-sm sm:text-base font-black text-slate-900">{current.question}</h3>
+        <h3 className="text-sm sm:text-base font-bold text-slate-900">{current.question}</h3>
 
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {current.options.map((opt, idx) => {
             const isPicked = selectedIdx === idx;
             return (
@@ -424,7 +424,7 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({
                 type="button"
                 disabled={selectedIdx !== null}
                 onClick={() => handleSelect(idx)}
-                className={`w-full text-left p-3.5 rounded-2xl border-2 text-xs sm:text-sm font-bold transition flex items-center justify-between gap-2 cursor-pointer ${
+                className={`w-full text-left p-3.5 min-h-[50px] rounded-2xl border-2 text-xs sm:text-sm font-semibold transition flex items-center justify-between gap-2 cursor-pointer ${
                   selectedIdx !== null
                     ? opt.isBest
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-950'
@@ -450,7 +450,7 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-3.5 rounded-2xl border text-xs sm:text-sm font-medium ${
+            className={`p-3 rounded-2xl border text-xs sm:text-sm font-medium leading-relaxed ${
               chosenOption.isBest
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
                 : 'bg-amber-50 border-amber-200 text-amber-950'
@@ -465,7 +465,7 @@ export const IncidentResponseGame: React.FC<IncidentResponseGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

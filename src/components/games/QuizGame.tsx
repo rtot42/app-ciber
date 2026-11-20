@@ -381,7 +381,7 @@ export const QuizGame: React.FC<QuizGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -395,7 +395,7 @@ export const QuizGame: React.FC<QuizGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -414,9 +414,9 @@ export const QuizGame: React.FC<QuizGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4"
+        className="flex-1 min-h-0 bg-white rounded-3xl p-4 sm:p-6 shadow-xs border border-slate-200/80 flex flex-col justify-center gap-4"
       >
-        <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
+        <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
           {current.question}
         </h3>
 
@@ -429,7 +429,7 @@ export const QuizGame: React.FC<QuizGameProps> = ({
                 type="button"
                 disabled={selectedIdx !== null}
                 onClick={() => handleSelect(oIdx)}
-                className={`w-full text-left p-3.5 rounded-2xl border-2 text-xs sm:text-sm font-bold transition flex items-center justify-between gap-2 cursor-pointer ${
+                className={`w-full text-left p-3.5 sm:p-4 min-h-[52px] rounded-2xl border-2 text-xs sm:text-sm font-semibold transition flex items-center justify-between gap-2 cursor-pointer ${
                   selectedIdx !== null
                     ? opt.isCorrect
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-950'
@@ -455,7 +455,7 @@ export const QuizGame: React.FC<QuizGameProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-3.5 rounded-2xl border text-xs sm:text-sm font-medium ${
+            className={`p-3.5 rounded-2xl border text-xs sm:text-sm font-medium leading-relaxed ${
               chosenOption.isCorrect
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
                 : 'bg-amber-50 border-amber-200 text-amber-950'
@@ -470,7 +470,7 @@ export const QuizGame: React.FC<QuizGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />

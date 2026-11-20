@@ -435,7 +435,7 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
       ageGroup,
     };
     return (
-      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+      <div className="flex-1 min-h-0 w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 overflow-y-auto overflow-x-hidden scrollbar-none">
         <GameVictorySummary
           title={copy.labels.title}
           takeaway={copy.labels.takeaway}
@@ -449,7 +449,7 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
   }
 
   return (
-    <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+    <div className="flex-1 min-h-0 w-full flex flex-col p-2.5 sm:p-4 bg-slate-50 text-slate-800 overflow-y-auto overflow-x-hidden scrollbar-none gap-2.5 sm:gap-3 pb-4">
       <GameHud
         title={copy.labels.title}
         subtitle={copy.labels.subtitle}
@@ -468,13 +468,13 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-4"
+        className="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs flex flex-col justify-center gap-4"
       >
         <div className="space-y-1">
-          <div className="text-xs font-extrabold uppercase tracking-wider text-cyan-700">
+          <div className="text-xs font-semibold uppercase tracking-wider text-cyan-700">
             {current.location}
           </div>
-          <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
             {current.prompt}
           </h3>
         </div>
@@ -490,7 +490,7 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
                 type="button"
                 disabled={!!selectedId}
                 onClick={() => handleSelect(net)}
-                className={`w-full text-left p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 active:scale-[0.98] ${
+                className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between gap-3 active:scale-[0.98] ${
                   showState
                     ? net.isSafe
                       ? 'bg-emerald-50 border-emerald-400'
@@ -500,9 +500,9 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
                     : 'bg-slate-50 hover:bg-cyan-50/60 border-slate-200 hover:border-cyan-300'
                 }`}
               >
-                <div className="flex items-center gap-3.5 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <div
-                    className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                       net.security === 'OPEN' || net.security === 'WEP'
                         ? 'bg-rose-100 text-rose-600'
                         : 'bg-cyan-100 text-cyan-700'
@@ -515,18 +515,18 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
                     )}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-sm sm:text-base font-black text-slate-900 truncate">
+                    <div className="text-sm font-bold text-slate-900 leading-snug break-words">
                       {net.ssid}
                     </div>
-                    <div className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mt-0.5">
+                    <div className="text-xs font-medium text-slate-500 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-0.5">
                       {net.security === 'OPEN' || net.security === 'WEP' ? (
                         <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                       ) : (
                         <Lock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                       )}
-                      <span className="font-mono font-bold text-slate-700">{net.security}</span>
+                      <span className="font-semibold text-slate-700">{net.security}</span>
                       <span aria-hidden="true">·</span>
-                      <span className="truncate">{net.note}</span>
+                      <span className="leading-snug">{net.note}</span>
                     </div>
                   </div>
                 </div>
@@ -549,14 +549,14 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-4 rounded-2xl border text-xs sm:text-sm space-y-1 ${
+            className={`p-3.5 rounded-2xl border text-xs sm:text-sm space-y-1 ${
               chosenNet.isSafe
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
                 : 'bg-amber-50 border-amber-200 text-amber-950'
             }`}
           >
-            <div className="font-black flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4" />
+            <div className="font-bold flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 shrink-0" />
               <span>{chosenNet.isSafe ? copy.labels.safePick : copy.labels.riskyPick}</span>
             </div>
             <p className="font-medium leading-relaxed">{chosenNet.reason}</p>
@@ -568,7 +568,7 @@ export const WifiShieldGame: React.FC<WifiShieldGameProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+          className="w-full py-3.5 min-h-[48px] shrink-0 rounded-2xl font-bold text-sm sm:text-base bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
         >
           <span>{copy.labels.nextBtn}</span>
           <ArrowRight className="w-5 h-5" />
