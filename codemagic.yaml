@@ -37,7 +37,7 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/ios/App"
 
-          BUILD_NUMBER=$((100 + CM_BUILD_NUMBER))
+          BUILD_NUMBER=101
           echo "Setting iOS build number: $BUILD_NUMBER"
 
           PROJECT_FILE="App.xcodeproj/project.pbxproj"
