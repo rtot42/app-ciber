@@ -1,3 +1,4 @@
+
 workflows:
   ios-capacitor:
     name: CiberKids iOS App Store
@@ -30,10 +31,29 @@ workflows:
       - name: Set up iOS signing
         script: |
           xcode-project use-profiles
-      - name: Increment iOS build number
+
+      - name: Set iOS build number
         script: |
-          cd ios/App
-          agvtool new-version -all $((CM_BUILD_NUMBER + 1))
+          cd "$CM_BUILD_DIR/ios/App"
+
+          BUILD_NUMBER=$((100 + CM_BUILD_NUMBER))
+          echo "Setting iOS build number: $BUILD_NUMBER"
+
+          PROJECT_FILE="App.xcodeproj/project.pbxproj"
+
+          if [ ! -f "$PROJECT_FILE" ]; then
+            echo "Xcode project not found"
+            exit 1
+          fi
+
+          export BUILD_NUMBER
+
+          perl -0pi -e 's/CURRENT_PROJECT_VERSION = [^;]+;/CURRENT_PROJECT_VERSION = $ENV{BUILD_NUMBER};/g' "$PROJECT_FILE"
+
+          /usr/libexec/PlistBuddy \
+            -c "Set :CFBundleVersion $BUILD_NUMBER" \
+            App/Info.plist 2>/dev/null || true
+
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
@@ -44,7 +64,9 @@ workflows:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
 
-  publishing:
-    app_store_connect:
-      auth: integration
-      apple_id: 6816774449
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+
