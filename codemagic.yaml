@@ -30,7 +30,10 @@ workflows:
       - name: Set up iOS signing
         script: |
           xcode-project use-profiles
-
+      - name: Increment iOS build number
+        script: |
+          cd ios/App
+          agvtool new-version -all $((CM_BUILD_NUMBER + 1))
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
@@ -41,6 +44,7 @@ workflows:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
 
-    publishing:
-      app_store_connect:
-        auth: integration
+  publishing:
+    app_store_connect:
+      auth: integration
+      apple_id: 6816774449
