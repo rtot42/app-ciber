@@ -46,11 +46,11 @@ export const ParentDashboardScreen: React.FC<ParentDashboardScreenProps> = ({
   const [pinCode, setPinCode] = useState<string>('2468');
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col justify-between bg-slate-50 text-slate-800 select-none overflow-hidden">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col justify-between bg-slate-50 text-slate-800 select-none overflow-hidden">
       {/* Mature, Calm Parent Header */}
-      <header className="px-5 sm:px-6 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 shadow-xs">
+      <header className="px-4 sm:px-6 py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0 shadow-xs w-full">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 font-black text-sm">
+          <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 font-black text-sm shadow-xs">
             P
           </div>
           <div>
@@ -69,28 +69,28 @@ export const ParentDashboardScreen: React.FC<ParentDashboardScreenProps> = ({
 
         <button
           onClick={onReturnToChildMode}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cyan-50 hover:bg-cyan-100 text-cyan-700 border border-cyan-200 text-xs font-bold transition cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-cyan-50 hover:bg-cyan-100 text-cyan-700 border border-cyan-200 text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-4 h-4" />
           <span>{t('parentDashboard.childModeBtn')}</span>
         </button>
       </header>
 
       {/* Main Content Area per Tab */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-5 sm:p-6 space-y-6 sm:space-y-7 scrollbar-none pb-28">
+      <div className="flex-1 min-h-0 w-full max-w-full overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-5 sm:space-y-6 scrollbar-none pb-28">
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
             {/* Child Profile Bar */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-100 shadow-sm flex items-center justify-between">
+            <div className="p-4 sm:p-6 rounded-3xl bg-white border border-slate-100 shadow-sm flex items-center justify-between">
               <div className="flex items-center gap-3.5">
-                <div className="w-13 h-13 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl">
+                <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-3xl shrink-0">
                   🤖
                 </div>
                 <div>
-                  <div className="text-base font-black text-slate-900">
+                  <div className="text-base sm:text-lg font-black text-slate-900">
                     {profile.nickname}
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs sm:text-sm text-slate-500">
                     {t('profile.guardianTitle', { age: profile.ageGroup })} • Lvl {profile.level}
                   </div>
                 </div>

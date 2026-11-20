@@ -1,185 +1,303 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, CheckCircle2, ShieldCheck, HelpCircle } from 'lucide-react';
-import { CiberMascot } from '../CiberMascot';
+import { Shield, Lock, KeyRound, Cloud, Wifi, EyeOff, Cpu, MailWarning } from 'lucide-react';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { ChildAgeGroup } from '../../types';
+import { ChildAgeGroup, GameResultStats } from '../../types';
+import { GameHud, GameVictorySummary } from './GameShell';
+import { computeStars } from '../../utils/ageDifficulty';
+import { playGameSound } from '../../utils/gameAudio';
+
+interface PairDef {
+  pairId: string;
+  label: string;
+  kind: 'tool' | 'counter';
+  iconKey: string;
+}
 
 interface MemoryCard {
   id: number;
   pairId: string;
-  icon: string;
+  label: string;
+  iconKey: string;
 }
 
 interface MemoryMatchGameProps {
-  onComplete: () => void;
+  onComplete: (stats?: GameResultStats) => void;
   ageGroup?: ChildAgeGroup;
 }
 
-export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
+export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({
+  onComplete,
+  ageGroup = '8–10' as ChildAgeGroup,
+}) => {
   const { language } = useLanguage();
 
-  const locData = {
-    es: {
-      tag: 'Mecánica 9 / Memoria',
-      title: 'Parejas de Ciberseguridad',
-      pairsBadge: (curr: number, total: number) => `${curr} / ${total} parejas`,
-      mascot: 'Ciber dice: "Encuentra las 4 parejas de herramientas de seguridad digital para reforzar tu memoria defensiva."',
-      completeBtn: '¡Completar Desafío de Memoria!',
-      findMoreBtn: 'Encuentra las 4 parejas de cartas',
-      labels: {
-        shield: 'Antivirus',
-        key: '2FA Clave',
-        fish: 'Anti-Phishing',
-        backup: 'Copia Nube',
-      } as Record<string, string>,
-    },
-    fr: {
-      tag: 'Mécanique 9 / Mémoire',
-      title: 'Paires de Cybersécurité',
-      pairsBadge: (curr: number, total: number) => `${curr} / ${total} paires`,
-      mascot: 'Ciber dit : "Trouve les 4 paires d’outils de sécurité numérique pour muscler ta mémoire défensive."',
-      completeBtn: 'Terminer le Défi de Mémoire !',
-      findMoreBtn: 'Trouve les 4 paires de cartes',
-      labels: {
-        shield: 'Antivirus',
-        key: 'Clé 2FA',
-        fish: 'Anti-Phishing',
-        backup: 'Sauvegarde Cloud',
-      } as Record<string, string>,
-    },
-    en: {
-      tag: 'Mechanic 9 / Memory',
-      title: 'Cybersecurity Match Pairs',
-      pairsBadge: (curr: number, total: number) => `${curr} / ${total} pairs`,
-      mascot: 'Ciber says: "Find all 4 pairs of digital security tools to strengthen your cyber defense memory."',
-      completeBtn: 'Complete Memory Challenge!',
-      findMoreBtn: 'Find all 4 card pairs',
-      labels: {
-        shield: 'Antivirus',
-        key: '2FA Key',
-        fish: 'Anti-Phishing',
-        backup: 'Cloud Backup',
-      } as Record<string, string>,
-    },
-  };
+  const pairCount = ageGroup === '13–14' ? 8 : ageGroup === '11–12' ? 6 : 4;
 
-  const loc = locData[language] || locData.en || locData.es;
+  const copy = useMemo(() => {
+    const labelsByLang: Record<string, { id: string; a: string; b: string; iconKey: string }[]> = {
+      es: [
+        { id: '2fa', a: 'Código 2FA', b: 'Bloquea robos de clave', iconKey: 'key' },
+        { id: 'phish', a: 'Anti-Phishing', b: 'Detecta enlaces falsos', iconKey: 'mail' },
+        { id: 'lock', a: 'Candado HTTPS', b: 'Cifra tu conexión', iconKey: 'lock' },
+        { id: 'cloud', a: 'Copia en Nube', b: 'Salva tus archivos', iconKey: 'cloud' },
+        { id: 'shield', a: 'Antivirus', b: 'Detiene malware', iconKey: 'shield' },
+        { id: 'priv', a: 'Modo Privado', b: 'Oculta ubicación GPS', iconKey: 'eye' },
+        { id: 'wifi', a: 'Red Segura', b: 'Evita Wi-Fi sin clave', iconKey: 'wifi' },
+        { id: 'patch', a: 'Actualización', b: 'Cierra fallos técnicos', iconKey: 'cpu' },
+      ],
+      fr: [
+        { id: '2fa', a: 'Code 2FA', b: 'Bloque le vol de clé', iconKey: 'key' },
+        { id: 'phish', a: 'Anti-Phishing', b: 'Repère les faux liens', iconKey: 'mail' },
+        { id: 'lock', a: 'Cadenas HTTPS', b: 'Chiffre les échanges', iconKey: 'lock' },
+        { id: 'cloud', a: 'Sauvegarde Cloud', b: 'Protège tes fichiers', iconKey: 'cloud' },
+        { id: 'shield', a: 'Antivirus', b: 'Bloque les malwares', iconKey: 'shield' },
+        { id: 'priv', a: 'Mode Privé', b: 'Masque le GPS', iconKey: 'eye' },
+        { id: 'wifi', a: 'Réseau Sûr', b: 'Évite le Wi-Fi ouvert', iconKey: 'wifi' },
+        { id: 'patch', a: 'Mise à jour', b: 'Corrige les failles', iconKey: 'cpu' },
+      ],
+      en: [
+        { id: '2fa', a: '2FA Code', b: 'Stops stolen logins', iconKey: 'key' },
+        { id: 'phish', a: 'Anti-Phishing', b: 'Catches fake links', iconKey: 'mail' },
+        { id: 'lock', a: 'HTTPS Padlock', b: 'Encrypts web traffic', iconKey: 'lock' },
+        { id: 'cloud', a: 'Cloud Backup', b: 'Saves your data', iconKey: 'cloud' },
+        { id: 'shield', a: 'Antivirus', b: 'Blocks malware', iconKey: 'shield' },
+        { id: 'priv', a: 'Privacy Mode', b: 'Hides GPS location', iconKey: 'eye' },
+        { id: 'wifi', a: 'Trusted Wi-Fi', b: 'Skips open hotspots', iconKey: 'wifi' },
+        { id: 'patch', a: 'System Update', b: 'Patches security bugs', iconKey: 'cpu' },
+      ],
+    };
 
-  const PAIRS_CONFIG = [
-    { pairId: 'shield', icon: '🛡️' },
-    { pairId: 'key', icon: '🔑' },
-    { pairId: 'fish', icon: '🎣' },
-    { pairId: 'backup', icon: '💾' },
-  ];
+    const selected = labelsByLang[language].slice(0, pairCount);
+    const ui = {
+      es: {
+        title: 'Memoria de Defensas Digitales',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Empareja 8 herramientas con su función defensiva'
+            : ageGroup === '11–12'
+            ? 'Empareja 6 herramientas y escudos'
+            : 'Encuentra las 4 parejas de ciberseguridad',
+        movesLabel: 'Intentos:',
+        takeaway:
+          'Cada defensa digital cumple un rol clave: 2FA frena intrusos, HTTPS cifra datos, las copias salvan archivos y las actualizaciones cierran fallos.',
+      },
+      fr: {
+        title: 'Mémoire des Outils Cyber',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Associe 8 outils à leur rôle défensif'
+            : ageGroup === '11–12'
+            ? 'Trouve les 6 paires de protection'
+            : 'Trouve les 4 paires de cybersécurité',
+        movesLabel: 'Essais :',
+        takeaway:
+          'Chaque outil a un rôle précis : la 2FA bloque les intrus, HTTPS chiffre la connexion, la sauvegarde protège tes fichiers et les mises à jour bouchent les failles.',
+      },
+      en: {
+        title: 'Cyber Defense Memory Match',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Match 8 cyber tools with what they protect'
+            : ageGroup === '11–12'
+            ? 'Uncover all 6 defense pairs'
+            : 'Match all 4 cybersecurity pairs',
+        movesLabel: 'Moves:',
+        takeaway:
+          'Every security habit has a clear job: 2FA stops stolen passwords, HTTPS encrypts traffic, backups save files, and updates patch security holes.',
+      },
+    }[language];
+
+    return { selected, ui };
+  }, [ageGroup, language, pairCount]);
+
+  const [seed, setSeed] = useState(0);
 
   const deck = useMemo<MemoryCard[]>(() => {
-    return [
-      ...PAIRS_CONFIG.map((p, idx) => ({ id: idx, pairId: p.pairId, icon: p.icon })),
-      ...PAIRS_CONFIG.map((p, idx) => ({ id: idx + 4, pairId: p.pairId, icon: p.icon })),
-    ].sort(() => Math.random() - 0.5);
-  }, []);
+    const cards: MemoryCard[] = [];
+    copy.selected.forEach((p, idx) => {
+      cards.push({ id: idx * 2, pairId: p.id, label: p.a, iconKey: p.iconKey });
+      cards.push({
+        id: idx * 2 + 1,
+        pairId: p.id,
+        label: ageGroup === '8–10' ? p.a : p.b,
+        iconKey: p.iconKey,
+      });
+    });
+    // deterministic-friendly shuffle keyed by seed
+    return cards.sort((a, b) => {
+      const ha = ((a.id + 3) * (seed + 7) * 2654435761) % 97;
+      const hb = ((b.id + 5) * (seed + 11) * 2654435761) % 97;
+      return ha - hb;
+    });
+  }, [copy.selected, ageGroup, seed]);
 
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
+  const [moves, setMoves] = useState(0);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(1);
+  const [finished, setFinished] = useState(false);
+
+  const renderIcon = (key: string) => {
+    const cls = 'w-6 h-6 text-rose-600';
+    switch (key) {
+      case 'key':
+        return <KeyRound className={cls} />;
+      case 'mail':
+        return <MailWarning className={cls} />;
+      case 'lock':
+        return <Lock className={cls} />;
+      case 'cloud':
+        return <Cloud className={cls} />;
+      case 'eye':
+        return <EyeOff className={cls} />;
+      case 'wifi':
+        return <Wifi className={cls} />;
+      case 'cpu':
+        return <Cpu className={cls} />;
+      default:
+        return <Shield className={cls} />;
+    }
+  };
 
   const handleCardClick = (card: MemoryCard) => {
     if (flipped.length === 2 || flipped.includes(card.id) || matched.includes(card.pairId)) {
       return;
     }
 
+    playGameSound('tap');
     const nextFlipped = [...flipped, card.id];
     setFlipped(nextFlipped);
 
     if (nextFlipped.length === 2) {
-      const firstCard = deck.find((c) => c.id === nextFlipped[0])!;
-      const secondCard = deck.find((c) => c.id === nextFlipped[1])!;
+      const nextMoves = moves + 1;
+      setMoves(nextMoves);
+      const first = deck.find((c) => c.id === nextFlipped[0])!;
+      const second = deck.find((c) => c.id === nextFlipped[1])!;
 
-      if (firstCard.pairId === secondCard.pairId) {
-        setMatched((prev) => [...prev, firstCard.pairId]);
+      if (first.pairId === second.pairId) {
+        const nextMatched = [...matched, first.pairId];
+        const nextStreak = streak + 1;
+        setMatched(nextMatched);
+        setStreak(nextStreak);
+        setMaxStreak((m) => Math.max(m, nextStreak));
+        setScore((s) => s + 110 + nextStreak * 20);
         setFlipped([]);
+        playGameSound(nextStreak > 1 ? 'combo' : 'correct');
+
+        if (nextMatched.length === pairCount) {
+          setTimeout(() => {
+            playGameSound('win');
+            setFinished(true);
+          }, 550);
+        }
       } else {
+        setStreak(0);
         setTimeout(() => {
+          playGameSound('wrong');
           setFlipped([]);
-        }, 1000);
+        }, 850);
       }
     }
   };
 
-  const isAllMatched = matched.length === PAIRS_CONFIG.length;
+  const handleReplay = () => {
+    setSeed((s) => s + 1);
+    setFlipped([]);
+    setMatched([]);
+    setMoves(0);
+    setScore(0);
+    setStreak(0);
+    setMaxStreak(1);
+    setFinished(false);
+  };
+
+  const efficiency =
+    moves > 0
+      ? Math.min(100, Math.max(45, Math.round((pairCount / Math.max(pairCount, moves)) * 115)))
+      : 100;
+
+  if (finished) {
+    const finalAcc = Math.min(
+      100,
+      Math.max(50, Math.round((pairCount / Math.max(pairCount, moves - 1)) * 100))
+    );
+    const stats: GameResultStats = {
+      stars: computeStars(finalAcc, ageGroup),
+      accuracy: finalAcc,
+      score,
+      streakMax: maxStreak,
+      ageGroup,
+    };
+    return (
+      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+        <GameVictorySummary
+          title={copy.ui.title}
+          takeaway={copy.ui.takeaway}
+          stats={stats}
+          ageGroup={ageGroup}
+          onReplay={handleReplay}
+          onContinue={onComplete}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
-      {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-pink-100 text-pink-700 flex items-center justify-center font-bold text-xl">
-            🃏
-          </div>
-          <div>
-            <div className="text-xs uppercase font-extrabold text-pink-600 tracking-wider">
-              {loc.tag}
-            </div>
-            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
-          </div>
-        </div>
-        <span className="text-xs font-bold text-slate-600">
-          {loc.pairsBadge(matched.length, PAIRS_CONFIG.length)}
-        </span>
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+      <GameHud
+        title={copy.ui.title}
+        subtitle={copy.ui.subtitle}
+        icon={<Shield className="w-5 h-5" />}
+        accentColor="rose"
+        ageGroup={ageGroup}
+        currentStep={matched.length}
+        totalSteps={pairCount}
+        score={score}
+        streak={streak}
+        accuracy={moves > 0 ? efficiency : undefined}
+      />
+
+      <div className="text-xs font-bold text-slate-500 text-right tabular-nums px-1">
+        {copy.ui.movesLabel} <strong className="text-slate-800">{moves}</strong>
       </div>
 
-      {/* Mascot advice */}
-      <div className="flex items-center gap-3.5 p-4 bg-pink-50/80 rounded-3xl border border-pink-100">
-        <CiberMascot size="sm" expression={isAllMatched ? 'celebrating' : 'thinking'} />
-        <div className="text-xs sm:text-sm text-pink-950 leading-relaxed">
-          {loc.mascot}
-        </div>
-      </div>
-
-      {/* Grid of Cards */}
-      <div className="grid grid-cols-4 gap-2.5 py-2">
+      {/* Adaptive Card Grid */}
+      <div className="grid grid-cols-4 gap-2 sm:gap-2.5">
         {deck.map((card) => {
-          const isCardFlipped = flipped.includes(card.id) || matched.includes(card.pairId);
+          const isRevealed = flipped.includes(card.id) || matched.includes(card.pairId);
+          const isSolved = matched.includes(card.pairId);
 
           return (
             <motion.button
               key={card.id}
+              type="button"
               whileTap={{ scale: 0.95 }}
               onClick={() => handleCardClick(card)}
-              className={`h-24 rounded-2xl border-2 transition-all flex flex-col items-center justify-center p-2 cursor-pointer shadow-sm ${
-                isCardFlipped
-                  ? 'bg-white border-pink-400'
-                  : 'bg-gradient-to-br from-pink-500 to-rose-600 border-pink-600 text-white'
+              className={`min-h-[86px] sm:min-h-[96px] rounded-2xl border-2 transition-all flex flex-col items-center justify-center p-1.5 cursor-pointer shadow-xs text-center ${
+                isSolved
+                  ? 'bg-emerald-50 border-emerald-400'
+                  : isRevealed
+                  ? 'bg-white border-rose-400'
+                  : 'bg-gradient-to-br from-rose-500 to-pink-600 border-rose-600 text-white hover:brightness-105'
               }`}
             >
-              {isCardFlipped ? (
-                <div className="flex flex-col items-center">
-                  <span className="text-2xl">{card.icon}</span>
-                  <span className="text-[9px] font-bold text-slate-700 mt-1 truncate max-w-full">
-                    {loc.labels[card.pairId] || card.pairId}
+              {isRevealed ? (
+                <div className="flex flex-col items-center gap-1">
+                  {renderIcon(card.iconKey)}
+                  <span className="text-[10px] sm:text-[11px] font-black text-slate-800 leading-tight line-clamp-2">
+                    {card.label}
                   </span>
                 </div>
               ) : (
-                <span className="text-lg font-black opacity-60">CK</span>
+                <span className="text-sm sm:text-base font-black opacity-75">CK</span>
               )}
             </motion.button>
           );
         })}
       </div>
-
-      {/* Action CTA */}
-      <button
-        onClick={onComplete}
-        disabled={!isAllMatched}
-        className={`w-full py-3.5 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-          isAllMatched
-            ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-pink-500/20 active:scale-95'
-            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-        }`}
-      >
-        <ShieldCheck className="w-4 h-4" />
-        <span>{isAllMatched ? loc.completeBtn : loc.findMoreBtn}</span>
-      </button>
     </div>
   );
 };

@@ -38,7 +38,28 @@ export type GameType =
   | 'puzzle-vault'
   | 'ai-detector'
   | 'incident-response'
-  | 'quiz';
+  | 'quiz'
+  | 'app-permissions'
+  | 'url-inspector'
+  | 'wifi-shield'
+  | 'cyber-bully-shield'
+  | 'digital-footprint'
+  | 'cyber-runner'
+  | 'cyber-snake'
+  | 'cyber-pacman'
+  | 'cyber-invaders'
+  | 'cyber-flappy'
+  | 'cyber-tetris'
+  | 'cyber-pvz'
+  | 'cyber-dino';
+
+export interface GameResultStats {
+  stars: 1 | 2 | 3;
+  accuracy: number;
+  score: number;
+  streakMax?: number;
+  ageGroup?: ChildAgeGroup;
+}
 
 export interface UserProfile {
   nickname: string;

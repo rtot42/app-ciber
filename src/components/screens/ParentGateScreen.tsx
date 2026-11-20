@@ -41,69 +41,69 @@ export const ParentGateScreen: React.FC<ParentGateScreenProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between p-6 bg-slate-50 text-slate-800 select-none">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col justify-between p-4 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden">
       {/* Top Bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between shrink-0">
         <button
           onClick={onCancel}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 transition cursor-pointer text-xs font-bold shadow-xs"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 transition cursor-pointer text-xs sm:text-sm font-bold shadow-xs active:scale-95"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4.5 h-4.5" />
           <span>{t('parentGate.back')}</span>
         </button>
 
-        <span className="text-xs font-black uppercase tracking-wider text-amber-800">
+        <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-800">
           {t('parentGate.tag')}
         </span>
       </div>
 
       {/* Main Verification Card */}
-      <div className="my-auto flex flex-col items-center text-center space-y-4 max-w-xs mx-auto">
-        <div className="w-16 h-16 rounded-3xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-sm">
-          <Lock className="w-8 h-8" />
+      <div className="my-auto flex flex-col items-center text-center space-y-4 max-w-sm mx-auto w-full py-4">
+        <div className="w-18 h-18 rounded-3xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-sm">
+          <Lock className="w-9 h-9" />
         </div>
 
         <div>
-          <h1 className="text-xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {t('parentGate.title')}
           </h1>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
             {t('parentGate.subtitle')}
           </p>
         </div>
 
         {/* Math Challenge in Words */}
-        <div className="w-full p-4 rounded-3xl bg-white border border-slate-100 shadow-sm">
-          <span className="text-xs text-slate-400 font-semibold block mb-1">
+        <div className="w-full p-4 sm:p-5 rounded-3xl bg-white border border-slate-100 shadow-sm space-y-2">
+          <span className="text-xs sm:text-sm text-slate-400 font-semibold block">
             {t('parentGate.questionLabel')}
           </span>
-          <div className="text-base font-black text-slate-900 tracking-tight">
+          <div className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
             {t('parentGate.question')}
           </div>
-          <div className="text-[11px] text-slate-400 mt-1 font-mono">
+          <div className="text-xs text-slate-400 font-mono">
             {t('parentGate.hint')}
           </div>
 
           {/* Answer Display */}
-          <div className="mt-3 flex items-center justify-center gap-2">
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-xl font-mono font-bold text-slate-900">
+          <div className="mt-3 flex items-center justify-center gap-3">
+            <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl font-mono font-bold text-slate-900 shadow-inner">
               {pin[0] || '—'}
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-xl font-mono font-bold text-slate-900">
+            <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl font-mono font-bold text-slate-900 shadow-inner">
               {pin[1] || '—'}
             </div>
           </div>
 
           {errorMsg && (
-            <p className="text-xs text-rose-500 font-semibold mt-2 flex items-center justify-center gap-1">
-              <AlertCircle className="w-3.5 h-3.5" />
+            <p className="text-xs font-bold text-rose-500 mt-2 flex items-center justify-center gap-1.5">
+              <AlertCircle className="w-4 h-4" />
               {errorMsg}
             </p>
           )}
         </div>
 
         {/* Quick 0-9 Keypad */}
-        <div className="grid grid-cols-3 gap-2 w-full pt-1">
+        <div className="grid grid-cols-3 gap-2.5 w-full pt-1">
           {['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '✓'].map((key) => {
             const isClear = key === 'C';
             const isSubmit = key === '✓';
@@ -121,7 +121,7 @@ export const ParentGateScreen: React.FC<ParentGateScreenProps> = ({
                     handleKeyPress(key);
                   }
                 }}
-                className={`py-3 rounded-2xl font-bold text-sm transition cursor-pointer active:scale-95 border ${
+                className={`py-3.5 sm:py-4 rounded-2xl font-bold text-base transition cursor-pointer active:scale-95 border ${
                   isSubmit
                     ? 'bg-amber-500 text-white font-black border-amber-500 shadow-sm'
                     : isClear

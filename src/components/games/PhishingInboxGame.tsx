@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, AlertTriangle, ShieldCheck, CheckCircle2, ChevronRight, ExternalLink, Flag, Info, Search } from 'lucide-react';
-import { CiberMascot } from '../CiberMascot';
+import {
+  Mail,
+  AlertTriangle,
+  ShieldCheck,
+  Search,
+  ArrowRight,
+  CheckCircle2,
+  XCircle,
+  Eye,
+} from 'lucide-react';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { ChildAgeGroup } from '../../types';
+import { ChildAgeGroup, GameResultStats } from '../../types';
+import { GameHud, GameVictorySummary } from './GameShell';
+import { computeStars } from '../../utils/ageDifficulty';
+import { playGameSound } from '../../utils/gameAudio';
 
 interface EmailItem {
   id: string;
   senderName: string;
   senderEmail: string;
   subject: string;
-  preview: string;
   date: string;
   isPhishing: boolean;
   clues: string[];
@@ -19,575 +29,578 @@ interface EmailItem {
 }
 
 interface PhishingInboxGameProps {
-  onComplete: () => void;
+  onComplete: (stats?: GameResultStats) => void;
   ageGroup?: ChildAgeGroup;
 }
 
-export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
+export const PhishingInboxGame: React.FC<PhishingInboxGameProps> = ({
+  onComplete,
+  ageGroup = '8–10' as ChildAgeGroup,
+}) => {
   const { language } = useLanguage();
 
-  const locData = {
-    es: {
-      tag: 'Mecánica 4 / Mundo 3',
-      title: 'Bandeja de Entrada Phishing',
-      reviewedBadge: (count: number) => `${count}/5 revisados`,
-      mascot: 'Ciber dice: "Revisa siempre la dirección de correo exacta, las faltas de ortografía y las promesas de premios imposibles."',
-      selectPrompt: 'Selecciona un correo para investigarlo:',
-      safeBadge: 'Seguro',
-      trapBadge: 'Trampa',
-      fromLabel: 'De:',
-      cluesTitle: 'Pistas del detective:',
-      safeBtn: 'Es Correo Seguro',
-      phishBtn: '¡Es Phishing / Trampa!',
-      correctPrefix: '¡Acertaste!',
-      wrongPrefix: '¡Ojo! Observa con más calma:',
-      completeBtn: '¡Completar Inspección de Phishing!',
-      needMoreBtn: (count: number) => `Analiza al menos 3 correos (${count}/3)`,
-      emails: [
-        {
-          id: 'em-1',
-          senderName: 'Soporte Roblox Oficial',
-          senderEmail: 'soporte@robl0x-premios-gratis.net',
-          subject: '¡URGENTE! Has ganado 50,000 Robux gratis',
-          preview: 'Reclama tus monedas antes de que expiren en 15 minutos...',
-          date: '10:42 AM',
-          isPhishing: true,
-          clues: [
-            'Remitente falso: robl0x con un "cero" en lugar de letra "o"',
-            'Falsa urgencia: "expiran en 15 minutos"',
-            'Nadie regala 50,000 Robux sin motivo',
-          ],
-          explanation: 'Las plataformas oficiales nunca usan dominios como "robl0x-premios-gratis.net" ni regalan monedas por sorpresa.',
-          fullBody: '¡Felicidades jugador! Has sido seleccionado al azar para recibir 50,000 Robux. Haz clic en el siguiente enlace e ingresa tu usuario y contraseña de inmediato para desbloquear el premio.',
-        },
-        {
-          id: 'em-2',
-          senderName: 'Colegio San Patricio',
-          senderEmail: 'notificaciones@colegiosanpatricio.edu',
-          subject: 'Circular escolar: Horarios de exámenes de mayo',
-          preview: 'Estimados alumnos y familias, adjuntamos el calendario oficial...',
-          date: 'Ayer',
-          isPhishing: false,
-          clues: ['Dominio oficial .edu', 'Tono formal sin pedidos de claves', 'No contiene enlaces urgentes ni premios'],
-          explanation: 'Este es un correo escolar genuino. El dominio es oficial y no te solicita contraseñas ni datos personales.',
-          fullBody: 'Estimados alumnos: les recordamos que el calendario de evaluaciones trimestrales se encuentra disponible en la cartelera del colegio y en el portal estudiantil.',
-        },
-        {
-          id: 'em-3',
-          senderName: 'Equipo de Seguridad Fortnite',
-          senderEmail: 'security-epicgames@alerta-cuentas-bloqueo.com',
-          subject: '¡Tu cuenta será BORRADA en 2 horas por actividad sospechosa!',
-          preview: 'Haz clic aquí para verificar tu identidad o perderás todas tus skins...',
-          date: 'Lunes',
-          isPhishing: true,
-          clues: [
-            'Amenaza de borrado de cuenta en tiempo límite',
-            'Dirección de correo falsa ("alerta-cuentas-bloqueo.com")',
-            'Usa el miedo para que actúes sin pensar',
-          ],
-          explanation: 'Los atacantes usan amenazas para que te asustes y pongas tu clave sin verificar el remitente.',
-          fullBody: 'ADVERTENCIA CRÍTICA: Hemos detectado inicio de sesión sospechoso. Tienes 120 minutos para ingresar tu correo y contraseña o tu inventario será permanentemente eliminado.',
-        },
-        {
-          id: 'em-4',
-          senderName: 'Biblioteca Municipal',
-          senderEmail: 'prestamos@bibliotecaciudad.org',
-          subject: 'Recordatorio de devolución: El Principito',
-          preview: 'Hola Lucas, tu préstamo vence el próximo viernes 20...',
-          date: '28 Abr',
-          isPhishing: false,
-          clues: ['Remitente institucional .org', 'No solicita contraseñas', 'Información coherente'],
-          explanation: 'Es un simple recordatorio de biblioteca sin enlaces fraudulentos.',
-          fullBody: 'Hola Lucas: te recordamos que tienes prestado el libro "El Principito". Puedes devolverlo en mesa de entrada antes del viernes 20 de mayo.',
-        },
-        {
-          id: 'em-5',
-          senderName: 'Nintendo Rewards',
-          senderEmail: 'premios@switch-sorteo-ganadores.xyz',
-          subject: '¡Ganaste una Nintendo Switch OLED en el sorteo veraniego!',
-          preview: 'Ingresa tu dirección y número de tarjeta para pagar solo el envío de $2...',
-          date: '25 Abr',
-          isPhishing: true,
-          clues: [
-            'Extensión sospechosa ".xyz"',
-            'Piden pagar "solo el envío con tarjeta de crédito"',
-            'No participaste en ningún sorteo',
-          ],
-          explanation: 'Los falsos sorteos piden datos de tarjetas de crédito prometiendo regalos costosos.',
-          fullBody: '¡Ganador confirmado! Tu boleto digital resultó premiado con una consola Nintendo Switch. Para recibirla en tu puerta, solo debes cubrir $2 de gastos de envío ingresando una tarjeta de crédito.',
-        },
-      ],
-    },
-    fr: {
-      tag: 'Mécanique 4 / Monde 3',
-      title: 'Boîte de Réception Hameçonnage',
-      reviewedBadge: (count: number) => `${count}/5 vérifiés`,
-      mascot: 'Ciber dit : "Vérifie toujours l’adresse exacte de l’expéditeur, l’orthographe et les promesses de cadeaux impossibles."',
-      selectPrompt: 'Choisis un e-mail pour l’inspecter :',
-      safeBadge: 'Sûr',
-      trapBadge: 'Piège',
-      fromLabel: 'De :',
-      cluesTitle: 'Indices du détective :',
-      safeBtn: 'E-mail Sûr',
-      phishBtn: 'C’est du Phishing / Piège !',
-      correctPrefix: 'Bien vu !',
-      wrongPrefix: 'Attention ! Regarde de plus près :',
-      completeBtn: 'Terminer l’inspection Phishing !',
-      needMoreBtn: (count: number) => `Analyse au moins 3 e-mails (${count}/3)`,
-      emails: [
-        {
-          id: 'em-1',
-          senderName: 'Support Roblox Officiel',
-          senderEmail: 'support@robl0x-cadeaux-gratuits.net',
-          subject: 'URGENT ! Tu as gagné 50 000 Robux gratuits',
-          preview: 'Récupère tes pièces avant expiration dans 15 minutes...',
-          date: '10:42',
-          isPhishing: true,
-          clues: [
-            'Faux expéditeur : robl0x avec un "zéro" au lieu de la lettre "o"',
-            'Fausse urgence : "expire dans 15 minutes"',
-            'Personne n’offre 50 000 Robux sans raison',
-          ],
-          explanation: 'Les plateformes officielles n’utilisent jamais de domaines bizarres et n’offrent pas de pièces par surprise.',
-          fullBody: 'Félicitations joueur ! Tu as été tiré au sort pour recevoir 50 000 Robux. Clique sur le lien ci-dessous et entre ton mot de passe immédiatement.',
-        },
-        {
-          id: 'em-2',
-          senderName: 'Collège Saint-Patrick',
-          senderEmail: 'notifications@collegesaintpatrick.edu',
-          subject: 'Circulaire scolaire : Horaires des examens de mai',
-          preview: 'Chers élèves et familles, voici le calendrier officiel...',
-          date: 'Hier',
-          isPhishing: false,
-          clues: ['Domaine officiel .edu', 'Ton courtois sans demande de mot de passe', 'Aucun lien louche'],
-          explanation: 'E-mail scolaire authentique. Le domaine est officiel et ne te demande jamais tes identifiants.',
-          fullBody: 'Chers élèves : nous vous rappelons que le calendrier des épreuves trimestrielles est disponible sur le panneau d’affichage et l’ENT.',
-        },
-        {
-          id: 'em-3',
-          senderName: 'Sécurité Fortnite',
-          senderEmail: 'security-epicgames@alerte-blocage-comptes.com',
-          subject: 'Ton compte sera SUPPRIMÉ dans 2 heures !',
-          preview: 'Clique ici pour vérifier ton identité ou perds tes skins...',
-          date: 'Lundi',
-          isPhishing: true,
-          clues: [
-            'Menace de suppression avec compte à rebours',
-            'Adresse fausse ("alerte-blocage-comptes.com")',
-            'Joue sur la panique pour faire cliquer sans réfléchir',
-          ],
-          explanation: 'Les pirates créent la panique pour que tu donnes tes accès sans contrôler l’expéditeur.',
-          fullBody: 'AVERTISSEMENT CRITIQUE : Connexion suspecte détectée. Tu as 120 minutes pour renseigner ton mot de passe sinon tout ton inventaire sera effacé.',
-        },
-        {
-          id: 'em-4',
-          senderName: 'Médiathèque Municipale',
-          senderEmail: 'prets@mediatheque-ville.org',
-          subject: 'Rappel de retour : Le Petit Prince',
-          preview: 'Bonjour Lucas, ton prêt se termine le vendredi 20...',
-          date: '28 Avr',
-          isPhishing: false,
-          clues: ['Expéditeur en .org', 'Ne demande aucun mot de passe', 'Message cohérent'],
-          explanation: 'Simple rappel de bibliothèque scolaire, tout à fait sûr et normal.',
-          fullBody: 'Bonjour Lucas : nous te rappelons que tu as emprunté le livre "Le Petit Prince". Merci de le rapporter à l’accueil avant le 20 mai.',
-        },
-        {
-          id: 'em-5',
-          senderName: 'Nintendo Rewards',
-          senderEmail: 'gagnants@switch-tirage-ete.xyz',
-          subject: 'Tu as gagné une Nintendo Switch OLED !',
-          preview: 'Renseigne ton adresse et carte bancaire pour les 2€ de port...',
-          date: '25 Avr',
-          isPhishing: true,
-          clues: [
-            'Extension suspecte ".xyz"',
-            'Demande de carte bancaire pour payer les frais',
-            'Tu n’as participé à aucun tirage au sort',
-          ],
-          explanation: 'Les faux concours réclament des coordonnées bancaires sous prétexte de livrer un faux cadeau.',
-          fullBody: 'Gagnant confirmé ! Ton ticket a remporté une console Switch. Pour la recevoir, règle simplement 2€ de frais d’expédition en saisissant ta carte.',
-        },
-      ],
-    },
-    en: {
-      tag: 'Mechanic 4 / World 3',
-      title: 'Phishing Inbox Inspector',
-      reviewedBadge: (count: number) => `${count}/5 reviewed`,
-      mascot: 'Ciber says: "Always inspect the sender address character-by-character, spot spelling flaws, and question impossible prizes."',
-      selectPrompt: 'Select an email to inspect it:',
-      safeBadge: 'Safe',
-      trapBadge: 'Trap',
-      fromLabel: 'From:',
-      cluesTitle: 'Detective clues:',
-      safeBtn: 'This is Safe Email',
-      phishBtn: 'It’s Phishing / Scam!',
-      correctPrefix: 'Spot on!',
-      wrongPrefix: 'Look closer:',
-      completeBtn: 'Complete Phishing Inspection!',
-      needMoreBtn: (count: number) => `Analyze at least 3 emails (${count}/3)`,
-      emails: [
-        {
-          id: 'em-1',
-          senderName: 'Roblox Official Support',
-          senderEmail: 'support@robl0x-free-prizes.net',
-          subject: 'URGENT! You won 50,000 free Robux',
-          preview: 'Claim your coins before they expire in 15 minutes...',
-          date: '10:42 AM',
-          isPhishing: true,
-          clues: [
-            'Misspelled sender: robl0x with a zero "0" instead of "o"',
-            'Fake urgency: "expires in 15 minutes"',
-            'Nobody hands out 50,000 Robux for free',
-          ],
-          explanation: 'Official platforms never use domains like "robl0x-free-prizes.net" or give out free currency out of nowhere.',
-          fullBody: 'Congratulations gamer! You were randomly picked for 50,000 Robux. Click the link below and enter your password right away to unlock the prize.',
-        },
-        {
-          id: 'em-2',
-          senderName: 'St. Patrick School',
-          senderEmail: 'notifications@stpatrickschool.edu',
-          subject: 'School notice: May exam timetable',
-          preview: 'Dear students and families, please find the schedule attached...',
-          date: 'Yesterday',
-          isPhishing: false,
-          clues: ['Official .edu domain', 'Formal polite tone without password prompts', 'No urgent suspicious links'],
-          explanation: 'This is a genuine school message. The domain is official and never asks for your credentials.',
-          fullBody: 'Dear students: please note the term evaluation timetable is posted on the school board and student portal.',
-        },
-        {
-          id: 'em-3',
-          senderName: 'Fortnite Security Team',
-          senderEmail: 'security-epicgames@alert-account-suspension.com',
-          subject: 'Your account will be DELETED in 2 hours for suspicious activity!',
-          preview: 'Click here to verify identity or lose all your skins...',
-          date: 'Monday',
-          isPhishing: true,
-          clues: [
-            'Countdown threat to delete your account',
-            'Fake email address ("alert-account-suspension.com")',
-            'Uses fear so you panic and don’t check the source',
-          ],
-          explanation: 'Attackers create panic so you type in your login credentials without checking the sender.',
-          fullBody: 'CRITICAL ALERT: Suspicious login detected. You have 120 minutes to sign in or your inventory will be wiped forever.',
-        },
-        {
-          id: 'em-4',
-          senderName: 'City Public Library',
-          senderEmail: 'loans@citylibrary.org',
-          subject: 'Return reminder: The Little Prince',
-          preview: 'Hi Lucas, your book loan is due on Friday 20th...',
-          date: 'Apr 28',
-          isPhishing: false,
-          clues: ['Official .org domain', 'Does not request any passwords', 'Consistent everyday information'],
-          explanation: 'A normal library reminder with no malicious links.',
-          fullBody: 'Hi Lucas: please remember to return "The Little Prince" before Friday May 20th at the front desk.',
-        },
-        {
-          id: 'em-5',
-          senderName: 'Nintendo Rewards',
-          senderEmail: 'prizes@switch-summer-sweepstakes.xyz',
-          subject: 'You won a Nintendo Switch OLED in our summer draw!',
-          preview: 'Enter your address and card details to pay $2 shipping...',
-          date: 'Apr 25',
-          isPhishing: true,
-          clues: [
-            'Suspicious ".xyz" top-level domain',
-            'Asks for credit card details for "small shipping fee"',
-            'You never signed up for any raffle',
-          ],
-          explanation: 'Fake sweepstakes ask for credit cards by promising high-value gaming consoles.',
-          fullBody: 'Confirmed winner! Your ticket was drawn for a Nintendo Switch. To receive it, cover $2 shipping fees by entering your credit card.',
-        },
-      ],
-    },
-  }[language] || {
-    tag: 'Mecánica 4 / Mundo 3',
-    title: 'Bandeja de Entrada Phishing',
-    reviewedBadge: (count: number) => `${count}/5 revisados`,
-    mascot: 'Ciber dice: "Revisa siempre la dirección de correo exacta, las faltas de ortografía y las promesas de premios imposibles."',
-    selectPrompt: 'Selecciona un correo para investigarlo:',
-    safeBadge: 'Seguro',
-    trapBadge: 'Trampa',
-    fromLabel: 'De:',
-    cluesTitle: 'Pistas del detective:',
-    safeBtn: 'Es Correo Seguro',
-    phishBtn: '¡Es Phishing / Trampa!',
-    correctPrefix: '¡Acertaste!',
-    wrongPrefix: '¡Ojo! Observa con más calma:',
-    completeBtn: '¡Completar Inspección de Phishing!',
-    needMoreBtn: (count: number) => `Analiza al menos 3 correos (${count}/3)`,
-    emails: [
+  const copy = useMemo(() => {
+    const esEmails: EmailItem[] = [
       {
         id: 'em-1',
         senderName: 'Soporte Roblox Oficial',
         senderEmail: 'soporte@robl0x-premios-gratis.net',
         subject: '¡URGENTE! Has ganado 50,000 Robux gratis',
-        preview: 'Reclama tus monedas antes de que expiren en 15 minutos...',
         date: '10:42 AM',
         isPhishing: true,
         clues: [
-          'Remitente falso: robl0x con un "cero" en lugar de letra "o"',
+          'Remitente falso: "robl0x" usa un cero en vez de "o"',
           'Falsa urgencia: "expiran en 15 minutos"',
-          'Nadie regala 50,000 Robux sin motivo',
         ],
-        explanation: 'Las plataformas oficiales nunca usan dominios como "robl0x-premios-gratis.net" ni regalan monedas por sorpresa.',
-        fullBody: '¡Felicidades jugador! Has sido seleccionado al azar para recibir 50,000 Robux. Haz clic en el siguiente enlace e ingresa tu usuario y contraseña de inmediato para desbloquear el premio.',
+        explanation:
+          'Las plataformas oficiales jamás usan dominios con faltas ("robl0x") ni regalan 50,000 monedas por sorpresa.',
+        fullBody:
+          '¡Felicidades jugador! Has sido seleccionado al azar para recibir 50,000 Robux. Haz clic e ingresa tu usuario y contraseña de inmediato antes de que expire.',
       },
       {
         id: 'em-2',
         senderName: 'Colegio San Patricio',
         senderEmail: 'notificaciones@colegiosanpatricio.edu',
         subject: 'Circular escolar: Horarios de exámenes de mayo',
-        preview: 'Estimados alumnos y familias, adjuntamos el calendario oficial...',
         date: 'Ayer',
         isPhishing: false,
-        clues: ['Dominio oficial .edu', 'Tono formal sin pedidos de claves', 'No contiene enlaces urgentes ni premios'],
-        explanation: 'Este es un correo escolar genuino. El dominio es oficial y no te solicita contraseñas ni datos personales.',
-        fullBody: 'Estimados alumnos: les recordamos que el calendario de evaluaciones trimestrales se encuentra disponible en la cartelera del colegio y en el portal estudiantil.',
+        clues: ['Dominio oficial .edu del colegio', 'No solicita contraseñas ni clics urgentes'],
+        explanation:
+          'Correo escolar legítimo: dominio verificado .edu y sin pedir datos sensibles ni claves.',
+        fullBody:
+          'Estimados alumnos: el calendario de evaluaciones trimestrales ya está disponible en la cartelera del colegio y en el portal estudiantil.',
       },
       {
         id: 'em-3',
-        senderName: 'Equipo de Seguridad Fortnite',
-        senderEmail: 'security-epicgames@alerta-cuentas-bloqueo.com',
-        subject: '¡Tu cuenta será BORRADA en 2 horas por actividad sospechosa!',
-        preview: 'Haz clic aquí para verificar tu identidad o perderás todas tus skins...',
-        date: 'Lunes',
+        senderName: 'Nintendo Rewards',
+        senderEmail: 'premios@switch-sorteo-ganadores.xyz',
+        subject: '¡Ganaste una Nintendo Switch OLED!',
+        date: '25 Abr',
         isPhishing: true,
-        clues: [
-          'Amenaza de borrado de cuenta en tiempo límite',
-          'Dirección de correo falsa ("alerta-cuentas-bloqueo.com")',
-          'Usa el miedo para que actúes sin pensar',
-        ],
-        explanation: 'Los atacantes usan amenazas para que te asustes y pongas tu clave sin verificar el remitente.',
-        fullBody: 'ADVERTENCIA CRÍTICA: Hemos detectado inicio de sesión sospechoso. Tienes 120 minutos para ingresar tu correo y contraseña o tu inventario será permanentemente eliminado.',
+        clues: ['Dominio ".xyz" sospechoso', 'Pide tarjeta para pagar "$2 de envío"'],
+        explanation:
+          'Los sorteos falsos prometen consolas gratis para robar tarjetas de crédito bajo excusa de envío.',
+        fullBody:
+          '¡Ganador confirmado! Tu boleto digital ganó una consola Nintendo Switch OLED. Cubre $2 de envío ingresando tu tarjeta bancaria.',
       },
       {
         id: 'em-4',
-        senderName: 'Biblioteca Municipal',
-        senderEmail: 'prestamos@bibliotecaciudad.org',
-        subject: 'Recordatorio de devolución: El Principito',
-        preview: 'Hola Lucas, tu préstamo vence el próximo viernes 20...',
-        date: '28 Abr',
-        isPhishing: false,
-        clues: ['Remitente institucional .org', 'No solicita contraseñas', 'Información coherente'],
-        explanation: 'Es un simple recordatorio de biblioteca sin enlaces fraudulentos.',
-        fullBody: 'Hola Lucas: te recordamos que tienes prestado el libro "El Principito". Puedes devolverlo en mesa de entrada antes del viernes 20 de mayo.',
+        senderName: 'Discord Gift Drops',
+        senderEmail: 'promo@dlscord-nitro-free.com',
+        subject: 'Alguien te regaló 1 año de Nitro — Reclámalo hoy',
+        date: 'Hace 2h',
+        isPhishing: true,
+        clues: [
+          'Typosquatting: "dlscord" usa una L en vez de I',
+          'Solicita iniciar sesión fuera de discord.com',
+        ],
+        explanation:
+          'Cambiar "i" por "l" ("dlscord") es un truco visual clásico para robar tokens y cuentas.',
+        fullBody:
+          'Un amigo del servidor te envió Nitro por 12 meses. Inicia sesión en nuestro portal externo para activar tu regalo.',
       },
       {
         id: 'em-5',
-        senderName: 'Nintendo Rewards',
-        senderEmail: 'premios@switch-sorteo-ganadores.xyz',
-        subject: '¡Ganaste una Nintendo Switch OLED en el sorteo veraniego!',
-        preview: 'Ingresa tu dirección y número de tarjeta para pagar solo el envío de $2...',
-        date: '25 Abr',
+        senderName: 'Google Security Alerts',
+        senderEmail: 'no-reply@accounts.google.com.verify-token.co',
+        subject: 'Alerta crítica: 3 inicios de sesión bloqueados',
+        date: '09:15 AM',
         isPhishing: true,
         clues: [
-          'Extensión sospechosa ".xyz"',
-          'Piden pagar "solo el envío con tarjeta de crédito"',
-          'No participaste en ningún sorteo',
+          'El dominio raíz real es "verify-token.co", no google.com',
+          'Ingeniería social usando pánico de robo de cuenta',
         ],
-        explanation: 'Los falsos sorteos piden datos de tarjetas de crédito prometiendo regalos costosos.',
-        fullBody: '¡Ganador confirmado! Tu boleto digital resultó premiado con una consola Nintendo Switch. Para recibirla en tu puerta, solo debes cubrir $2 de gastos de envío ingresando una tarjeta de crédito.',
+        explanation:
+          'Aunque diga "accounts.google.com" al principio, el dominio real antes de la barra es "verify-token.co".',
+        fullBody:
+          'Detectamos accesos desde otro país. Confirma tu código 2FA y contraseña ahora mismo en el enlace de verificación o tu cuenta será suspendida.',
       },
-    ],
+      {
+        id: 'em-6',
+        senderName: 'Biblioteca Municipal',
+        senderEmail: 'prestamos@bibliotecaciudad.org',
+        subject: 'Recordatorio de devolución: El Principito',
+        date: '28 Abr',
+        isPhishing: false,
+        clues: ['Dominio institucional .org', 'Información rutinaria sin pedir claves'],
+        explanation:
+          'Recordatorio real de la biblioteca: sin enlaces extraños ni solicitud de datos personales.',
+        fullBody:
+          'Hola Lucas: te recordamos que el préstamo de "El Principito" vence este viernes. Puedes entregarlo en recepción.',
+      },
+    ];
+
+    const frEmails: EmailItem[] = [
+      {
+        id: 'em-1',
+        senderName: 'Support Roblox Officiel',
+        senderEmail: 'support@robl0x-cadeaux-gratuits.net',
+        subject: 'URGENT ! Tu as gagné 50 000 Robux gratuits',
+        date: '10:42',
+        isPhishing: true,
+        clues: ['Faux domaine : "robl0x" avec un zéro', 'Fausse urgence : 15 minutes'],
+        explanation:
+          'Les plateformes officielles n’utilisent jamais "robl0x" et n’offrent pas 50 000 pièces par surprise.',
+        fullBody:
+          'Félicitations joueur ! Tu as été tiré au sort pour 50 000 Robux. Connecte-toi vite avec ton mot de passe avant expiration.',
+      },
+      {
+        id: 'em-2',
+        senderName: 'Collège Saint-Patrick',
+        senderEmail: 'notifications@collegesaintpatrick.edu',
+        subject: 'Circulaire scolaire : Horaires des examens',
+        date: 'Hier',
+        isPhishing: false,
+        clues: ['Domaine officiel .edu', 'Ne demande aucun mot de passe'],
+        explanation:
+          'E-mail scolaire légitime avec un domaine .edu officiel et aucune demande suspecte.',
+        fullBody:
+          'Chers élèves : le calendrier des évaluations est affiché au secrétariat et disponible sur votre espace élève.',
+      },
+      {
+        id: 'em-3',
+        senderName: 'Nintendo Rewards',
+        senderEmail: 'gagnants@switch-tirage-ete.xyz',
+        subject: 'Tu as gagné une Nintendo Switch OLED !',
+        date: '25 Avr',
+        isPhishing: true,
+        clues: ['Extension douteuse ".xyz"', 'Demande une carte bancaire pour 2€ de port'],
+        explanation:
+          'Les faux concours demandent une carte bancaire sous prétexte de livrer un faux cadeau.',
+        fullBody:
+          'Gagnant confirmé ! Règle simplement 2€ de frais de port avec ta carte pour recevoir ta console.',
+      },
+      {
+        id: 'em-4',
+        senderName: 'Discord Gift Drops',
+        senderEmail: 'promo@dlscord-nitro-free.com',
+        subject: '1 an de Nitro offert — Réclame-le vite',
+        date: 'Il y a 2h',
+        isPhishing: true,
+        clues: ['Typosquatting : "dlscord" avec un "l"', 'Lien hors de discord.com'],
+        explanation:
+          'Remplacer le "i" par un "l" ("dlscord") est un piège classique pour voler des comptes.',
+        fullBody:
+          'Un membre du serveur t’a offert 12 mois de Nitro. Connecte-toi via ce portail partenaire pour l’activer.',
+      },
+      {
+        id: 'em-5',
+        senderName: 'Google Security Alerts',
+        senderEmail: 'no-reply@accounts.google.com.verify-token.co',
+        subject: 'Alerte critique : 3 connexions bloquées',
+        date: '09:15',
+        isPhishing: true,
+        clues: ['Le vrai domaine racine est "verify-token.co"', 'Fausse panique sécuritaire'],
+        explanation:
+          'Même avec "accounts.google.com" au début, le véritable propriétaire du domaine est "verify-token.co".',
+        fullBody:
+          'Connexion inhabituelle détectée. Valide ton code 2FA et ton mot de passe ici sous peine de blocage.',
+      },
+      {
+        id: 'em-6',
+        senderName: 'Médiathèque Municipale',
+        senderEmail: 'prets@mediatheque-ville.org',
+        subject: 'Rappel de retour : Le Petit Prince',
+        date: '28 Avr',
+        isPhishing: false,
+        clues: ['Expéditeur institutionnel .org', 'Aucune demande d’identifiants'],
+        explanation: 'Simple rappel de bibliothèque authentique, sans lien malveillant.',
+        fullBody:
+          'Bonjour Lucas : n’oublie pas de rapporter "Le Petit Prince" avant vendredi à l’accueil.',
+      },
+    ];
+
+    const enEmails: EmailItem[] = [
+      {
+        id: 'em-1',
+        senderName: 'Roblox Official Support',
+        senderEmail: 'support@robl0x-free-prizes.net',
+        subject: 'URGENT! You won 50,000 free Robux',
+        date: '10:42 AM',
+        isPhishing: true,
+        clues: ['Fake domain: "robl0x" uses a zero', 'Fake urgency: expires in 15 mins'],
+        explanation:
+          'Official platforms never use misspelled domains like "robl0x" or give away 50,000 coins.',
+        fullBody:
+          'Congrats gamer! You were picked for 50,000 Robux. Sign in with your username and password right away before time runs out.',
+      },
+      {
+        id: 'em-2',
+        senderName: 'St. Patrick School',
+        senderEmail: 'notifications@stpatrickschool.edu',
+        subject: 'School notice: May exam timetable',
+        date: 'Yesterday',
+        isPhishing: false,
+        clues: ['Verified .edu domain', 'Never asks for passwords'],
+        explanation: 'Genuine school message with an official .edu address and no credential requests.',
+        fullBody:
+          'Dear students: the term evaluation schedule is now posted on the school board and student portal.',
+      },
+      {
+        id: 'em-3',
+        senderName: 'Nintendo Rewards',
+        senderEmail: 'prizes@switch-summer-sweepstakes.xyz',
+        subject: 'You won a Nintendo Switch OLED!',
+        date: 'Apr 25',
+        isPhishing: true,
+        clues: ['Suspicious ".xyz" domain', 'Asks for a credit card for $2 shipping'],
+        explanation:
+          'Fake raffles ask for card details claiming a tiny shipping fee for a big prize.',
+        fullBody:
+          'Confirmed winner! Enter your card to cover $2 shipping so we can dispatch your Switch OLED.',
+      },
+      {
+        id: 'em-4',
+        senderName: 'Discord Gift Drops',
+        senderEmail: 'promo@dlscord-nitro-free.com',
+        subject: 'Someone gifted you 1 year of Nitro — Claim now',
+        date: '2h ago',
+        isPhishing: true,
+        clues: ['Typosquatting: "dlscord" swaps "i" for "l"', 'Asks to log in off discord.com'],
+        explanation:
+          'Swapping "i" with "l" ("dlscord") tricks fast readers into typing their login credentials.',
+        fullBody:
+          'A server friend sent you 12 months of Nitro. Sign in via our external claim portal now.',
+      },
+      {
+        id: 'em-5',
+        senderName: 'Google Security Alerts',
+        senderEmail: 'no-reply@accounts.google.com.verify-token.co',
+        subject: 'Critical alert: 3 blocked sign-in attempts',
+        date: '09:15 AM',
+        isPhishing: true,
+        clues: ['Real root domain is "verify-token.co"', 'Urgent fear tactic targeting 2FA'],
+        explanation:
+          'Even though "accounts.google.com" appears first, the actual root domain is "verify-token.co".',
+        fullBody:
+          'Unusual sign-in detected. Confirm your password and 2FA backup code immediately or lose access.',
+      },
+      {
+        id: 'em-6',
+        senderName: 'City Public Library',
+        senderEmail: 'loans@citylibrary.org',
+        subject: 'Return reminder: The Little Prince',
+        date: 'Apr 28',
+        isPhishing: false,
+        clues: ['Institutional .org domain', 'No password or card requests'],
+        explanation: 'Normal library return notice with no phishing links.',
+        fullBody: 'Hi Lucas: please return "The Little Prince" at the front desk by Friday.',
+      },
+    ];
+
+    const pool = language === 'fr' ? frEmails : language === 'en' ? enEmails : esEmails;
+    const deck =
+      ageGroup === '8–10'
+        ? [pool[0], pool[1], pool[2]]
+        : ageGroup === '11–12'
+        ? [pool[3], pool[1], pool[0], pool[5]]
+        : [pool[4], pool[3], pool[1], pool[2], pool[5]];
+
+    const labels = {
+      es: {
+        title: 'Bandeja de Entrada Phishing',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Modo Pro: detecta subdominios falsos y homóglifos'
+            : ageGroup === '11–12'
+            ? 'Inspecciona remitentes y enlaces trampa'
+            : 'Distingue correos reales de trampas',
+        fromLabel: 'De:',
+        inspectHeadersBtn: 'Inspeccionar Remitente',
+        clueHint: 'Revisa letra por letra el dominio después de la "@".',
+        safeBtn: 'Correo Seguro',
+        phishBtn: '¡Es Phishing!',
+        nextBtn: 'Siguiente Correo',
+        correctPrefix: '¡Ojo de halcón!',
+        wrongPrefix: '¡Casi caemos en la trampa!',
+        cluesTitle: 'Evidencia forense:',
+        takeaway:
+          'Mira siempre el dominio completo después de la "@" antes de hacer clic: busca letras cambiadas ("0", "l") y desconfía de premios o bloqueos urgentes.',
+      },
+      fr: {
+        title: 'Boîte de Réception Hameçonnage',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Mode Pro : repère les faux sous-domaines'
+            : ageGroup === '11–12'
+            ? 'Inspecte les expéditeurs et pièges'
+            : 'Repère les vrais mails et les pièges',
+        fromLabel: 'De :',
+        inspectHeadersBtn: 'Inspecter l’adresse',
+        clueHint: 'Vérifie chaque lettre du domaine après le "@".',
+        safeBtn: 'E-mail Sûr',
+        phishBtn: 'C’est du Phishing !',
+        nextBtn: 'E-mail Suivant',
+        correctPrefix: 'Bien joué !',
+        wrongPrefix: 'Attention au piège :',
+        cluesTitle: 'Indices repérés :',
+        takeaway:
+          'Inspecte toujours l’adresse complète après le "@" (attention aux "0" ou "l") et méfie-toi des urgences ou cadeaux impossibles.',
+      },
+      en: {
+        title: 'Phishing Inbox Inspector',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Pro Mode: catch spoofed subdomains & homoglyphs'
+            : ageGroup === '11–12'
+            ? 'Verify sender addresses and urgency traps'
+            : 'Separate real emails from scams',
+        fromLabel: 'From:',
+        inspectHeadersBtn: 'Inspect Sender Address',
+        clueHint: 'Check the exact domain after the "@" character-by-character.',
+        safeBtn: 'Legitimate Email',
+        phishBtn: 'It’s Phishing!',
+        nextBtn: 'Next Email',
+        correctPrefix: 'Sharp catch!',
+        wrongPrefix: 'Careful! Watch this detail:',
+        cluesTitle: 'Forensic evidence:',
+        takeaway:
+          'Always verify the exact domain after "@", spot lookalike characters ("0", "1", "l"), and never rush when threatened with account deletion.',
+      },
+    }[language];
+
+    return { deck, labels };
+  }, [ageGroup, language]);
+
+  const [idx, setIdx] = useState(0);
+  const [headerHighlighted, setHeaderHighlighted] = useState(ageGroup === '8–10');
+  const [verdict, setVerdict] = useState<'safe' | 'phishing' | null>(null);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(1);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [finished, setFinished] = useState(false);
+
+  const current = copy.deck[idx];
+
+  const handleVote = (choice: 'safe' | 'phishing') => {
+    if (verdict) return;
+    const isCorrect =
+      (choice === 'phishing' && current.isPhishing) ||
+      (choice === 'safe' && !current.isPhishing);
+
+    setVerdict(choice);
+    if (isCorrect) {
+      const nextStreak = streak + 1;
+      setStreak(nextStreak);
+      setMaxStreak((m) => Math.max(m, nextStreak));
+      setCorrectCount((c) => c + 1);
+      setScore((s) => s + 120 + nextStreak * 25);
+      playGameSound(nextStreak > 1 ? 'combo' : 'correct');
+    } else {
+      setStreak(0);
+      playGameSound('wrong');
+    }
   };
 
-  const loc = locData[language] || locData.en || locData.es;
+  const handleNext = () => {
+    if (idx < copy.deck.length - 1) {
+      setIdx((i) => i + 1);
+      setVerdict(null);
+      setHeaderHighlighted(ageGroup === '8–10');
+    } else {
+      playGameSound('win');
+      setFinished(true);
+    }
+  };
 
-  const [selectedEmail, setSelectedEmail] = useState<EmailItem>(loc.emails[0]);
-  const [analyzedEmails, setAnalyzedEmails] = useState<Record<string, 'safe' | 'phishing'>>({});
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const handleReplay = () => {
+    setIdx(0);
+    setVerdict(null);
+    setHeaderHighlighted(ageGroup === '8–10');
+    setScore(0);
+    setStreak(0);
+    setMaxStreak(1);
+    setCorrectCount(0);
+    setFinished(false);
+  };
 
-  // Keep selected email synced if language changes
-  const activeEmail = loc.emails.find((e) => e.id === selectedEmail.id) || loc.emails[0];
+  const answeredCount = idx + (verdict ? 1 : 0);
+  const accuracy = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 100;
 
-  const handleVote = (verdict: 'safe' | 'phishing') => {
-    const isCorrect = (verdict === 'phishing' && activeEmail.isPhishing) || (verdict === 'safe' && !activeEmail.isPhishing);
-
-    setAnalyzedEmails((prev) => ({ ...prev, [activeEmail.id]: verdict }));
-    setFeedback(
-      isCorrect
-        ? `${loc.correctPrefix} ${activeEmail.explanation}`
-        : `${loc.wrongPrefix} ${activeEmail.explanation}`
+  if (finished) {
+    const finalAcc = Math.round((correctCount / copy.deck.length) * 100);
+    const stats: GameResultStats = {
+      stars: computeStars(finalAcc, ageGroup),
+      accuracy: finalAcc,
+      score,
+      streakMax: maxStreak,
+      ageGroup,
+    };
+    return (
+      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+        <GameVictorySummary
+          title={copy.labels.title}
+          takeaway={copy.labels.takeaway}
+          stats={stats}
+          ageGroup={ageGroup}
+          onReplay={handleReplay}
+          onContinue={onComplete}
+        />
+      </div>
     );
-  };
+  }
 
-  const completedCount = Object.keys(analyzedEmails).length;
-  const allReviewed = completedCount >= 3;
+  const isAnswerCorrect =
+    verdict !== null &&
+    ((verdict === 'phishing' && current.isPhishing) ||
+      (verdict === 'safe' && !current.isPhishing));
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
-      {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
-            <Mail className="w-6 h-6" />
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+      <GameHud
+        title={copy.labels.title}
+        subtitle={copy.labels.subtitle}
+        icon={<Mail className="w-5 h-5" />}
+        accentColor="amber"
+        ageGroup={ageGroup}
+        currentStep={idx + 1}
+        totalSteps={copy.deck.length}
+        score={score}
+        streak={streak}
+        accuracy={answeredCount > 0 ? accuracy : undefined}
+      />
+
+      {/* Active Email Client Card */}
+      <motion.div
+        key={current.id}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4"
+      >
+        <div className="border-b border-slate-100 pb-3 space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-black text-slate-900">{current.senderName}</span>
+            <span className="text-xs text-slate-400 font-mono tabular-nums">{current.date}</span>
           </div>
-          <div>
-            <div className="text-xs uppercase font-extrabold text-amber-600 tracking-wider">
-              {loc.tag}
+
+          <div
+            className={`text-xs font-mono px-3 py-2 rounded-xl border break-all flex items-center justify-between gap-2 ${
+              headerHighlighted
+                ? 'bg-amber-50 border-amber-300 text-amber-950'
+                : 'bg-slate-50 border-slate-200 text-slate-600'
+            }`}
+          >
+            <div>
+              <span className="text-slate-400">{copy.labels.fromLabel} </span>
+              <strong className="text-slate-900">{current.senderEmail}</strong>
             </div>
-            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200">
-          <Search className="w-3.5 h-3.5" />
-          <span>{loc.reviewedBadge(completedCount)}</span>
-        </div>
-      </div>
-
-      {/* Mascot Advice */}
-      <div className="flex items-center gap-3.5 p-4 bg-amber-50/80 rounded-3xl border border-amber-100">
-        <CiberMascot size="sm" expression="thinking" className="shrink-0" />
-        <div className="text-xs sm:text-sm text-amber-900 leading-relaxed">
-          {loc.mascot}
-        </div>
-      </div>
-
-      {/* Email Selector Carousel / List */}
-      <div className="space-y-2">
-        <div className="text-xs font-bold text-slate-500">{loc.selectPrompt}</div>
-        <div className="grid grid-cols-1 gap-2">
-          {loc.emails.map((email) => {
-            const status = analyzedEmails[email.id];
-            const isSelected = activeEmail.id === email.id;
-
-            return (
+            {!headerHighlighted && !verdict && (
               <button
-                key={email.id}
+                type="button"
                 onClick={() => {
-                  setSelectedEmail(email);
-                  setFeedback(null);
+                  playGameSound('tap');
+                  setHeaderHighlighted(true);
                 }}
-                className={`p-3 rounded-2xl text-left border transition cursor-pointer flex items-center justify-between ${
-                  isSelected
-                    ? 'bg-amber-50/60 border-amber-400 ring-2 ring-amber-300'
-                    : 'bg-white border-slate-100 hover:border-slate-300 shadow-sm'
-                }`}
+                className="shrink-0 px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 text-[11px] font-bold flex items-center gap-1 cursor-pointer"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                      status === 'phishing'
-                        ? 'bg-rose-100 text-rose-600'
-                        : status === 'safe'
-                        ? 'bg-emerald-100 text-emerald-600'
-                        : 'bg-slate-100 text-slate-500'
-                    }`}
-                  >
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div className="truncate">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-900 truncate">
-                        {email.senderName}
-                      </span>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        {email.date}
-                      </span>
-                    </div>
-                    <div className="text-xs text-slate-600 truncate">{email.subject}</div>
-                  </div>
-                </div>
-
-                {status && (
-                  <span
-                    className={`shrink-0 ml-2 px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
-                      status === 'phishing'
-                        ? 'bg-rose-100 text-rose-700'
-                        : 'bg-emerald-100 text-emerald-700'
-                    }`}
-                  >
-                    {status === 'phishing' ? loc.trapBadge : loc.safeBadge}
-                  </span>
-                )}
+                <Eye className="w-3.5 h-3.5" />
+                <span>{copy.labels.inspectHeadersBtn}</span>
               </button>
-            );
-          })}
-        </div>
-      </div>
+            )}
+          </div>
 
-      {/* Selected Email Detailed Inspector */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
-        <div className="border-b border-slate-100 pb-2.5">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-800">{activeEmail.senderName}</span>
-            <span className="text-[10px] text-slate-400 font-mono">{activeEmail.date}</span>
-          </div>
-          {/* Detailed sender address */}
-          <div className="text-[11px] font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded-lg mt-1 break-all">
-            {loc.fromLabel} <strong className="text-slate-800">{activeEmail.senderEmail}</strong>
-          </div>
-          <h3 className="text-sm font-black text-slate-900 mt-2">{activeEmail.subject}</h3>
+          <h3 className="text-base font-black text-slate-900 leading-snug">{current.subject}</h3>
         </div>
 
-        {/* Body content */}
-        <p className="text-xs text-slate-700 leading-relaxed bg-slate-50/50 p-3 rounded-2xl border border-slate-100">
-          {activeEmail.fullBody}
+        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
+          {current.fullBody}
         </p>
 
-        {/* Detective Clues */}
-        <div className="space-y-1.5 pt-1">
-          <div className="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-            <Search className="w-3.5 h-3.5 text-amber-500" />
-            <span>{loc.cluesTitle}</span>
+        {!verdict && headerHighlighted && (
+          <div className="text-xs text-amber-800 bg-amber-50/70 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2 font-medium">
+            <Search className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>{copy.labels.clueHint}</span>
           </div>
-          <ul className="space-y-1">
-            {activeEmail.clues.map((clue, idx) => (
-              <li key={idx} className="text-[11px] text-slate-600 flex items-start gap-1.5">
-                <span className="text-amber-500 font-bold">•</span>
-                <span>{clue}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        )}
 
-        {/* Feedback block */}
+        {/* Reveal forensic clues ONLY AFTER voting */}
         <AnimatePresence>
-          {feedback && (
+          {verdict && (
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-sky-50 border border-sky-200 rounded-2xl text-xs text-sky-900 flex items-start gap-2"
+              className={`p-4 rounded-2xl border space-y-2 ${
+                isAnswerCorrect
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                  : 'bg-amber-50 border-amber-200 text-amber-950'
+              }`}
             >
-              <CiberMascot size="sm" expression="excited" className="shrink-0" />
-              <div className="leading-snug">{feedback}</div>
+              <div className="font-black text-sm flex items-center gap-1.5">
+                {isAnswerCorrect ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <XCircle className="w-4 h-4 text-amber-600" />
+                )}
+                <span>
+                  {isAnswerCorrect ? copy.labels.correctPrefix : copy.labels.wrongPrefix}
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium leading-relaxed">
+                {current.explanation}
+              </p>
+              <div className="pt-1 border-t border-black/10 space-y-1">
+                <div className="text-[11px] font-black uppercase tracking-wider opacity-75">
+                  {copy.labels.cluesTitle}
+                </div>
+                {current.clues.map((clue, i) => (
+                  <div key={i} className="text-xs flex items-start gap-1.5 font-medium">
+                    <span>•</span>
+                    <span>{clue}</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Choice Buttons for this email */}
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        {/* Verdict Action Buttons */}
+        <div className="grid grid-cols-2 gap-3">
           <button
+            type="button"
+            disabled={!!verdict}
             onClick={() => handleVote('safe')}
-            className="py-2.5 px-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+            className={`py-3.5 px-3 rounded-2xl border-2 font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] ${
+              verdict === 'safe'
+                ? !current.isPhishing
+                  ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
+                  : 'bg-rose-50 border-rose-500 text-rose-800'
+                : 'bg-emerald-50/70 hover:bg-emerald-100 border-emerald-200 text-emerald-800'
+            }`}
           >
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>{loc.safeBtn}</span>
+            <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            <span>{copy.labels.safeBtn}</span>
           </button>
+
           <button
+            type="button"
+            disabled={!!verdict}
             onClick={() => handleVote('phishing')}
-            className="py-2.5 px-3 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold text-xs border border-rose-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+            className={`py-3.5 px-3 rounded-2xl border-2 font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer active:scale-[0.98] ${
+              verdict === 'phishing'
+                ? current.isPhishing
+                  ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
+                  : 'bg-rose-50 border-rose-500 text-rose-800'
+                : 'bg-rose-50/70 hover:bg-rose-100 border-rose-200 text-rose-800'
+            }`}
           >
-            <AlertTriangle className="w-4 h-4 text-rose-600" />
-            <span>{loc.phishBtn}</span>
+            <AlertTriangle className="w-5 h-5 text-rose-600" />
+            <span>{copy.labels.phishBtn}</span>
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Completion CTA */}
-      <button
-        onClick={onComplete}
-        disabled={!allReviewed}
-        className={`w-full py-3.5 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-          allReviewed
-            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:from-amber-400 hover:to-orange-400 active:scale-95'
-            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-        }`}
-      >
-        <ShieldCheck className="w-4 h-4" />
-        <span>{allReviewed ? loc.completeBtn : loc.needMoreBtn(completedCount)}</span>
-      </button>
+      {verdict && (
+        <button
+          type="button"
+          onClick={handleNext}
+          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+        >
+          <span>{copy.labels.nextBtn}</span>
+          <ArrowRight className="w-5 h-5" />
+        </button>
+      )}
     </div>
   );
 };

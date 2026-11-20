@@ -1,294 +1,413 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Sliders, Globe, Users, Lock, ShieldCheck, Eye, EyeOff, Check } from 'lucide-react';
-import { CiberMascot } from '../CiberMascot';
+import React, { useState, useMemo } from 'react';
+import {
+  Sliders,
+  Globe,
+  Users,
+  Lock,
+  ShieldCheck,
+  Eye,
+  AlertTriangle,
+  CheckCircle2,
+} from 'lucide-react';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { ChildAgeGroup } from '../../types';
+import { ChildAgeGroup, GameResultStats } from '../../types';
+import { GameHud, GameVictorySummary } from './GameShell';
+import { computeStars } from '../../utils/ageDifficulty';
+import { playGameSound } from '../../utils/gameAudio';
 
 interface PrivacyDialGameProps {
-  onComplete: () => void;
+  onComplete: (stats?: GameResultStats) => void;
   ageGroup?: ChildAgeGroup;
 }
 
-export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
+type DialValue = 'public' | 'friends' | 'private';
+
+interface DialConfig {
+  id: string;
+  label: string;
+  requiredSafe: DialValue[]; // allowed safe choices
+  strangerRiskLabel: string;
+  strangerSafeLabel: string;
+  questionLabel: string;
+  useMessageLabels?: boolean;
+}
+
+export const PrivacyDialGame: React.FC<PrivacyDialGameProps> = ({
+  onComplete,
+  ageGroup = '8–10' as ChildAgeGroup,
+}) => {
   const { language } = useLanguage();
 
-  // Settings
-  const [photoSetting, setPhotoSetting] = useState<'public' | 'friends' | 'private'>('public');
-  const [locationSetting, setLocationSetting] = useState<'public' | 'friends' | 'private'>('public');
-  const [messagesSetting, setMessagesSetting] = useState<'public' | 'friends' | 'private'>('public');
+  const copy = useMemo(() => {
+    const allDials: Record<string, DialConfig[]> = {
+      es: [
+        {
+          id: 'location',
+          label: 'Ubicación GPS en publicaciones',
+          requiredSafe: ['private'],
+          questionLabel: '¿Ve dónde vives / estudias?',
+          strangerRiskLabel: 'Visible en el mapa',
+          strangerSafeLabel: 'Oculto (Solo tú)',
+        },
+        {
+          id: 'photos',
+          label: '¿Quién ve mis fotos y videos?',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: '¿Ve tus álbumes?',
+          strangerRiskLabel: 'Abierto a cualquiera',
+          strangerSafeLabel: 'Solo amigos reales',
+        },
+        {
+          id: 'messages',
+          label: '¿Quién puede enviarme mensajes directos?',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: '¿Puede enviarte DMs?',
+          strangerRiskLabel: 'Bandeja abierta',
+          strangerSafeLabel: 'Extraños bloqueados',
+          useMessageLabels: true,
+        },
+        {
+          id: 'voice',
+          label: 'Chat de voz y solicitudes de juego',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: '¿Puede oír tu micrófono?',
+          strangerRiskLabel: 'Cualquier sala pública',
+          strangerSafeLabel: 'Solo escuadrón amigo',
+          useMessageLabels: true,
+        },
+        {
+          id: 'tracking',
+          label: 'Compartir actividad con apps externas',
+          requiredSafe: ['private'],
+          questionLabel: '¿Rastrea tus otras apps?',
+          strangerRiskLabel: 'Rastreo activo',
+          strangerSafeLabel: 'Bloqueado (Desactivado)',
+        },
+      ],
+      fr: [
+        {
+          id: 'location',
+          label: 'Position GPS sur les publications',
+          requiredSafe: ['private'],
+          questionLabel: 'Voit-il où tu habites ?',
+          strangerRiskLabel: 'Visible sur la carte',
+          strangerSafeLabel: 'Masqué (Moi seul)',
+        },
+        {
+          id: 'photos',
+          label: 'Qui peut voir mes photos et vidéos ?',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: 'Voit-il tes albums ?',
+          strangerRiskLabel: 'Ouvert à tous',
+          strangerSafeLabel: 'Amis vérifiés',
+        },
+        {
+          id: 'messages',
+          label: 'Qui peut m’envoyer des messages privés ?',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: 'Peut-il t’écrire en DM ?',
+          strangerRiskLabel: 'Boîte ouverte à tous',
+          strangerSafeLabel: 'Inconnus bloqués',
+          useMessageLabels: true,
+        },
+        {
+          id: 'voice',
+          label: 'Chat vocal et demandes d’amis en jeu',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: 'Entend-il ton micro ?',
+          strangerRiskLabel: 'Salon public ouvert',
+          strangerSafeLabel: 'Escouade d’amis',
+          useMessageLabels: true,
+        },
+        {
+          id: 'tracking',
+          label: 'Partage d’activité avec des applis tierces',
+          requiredSafe: ['private'],
+          questionLabel: 'Suit-il tes autres applis ?',
+          strangerRiskLabel: 'Suivi public actif',
+          strangerSafeLabel: 'Désactivé',
+        },
+      ],
+      en: [
+        {
+          id: 'location',
+          label: 'GPS location on posts',
+          requiredSafe: ['private'],
+          questionLabel: 'Can strangers see where you are?',
+          strangerRiskLabel: 'Visible on map',
+          strangerSafeLabel: 'Hidden (Only Me)',
+        },
+        {
+          id: 'photos',
+          label: 'Who can view my photos & videos?',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: 'Can they browse your albums?',
+          strangerRiskLabel: 'Public to everyone',
+          strangerSafeLabel: 'Trusted friends only',
+        },
+        {
+          id: 'messages',
+          label: 'Who can send direct messages?',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: 'Can strangers DM you?',
+          strangerRiskLabel: 'Inbox wide open',
+          strangerSafeLabel: 'Strangers blocked',
+          useMessageLabels: true,
+        },
+        {
+          id: 'voice',
+          label: 'Voice chat & multiplayer invites',
+          requiredSafe: ['friends', 'private'],
+          questionLabel: 'Can random players voice-chat?',
+          strangerRiskLabel: 'Open public lobby',
+          strangerSafeLabel: 'Squad friends only',
+          useMessageLabels: true,
+        },
+        {
+          id: 'tracking',
+          label: 'Cross-app activity & data sharing',
+          requiredSafe: ['private'],
+          questionLabel: 'Is third-party tracking on?',
+          strangerRiskLabel: 'Sharing enabled',
+          strangerSafeLabel: 'Blocked (Only Me)',
+        },
+      ],
+    };
 
-  const isSafeEnough = photoSetting !== 'public' && locationSetting === 'private' && messagesSetting !== 'public';
+    const dialCount = ageGroup === '13–14' ? 5 : ageGroup === '11–12' ? 4 : 3;
+    const dials = allDials[language].slice(0, dialCount);
 
-  const getAgeMascotText = () => {
-    if (ageGroup === '13–14') {
-      if (language === 'en') return 'Ciber says: "Disable background GPS tagging and restrict direct messaging to trusted contacts to curb your digital footprint."';
-      if (language === 'fr') return 'Ciber dit : "Désactive la géolocalisation GPS en arrière-plan et limite les messages privés aux contacts vérifiés."';
-      return 'Ciber dice: "Desactiva la geolocalización GPS en publicaciones y restringe mensajes privados a contactos reales para blindar tu huella digital."';
-    }
-    if (ageGroup === '11–12') {
-      if (language === 'en') return 'Ciber says: "On TikTok, gaming profiles, and Discord, keep your location completely off and DMs limited to trusted friends."';
-      if (language === 'fr') return 'Ciber dit : "Sur TikTok et Discord, garde ta position désactivée et tes messages réservés à tes vrais amis."';
-      return 'Ciber dice: "En TikTok, perfiles de juegos y Discord, mantén tu ubicación apagada y tus mensajes solo para amigos conocidos."';
-    }
-    if (language === 'en') return 'Ciber says: "Turn the dials so strangers cannot see your house or send you unsolicited messages!"';
-    if (language === 'fr') return 'Ciber dit : "Tourne les curseurs pour que les inconnus ne puissent pas voir où tu es ni t’écrire en privé !"';
-    return 'Ciber dice: "Mueve los diales para que un desconocido en Internet no pueda ver dónde estás ni mandarte mensajes privados."';
+    const labels = {
+      es: {
+        title: 'El Dial de Privacidad',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Blinda 5 controles incluyendo rastreo externo y GPS'
+            : ageGroup === '11–12'
+            ? 'Configura 4 escudos de perfil y chat de voz'
+            : 'Ajusta los 3 diales para ocultar tus datos',
+        levels: { public: 'Público', friends: 'Amigos', private: 'Solo yo' },
+        msgLevels: { public: 'Todos', friends: 'Amigos', private: 'Nadie' },
+        previewTitle: 'Vista previa de un desconocido:',
+        auditBtn: 'Verificar y Sellar Perfil',
+        errorFeedback:
+          'Aún quedan puertas abiertas para desconocidos: el GPS y el rastreo deben estar en "Solo yo" y ningún ajuste debe quedar en "Público".',
+        takeaway:
+          'Revisa siempre tus ajustes de privacidad al crear una cuenta: apaga la ubicación GPS pública, limita mensajes y voz a amigos reales y bloquea el rastreo entre apps.',
+      },
+      fr: {
+        title: 'Le Cadran de Confidentialité',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Verrouille 5 réglages dont le pistage tiers et le GPS'
+            : ageGroup === '11–12'
+            ? 'Configure 4 boucliers de profil et chat vocal'
+            : 'Règle les 3 curseurs pour masquer tes données',
+        levels: { public: 'Public', friends: 'Amis', private: 'Moi seul' },
+        msgLevels: { public: 'Tous', friends: 'Amis', private: 'Personne' },
+        previewTitle: 'Ce que voit un inconnu en ligne :',
+        auditBtn: 'Auditer & Verrouiller le Profil',
+        errorFeedback:
+          'Il reste des failles visibles pour les inconnus : la position GPS et le suivi doivent être sur "Moi seul", et rien ne doit rester "Public".',
+        takeaway:
+          'Vérifie toujours les paramètres dès l’inscription : coupe le GPS public, limite messages et micro aux vrais amis et refuse le pistage tiers.',
+      },
+      en: {
+        title: 'The Privacy Dial',
+        subtitle:
+          ageGroup === '13–14'
+            ? 'Lock down 5 controls including cross-app tracking & GPS'
+            : ageGroup === '11–12'
+            ? 'Secure 4 profile & voice-lobby privacy dials'
+            : 'Adjust all 3 dials to shield your personal info',
+        levels: { public: 'Public', friends: 'Friends', private: 'Only Me' },
+        msgLevels: { public: 'Anyone', friends: 'Friends', private: 'Nobody' },
+        previewTitle: 'Live stranger view preview:',
+        auditBtn: 'Verify & Lock Privacy Shield',
+        errorFeedback:
+          'A stranger can still reach exposed data: set GPS location and cross-app tracking to "Only Me", and keep zero dials on "Public".',
+        takeaway:
+          'Check privacy controls on every new app: turn off public GPS location, restrict DMs and voice lobbies to real friends, and block cross-app tracking.',
+      },
+    }[language];
+
+    return { dials, labels };
+  }, [ageGroup, language]);
+
+  const [values, setValues] = useState<Record<string, DialValue>>({
+    location: 'public',
+    photos: 'public',
+    messages: 'public',
+    voice: 'public',
+    tracking: 'public',
+  });
+  const [auditAttempts, setAuditAttempts] = useState(0);
+  const [showError, setShowError] = useState(false);
+  const [finished, setFinished] = useState(false);
+
+  const safeCount = copy.dials.filter((d) => d.requiredSafe.includes(values[d.id])).length;
+  const allSafe = safeCount === copy.dials.length;
+
+  const handleSetDial = (id: string, val: DialValue) => {
+    playGameSound('tap');
+    setShowError(false);
+    setValues((prev) => ({ ...prev, [id]: val }));
   };
 
-  const locData = {
-    es: {
-      tag: `Mecánica 7 • Nivel ${ageGroup} años`,
-      title: 'El Dial de Privacidad',
-      shieldedStatus: 'Perfil Blindado',
-      exposedStatus: 'Datos Expuestos',
-      mascot: getAgeMascotText(),
-      dial1Label: 'Ubicación GPS en publicaciones',
-      dial2Label: '¿Quién ve mis fotos y videos?',
-      dial3Label: '¿Quién puede enviarme mensajes directos?',
-      levels: {
-        public: 'Público',
-        friends: 'Amigos',
-        private: 'Solo yo',
-      },
-      messageLevels: {
-        public: 'Cualquiera',
-        friends: 'Solo Amigos',
-        private: 'Nadie',
-      },
-      previewTitle: 'Vista de un desconocido en Internet:',
-      q1: '¿Puede ver dónde vives / estudias?',
-      q1Yes: '⚠️ Sí (Visible)',
-      q1No: '🔒 Oculto',
-      q2: '¿Puede ver tus fotos privadas?',
-      q2Yes: '⚠️ Sí (Cualquiera)',
-      q2No: '🔒 Solo Amigos',
-      q3: '¿Puede escribirte un mensaje directo?',
-      q3Yes: '⚠️ Sí (Abierto)',
-      q3No: '🔒 Bloqueado a extraños',
-      saveBtn: '¡Guardar Configuración Segura!',
-      needAdjustBtn: 'Ajusta la ubicación y mensajes a modo seguro',
-    },
-    fr: {
-      tag: 'Mécanique 7 / Confidentialité',
-      title: 'Le Cadran de Confidentialité',
-      shieldedStatus: 'Profil Blindé',
-      exposedStatus: 'Données Exposées',
-      mascot: 'Ciber dit : "Ajuste les curseurs pour qu’un inconnu sur le web ne sache pas où tu es et ne puisse pas t’écrire en privé."',
-      dial1Label: 'Position GPS sur les publications',
-      dial2Label: 'Qui peut voir mes photos et vidéos ?',
-      dial3Label: 'Qui peut m’envoyer des messages privés ?',
-      levels: {
-        public: 'Public',
-        friends: 'Amis',
-        private: 'Moi seul',
-      },
-      messageLevels: {
-        public: 'Tout le monde',
-        friends: 'Amis seuls',
-        private: 'Personne',
-      },
-      previewTitle: 'Ce que voit un inconnu en ligne :',
-      q1: 'Peut-il voir où tu habites / étudies ?',
-      q1Yes: '⚠️ Oui (Visible)',
-      q1No: '🔒 Masqué',
-      q2: 'Peut-il voir tes photos personnelles ?',
-      q2Yes: '⚠️ Oui (Tout le monde)',
-      q2No: '🔒 Amis seulement',
-      q3: 'Peut-il t’envoyer un message direct ?',
-      q3Yes: '⚠️ Oui (Ouvert)',
-      q3No: '🔒 Inconnus bloqués',
-      saveBtn: 'Enregistrer le Profil Sécurisé !',
-      needAdjustBtn: 'Règle la localisation et les messages en mode sûr',
-    },
-    en: {
-      tag: 'Mechanic 7 / Privacy',
-      title: 'The Privacy Dial',
-      shieldedStatus: 'Armored Profile',
-      exposedStatus: 'Exposed Data',
-      mascot: 'Ciber says: "Adjust the dials so an internet stranger cannot track where you are or slide into your DMs."',
-      dial1Label: 'GPS location on posts',
-      dial2Label: 'Who can view my photos and videos?',
-      dial3Label: 'Who can send me direct messages?',
-      levels: {
-        public: 'Public',
-        friends: 'Friends',
-        private: 'Only Me',
-      },
-      messageLevels: {
-        public: 'Anyone',
-        friends: 'Friends Only',
-        private: 'Nobody',
-      },
-      previewTitle: 'What a random stranger online sees:',
-      q1: 'Can they see where you live / attend school?',
-      q1Yes: '⚠️ Yes (Visible)',
-      q1No: '🔒 Hidden',
-      q2: 'Can they view your private photos?',
-      q2Yes: '⚠️ Yes (Anyone)',
-      q2No: '🔒 Friends Only',
-      q3: 'Can they send you direct messages?',
-      q3Yes: '⚠️ Yes (Open)',
-      q3No: '🔒 Strangers blocked',
-      saveBtn: 'Save Safe Privacy Settings!',
-      needAdjustBtn: 'Set location & direct messages to a safe level',
-    },
+  const handleVerify = () => {
+    const nextAttempts = auditAttempts + 1;
+    setAuditAttempts(nextAttempts);
+    if (!allSafe) {
+      playGameSound('wrong');
+      setShowError(true);
+      return;
+    }
+    playGameSound('win');
+    setFinished(true);
   };
 
-  const loc = locData[language] || locData.en || locData.es;
+  const handleReplay = () => {
+    setValues({
+      location: 'public',
+      photos: 'public',
+      messages: 'public',
+      voice: 'public',
+      tracking: 'public',
+    });
+    setAuditAttempts(0);
+    setShowError(false);
+    setFinished(false);
+  };
+
+  if (finished) {
+    const accuracy = Math.max(65, Math.round((1 / Math.max(1, auditAttempts)) * 100));
+    const score = copy.dials.length * 100 + (auditAttempts === 1 ? 150 : 50);
+    const stats: GameResultStats = {
+      stars: computeStars(accuracy, ageGroup),
+      accuracy,
+      score,
+      streakMax: safeCount,
+      ageGroup,
+    };
+    return (
+      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+        <GameVictorySummary
+          title={copy.labels.title}
+          takeaway={copy.labels.takeaway}
+          stats={stats}
+          ageGroup={ageGroup}
+          onReplay={handleReplay}
+          onContinue={onComplete}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
-      {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
-            <Sliders className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-xs uppercase font-extrabold text-cyan-600 tracking-wider">
-              {loc.tag}
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+      <GameHud
+        title={copy.labels.title}
+        subtitle={copy.labels.subtitle}
+        icon={<Sliders className="w-5 h-5" />}
+        accentColor="cyan"
+        ageGroup={ageGroup}
+        currentStep={safeCount}
+        totalSteps={copy.dials.length}
+        score={safeCount * 100}
+        streak={safeCount}
+      />
+
+      {/* Interactive Dials */}
+      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4">
+        {copy.dials.map((dial) => {
+          const curr = values[dial.id];
+          const isDialSafe = dial.requiredSafe.includes(curr);
+          const labelsMap = dial.useMessageLabels ? copy.labels.msgLevels : copy.labels.levels;
+
+          return (
+            <div key={dial.id} className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-700 gap-2">
+                <span className="flex items-center gap-1.5">
+                  {isDialSafe ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+                  )}
+                  <span>{dial.label}</span>
+                </span>
+                <span
+                  className={`text-[11px] uppercase font-black shrink-0 ${
+                    isDialSafe ? 'text-emerald-700' : 'text-rose-600'
+                  }`}
+                >
+                  {labelsMap[curr]}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl">
+                {(['public', 'friends', 'private'] as const).map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    onClick={() => handleSetDial(dial.id, level)}
+                    className={`py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                      curr === level
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    {level === 'public' && <Globe className="w-3.5 h-3.5" />}
+                    {level === 'friends' && <Users className="w-3.5 h-3.5" />}
+                    {level === 'private' && <Lock className="w-3.5 h-3.5" />}
+                    <span>{labelsMap[level]}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <h2 className="text-base font-black text-slate-900">{loc.title}</h2>
-          </div>
-        </div>
-        <span className={`text-xs font-bold ${isSafeEnough ? 'text-emerald-700' : 'text-amber-700'}`}>
-          {isSafeEnough ? loc.shieldedStatus : loc.exposedStatus}
-        </span>
+          );
+        })}
       </div>
 
-      {/* Mascot advice */}
-      <div className="flex items-center gap-3 p-3 bg-cyan-50/80 rounded-2xl border border-cyan-100">
-        <CiberMascot size="sm" expression={isSafeEnough ? 'celebrating' : 'thinking'} />
-        <div className="text-xs text-cyan-950 leading-snug">
-          {loc.mascot}
-        </div>
-      </div>
-
-      {/* 3 Privacy Dials */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-4">
-        {/* Dial 1: Ubicación en vivo */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-            <span>{loc.dial1Label}</span>
-            <span className="text-[10px] uppercase text-cyan-600 font-extrabold">{loc.levels[locationSetting]}</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl">
-            {(['public', 'friends', 'private'] as const).map((level) => (
-              <button
-                key={level}
-                onClick={() => setLocationSetting(level)}
-                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
-                  locationSetting === level
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                {level === 'public' && <Globe className="w-3.5 h-3.5" />}
-                {level === 'friends' && <Users className="w-3.5 h-3.5" />}
-                {level === 'private' && <Lock className="w-3.5 h-3.5" />}
-                <span>{loc.levels[level]}</span>
-              </button>
-            ))}
-          </div>
+      {/* Live Stranger Preview */}
+      <div className="bg-white rounded-3xl p-4 shadow-xs border border-slate-200/80 space-y-2.5">
+        <div className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+          <Eye className="w-4 h-4 text-sky-600" />
+          <span>{copy.labels.previewTitle}</span>
         </div>
 
-        {/* Dial 2: Fotos & Álbumes */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-            <span>{loc.dial2Label}</span>
-            <span className="text-[10px] uppercase text-cyan-600 font-extrabold">{loc.levels[photoSetting]}</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl">
-            {(['public', 'friends', 'private'] as const).map((level) => (
-              <button
-                key={level}
-                onClick={() => setPhotoSetting(level)}
-                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
-                  photoSetting === level
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                {level === 'public' && <Globe className="w-3.5 h-3.5" />}
-                {level === 'friends' && <Users className="w-3.5 h-3.5" />}
-                {level === 'private' && <Lock className="w-3.5 h-3.5" />}
-                <span>{loc.levels[level]}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Dial 3: Mensajes Directos */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-            <span>{loc.dial3Label}</span>
-            <span className="text-[10px] uppercase text-cyan-600 font-extrabold">{loc.messageLevels[messagesSetting]}</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl">
-            {(['public', 'friends', 'private'] as const).map((level) => (
-              <button
-                key={level}
-                onClick={() => setMessagesSetting(level)}
-                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
-                  messagesSetting === level
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                {level === 'public' && <Globe className="w-3.5 h-3.5" />}
-                {level === 'friends' && <Users className="w-3.5 h-3.5" />}
-                {level === 'private' && <Lock className="w-3.5 h-3.5" />}
-                <span>{loc.messageLevels[level]}</span>
-              </button>
-            ))}
-          </div>
+        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 text-xs space-y-2">
+          {copy.dials.map((dial) => {
+            const isDialSafe = dial.requiredSafe.includes(values[dial.id]);
+            return (
+              <div key={dial.id} className="flex items-center justify-between gap-2">
+                <span className="text-slate-600">{dial.questionLabel}</span>
+                <span className={`font-black shrink-0 ${isDialSafe ? 'text-emerald-700' : 'text-rose-600'}`}>
+                  {isDialSafe ? dial.strangerSafeLabel : dial.strangerRiskLabel}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Live Preview: What a stranger sees */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
-            <Eye className="w-3.5 h-3.5 text-sky-500" />
-            <span>{loc.previewTitle}</span>
-          </span>
+      {showError && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-bold text-amber-950 flex items-start gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <span>{copy.labels.errorFeedback}</span>
         </div>
+      )}
 
-        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-600">{loc.q1}</span>
-            <span className={`font-bold ${locationSetting === 'public' ? 'text-rose-600' : 'text-emerald-600'}`}>
-              {locationSetting === 'public' ? loc.q1Yes : loc.q1No}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-slate-600">{loc.q2}</span>
-            <span className={`font-bold ${photoSetting === 'public' ? 'text-rose-600' : 'text-emerald-600'}`}>
-              {photoSetting === 'public' ? loc.q2Yes : loc.q2No}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-slate-600">{loc.q3}</span>
-            <span className={`font-bold ${messagesSetting === 'public' ? 'text-rose-600' : 'text-emerald-600'}`}>
-              {messagesSetting === 'public' ? loc.q3Yes : loc.q3No}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Button */}
       <button
-        onClick={onComplete}
-        disabled={!isSafeEnough}
-        className={`w-full py-3.5 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-          isSafeEnough
-            ? 'bg-gradient-to-r from-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/20 hover:from-sky-400 hover:to-cyan-400 active:scale-95'
-            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+        type="button"
+        onClick={handleVerify}
+        className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] ${
+          allSafe
+            ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white shadow-lg shadow-sky-500/20 hover:from-sky-400 hover:to-cyan-500'
+            : 'bg-slate-800 text-white hover:bg-slate-900'
         }`}
       >
-        <ShieldCheck className="w-4 h-4" />
-        <span>{isSafeEnough ? loc.saveBtn : loc.needAdjustBtn}</span>
+        <ShieldCheck className="w-5 h-5" />
+        <span>{copy.labels.auditBtn}</span>
       </button>
     </div>
   );

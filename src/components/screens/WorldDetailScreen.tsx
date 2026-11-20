@@ -73,14 +73,14 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
   return (
     <div
       ref={containerRef}
-      className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none pb-28 space-y-6 sm:space-y-7"
+      className="flex-1 min-h-0 w-full max-w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none pb-28 space-y-5 sm:space-y-6"
     >
       {/* Unified World Hero Header Card */}
       <motion.section
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="shrink-0 rounded-3xl p-5 sm:p-6 bg-white border border-slate-100 shadow-sm relative overflow-hidden space-y-4"
+        className="shrink-0 w-full rounded-3xl p-4 sm:p-6 bg-white border border-slate-100 shadow-sm relative overflow-hidden space-y-4"
       >
         {/* Accent top gradient stripe */}
         <div
@@ -91,10 +91,10 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
         />
 
         {/* Top Action Row: Back Button & World Meta */}
-        <div className="flex items-center justify-between gap-3 pt-1">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
           <button
             onClick={onBackToMap}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-xs font-bold text-slate-700 transition cursor-pointer shadow-2xs"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-xs sm:text-sm font-bold text-slate-700 transition cursor-pointer shadow-2xs"
           >
             <ArrowLeft className="w-4 h-4 text-slate-600" />
             <span>{t('worldDetail.backToMap')}</span>
@@ -102,7 +102,7 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
 
           <div className="flex items-center gap-2">
             <span
-              className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-2xl"
+              className="text-xs sm:text-sm font-black uppercase tracking-wider px-3 py-1 rounded-2xl"
               style={{
                 backgroundColor: `${world.color}18`,
                 color: world.color,
@@ -112,8 +112,8 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
               {t('common.world')} {world.number + 1}
             </span>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm font-bold">
+              <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
               <span>
                 {completedCount}/{totalCount}
               </span>
@@ -125,21 +125,21 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
         <div className="space-y-2 pt-1">
           <div className="flex items-center gap-2.5">
             <div
-              className="w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs"
+              className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs"
               style={{
                 backgroundColor: `${world.color}20`,
                 border: `1.5px solid ${world.color}`,
               }}
             >
-              <WorldIcon className="w-4.5 h-4.5" style={{ color: world.color }} />
+              <WorldIcon className="w-5 h-5" style={{ color: world.color }} />
             </div>
-            <span className="text-xs font-black tracking-wider uppercase" style={{ color: world.color }}>
+            <span className="text-xs sm:text-sm font-black tracking-wider uppercase" style={{ color: world.color }}>
               {world.name}
             </span>
           </div>
 
           <div className="flex items-start justify-between gap-3">
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-snug break-words flex-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug break-words flex-1">
               {world.title}
             </h1>
             <div className="shrink-0 -mt-1">
@@ -147,21 +147,21 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                 animate={{ y: [0, -3, 0] }}
                 transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
               >
-                <CiberMascot size="sm" expression="happy" />
+                <CiberMascot size="lg" expression="happy" />
               </motion.div>
             </div>
           </div>
 
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
             {world.subtitle}
           </p>
         </div>
 
         {/* Motto banner if available */}
         {world.motto && (
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-cyan-50/80 border border-cyan-100 flex items-center gap-3">
-            <span className="text-base shrink-0">🧭</span>
-            <p className="text-xs sm:text-sm font-bold text-cyan-900 leading-snug">
+          <div className="p-4 sm:p-4.5 rounded-2xl bg-cyan-50/90 border border-cyan-100 flex items-center gap-3">
+            <span className="text-xl shrink-0">🧭</span>
+            <p className="text-sm sm:text-base font-bold text-cyan-900 leading-snug">
               &quot;{world.motto}&quot;
             </p>
           </div>
@@ -169,16 +169,16 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
 
         {/* Progress Bar */}
         <div className="pt-3 border-t border-slate-100 space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500">
+          <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-500">
             <span className="text-cyan-700 font-extrabold flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-cyan-500" />
+              <Zap className="w-4 h-4 text-cyan-500" />
               {t('worldDetail.worldProgress')}
             </span>
             <span className="font-mono text-slate-700">
               {t('worldDetail.missionsCount', { completed: completedCount, total: totalCount })} ({progressPercent}%)
             </span>
           </div>
-          <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden p-0.5">
+          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden p-0.5">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressPercent}%` }}
@@ -193,15 +193,15 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
       </motion.section>
 
       {/* Missions List */}
-      <section className="space-y-4 shrink-0">
+      <section className="space-y-4 shrink-0 w-full">
         <div className="shrink-0 flex items-center justify-between px-1">
-          <h2 className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-2">
+          <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-500 flex items-center gap-2">
             <span>{t('worldDetail.missionsTitle')}</span>
-            <span className="px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-700 text-[10px] font-extrabold">
+            <span className="px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-700 text-xs font-extrabold">
               {world.missions.length}
             </span>
           </h2>
-          <span className="text-xs text-cyan-600 font-extrabold tracking-wide">
+          <span className="text-xs sm:text-sm text-cyan-600 font-extrabold tracking-wide">
             {t('worldDetail.tapToPlay')}
           </span>
         </div>
@@ -225,7 +225,7 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                     onSelectMission(mission);
                   }
                 }}
-                className={`shrink-0 rounded-3xl p-5 sm:p-6 border transition-all cursor-pointer ${
+                className={`shrink-0 w-full rounded-3xl p-4 sm:p-6 border transition-all cursor-pointer overflow-hidden ${
                   isFeatured
                     ? 'bg-white border-cyan-400 shadow-sm ring-2 ring-cyan-100'
                     : isLocked
@@ -233,10 +233,10 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                     : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm'
                 }`}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3.5 sm:gap-4">
                   {/* Number / Status Icon */}
                   <div
-                    className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-xs shrink-0 shadow-xs ${
+                    className={`w-14 h-14 sm:w-16 sm:h-16 rounded-3xl flex items-center justify-center font-black text-base shrink-0 shadow-sm ${
                       isCompleted
                         ? 'bg-emerald-500 text-white'
                         : isFeatured
@@ -247,9 +247,9 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                     }`}
                   >
                     {isCompleted ? (
-                      <CheckCircle2 className="w-5 h-5 text-white" />
+                      <CheckCircle2 className="w-7 h-7 text-white" />
                     ) : isLocked ? (
-                      <Lock className="w-4 h-4" />
+                      <Lock className="w-6 h-6 text-slate-500" />
                     ) : (
                       idx + 1
                     )}
@@ -258,7 +258,7 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                   {/* Mission Details */}
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[11px] font-bold text-slate-600">
+                      <span className="text-xs sm:text-sm font-bold text-slate-600">
                         {mission.difficulty === 'Fácil'
                           ? t('common.easy')
                           : mission.difficulty === 'Media' || mission.difficulty === 'Medio'
@@ -266,27 +266,27 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                           : t('common.hard')}
                       </span>
                       <span className="text-slate-300">•</span>
-                      <span className="text-xs text-slate-400 flex items-center gap-1 font-medium">
-                        <Clock className="w-3.5 h-3.5" />
+                      <span className="text-xs sm:text-sm text-slate-500 flex items-center gap-1 font-semibold">
+                        <Clock className="w-4 h-4" />
                         {mission.timeEstimate}
                       </span>
                     </div>
 
-                    <h3 className="text-sm sm:text-base font-black text-slate-900 leading-snug">
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
                       {mission.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                       {mission.subtitle}
                     </p>
 
                     {/* Rewards Row */}
-                    <div className="flex items-center gap-4 pt-1.5 text-xs font-bold">
-                      <span className="flex items-center gap-1.5 text-cyan-600 font-extrabold">
-                        <Sparkles className="w-3.5 h-3.5 text-cyan-500" />
+                    <div className="flex items-center gap-4 pt-1.5 text-xs sm:text-sm font-black">
+                      <span className="flex items-center gap-1.5 text-cyan-600">
+                        <Sparkles className="w-4 h-4 text-cyan-500" />
                         +{mission.xpReward} XP
                       </span>
-                      <span className="flex items-center gap-1.5 text-amber-700 font-extrabold">
-                        <Coins className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                      <span className="flex items-center gap-1.5 text-amber-700">
+                        <Coins className="w-4 h-4 text-amber-500 fill-amber-400" />
                         +{mission.coinReward} {t('common.coins')}
                       </span>
                     </div>
@@ -301,7 +301,7 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                           e.stopPropagation();
                           onSelectMission(mission);
                         }}
-                        className={`px-3.5 py-2 rounded-2xl text-xs font-black flex items-center gap-1.5 cursor-pointer transition active:scale-95 ${
+                        className={`px-3.5 sm:px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-1.5 cursor-pointer transition active:scale-95 ${
                           isFeatured
                             ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500 shadow-sm'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -311,8 +311,8 @@ export const WorldDetailScreen: React.FC<WorldDetailScreenProps> = ({
                         <span>{isFeatured ? t('worldDetail.play') : t('worldDetail.open')}</span>
                       </button>
                     ) : (
-                      <div className="w-9 h-9 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
-                        <Lock className="w-4 h-4" />
+                      <div className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                        <Lock className="w-4.5 h-4.5" />
                       </div>
                     )}
                   </div>

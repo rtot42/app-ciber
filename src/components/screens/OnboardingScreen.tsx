@@ -59,25 +59,25 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
   const current = slides[currentSlide];
 
   return (
-    <div className="flex-1 flex flex-col justify-between p-6 bg-white text-slate-900 relative select-none">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col justify-between p-5 sm:p-7 bg-white text-slate-900 relative select-none overflow-y-auto overflow-x-hidden">
       {/* Top Header with Brand & Language picker & Skip */}
-      <div className="flex items-center justify-between z-20">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-xs text-white shadow-sm">
+      <div className="flex items-center justify-between z-20 w-full shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-base text-white shadow-md shadow-cyan-500/20">
             CK
           </div>
-          <span className="font-extrabold text-base tracking-tight text-slate-900">
+          <span className="font-black text-xl sm:text-2xl tracking-tight text-slate-900">
             Ciber<span className="text-cyan-600">Kids</span>
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <LanguageSelector variant="dropdown" />
 
           {currentSlide < slides.length - 1 ? (
             <button
               onClick={onFinish}
-              className="text-xs font-bold text-slate-400 hover:text-slate-600 transition px-2 py-1 rounded-full hover:bg-slate-100 cursor-pointer"
+              className="text-sm sm:text-base font-black text-slate-400 hover:text-slate-700 transition px-3 py-1.5 rounded-full hover:bg-slate-100 cursor-pointer"
             >
               {t('onboarding.skip')}
             </button>
@@ -86,7 +86,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
       </div>
 
       {/* Mascot & Visual Core in white card */}
-      <div className="my-auto flex flex-col items-center justify-center text-center py-4 z-10">
+      <div className="my-auto flex flex-col items-center justify-center text-center py-4 z-10 w-full max-w-md mx-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
@@ -94,11 +94,11 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -12 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center w-full"
           >
             {/* Mascot Pedestal with soft shadow */}
             <div className="relative mb-6">
-              <div className="w-48 h-48 rounded-3xl bg-gradient-to-b from-sky-50 via-cyan-50/50 to-white border border-slate-100 flex items-center justify-center shadow-md relative">
+              <div className="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl bg-gradient-to-b from-sky-50 via-cyan-50/50 to-white border-2 border-slate-100 flex items-center justify-center shadow-lg shadow-cyan-500/10 relative overflow-hidden">
                 <CiberMascot
                   size="xl"
                   expression={current.expression}
@@ -108,18 +108,18 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
             </div>
 
             {/* Badge */}
-            <div className={`inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full border text-xs font-bold mb-3 ${current.badgeColor}`}>
-              <current.badgeIcon className="w-3.5 h-3.5" />
+            <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full border text-sm sm:text-base font-black mb-3 shadow-xs ${current.badgeColor}`}>
+              <current.badgeIcon className="w-5 h-5" />
               <span>{current.subtitle}</span>
             </div>
 
             {/* Slide Title */}
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 mb-2">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 mb-2.5 leading-tight">
               {current.title}
             </h1>
 
             {/* Slide Description */}
-            <p className="text-slate-500 text-sm max-w-[280px] leading-relaxed">
+            <p className="text-slate-600 text-sm sm:text-base font-medium max-w-sm leading-relaxed">
               {current.description}
             </p>
           </motion.div>
@@ -127,18 +127,18 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
       </div>
 
       {/* Bottom Controls */}
-      <div className="flex flex-col gap-4 z-20 pb-2">
+      <div className="flex flex-col gap-4.5 z-20 pb-2 w-full max-w-md mx-auto shrink-0">
         {/* Step Indicator dots */}
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2.5">
           {slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
               aria-label={`Slide ${idx + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                 idx === currentSlide
-                  ? 'w-8 bg-cyan-500'
-                  : 'w-2 bg-slate-200 hover:bg-slate-300'
+                  ? 'w-10 bg-cyan-500 shadow-xs'
+                  : 'w-2.5 bg-slate-200 hover:bg-slate-300'
               }`}
             />
           ))}
@@ -147,14 +147,14 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
         {/* CTA Button */}
         <button
           onClick={handleNext}
-          className="w-full py-4 rounded-2xl font-black text-sm tracking-wide bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-lg shadow-cyan-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer active:scale-[0.98]"
+          className="w-full py-4.5 sm:py-5 rounded-2xl font-black text-base sm:text-lg tracking-wide bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/30 transition-all flex items-center justify-center gap-2.5 group cursor-pointer active:scale-[0.98]"
         >
           <span>
             {currentSlide === slides.length - 1
               ? t('onboarding.startAdventure')
               : t('onboarding.continue')}
           </span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform stroke-[2.5]" />
         </button>
       </div>
     </div>

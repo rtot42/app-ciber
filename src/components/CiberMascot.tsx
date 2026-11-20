@@ -18,10 +18,10 @@ export const CiberMascot: React.FC<CiberMascotProps> = ({
   className = '',
 }) => {
   const sizeMap = {
-    sm: 'w-12 h-12',
-    md: 'w-20 h-20',
-    lg: 'w-28 h-28',
-    xl: 'w-36 h-36',
+    sm: 'w-16 h-16',
+    md: 'w-26 h-26 sm:w-28 sm:h-28',
+    lg: 'w-36 h-36 sm:w-40 sm:h-40',
+    xl: 'w-52 h-52 sm:w-56 sm:h-56',
   };
 
   // Eyes render based on expression

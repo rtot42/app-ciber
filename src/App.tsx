@@ -14,19 +14,28 @@ import { EducationScreen } from './components/screens/EducationScreen';
 import { ProfileScreen } from './components/screens/ProfileScreen';
 import { ParentGateScreen } from './components/screens/ParentGateScreen';
 import { ParentDashboardScreen } from './components/screens/ParentDashboardScreen';
-import { ScreenId, UserProfile, World, Mission } from './types';
+import { ScreenId, UserProfile, World, Mission, GameResultStats, ChildAgeGroup } from './types';
 import { INITIAL_PROFILE } from './data';
 import { useLanguage } from './i18n/LanguageContext';
 import { LevelUpCelebrationModal } from './components/LevelUpCelebrationModal';
 import { checkLevelUp } from './utils/levelSystem';
 
 export default function App() {
-  const { worlds: localizedWorlds } = useLanguage();
+  const { worlds: localizedWorlds, t } = useLanguage();
   const [activeScreen, setActiveScreen] = useState<ScreenId>('onboarding');
   const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);
-  const [extraCompletedCounts, setExtraCompletedCounts] = useState<Record<string, number>>({});
   const [selectedWorldId, setSelectedWorldId] = useState<string>('world-1');
   const [activeMissionId, setActiveMissionId] = useState<string>('w1-m1');
+  const [arcadeMode, setArcadeMode] = useState<boolean>(false);
+  const [lastResult, setLastResult] = useState<{
+    mission?: Mission;
+    nextMission?: Mission;
+    stats?: GameResultStats;
+    xpGained: number;
+    coinsGained: number;
+    skillLabel?: string;
+    skillPoints: number;
+  } | null>(null);
 
   // Celebratory Level-Up Modal Overlay State
   const [levelUpData, setLevelUpData] = useState<{
@@ -36,14 +45,42 @@ export default function App() {
     bonusCoins: number;
   } | null>(null);
 
-  // Derived reactive worlds, selectedWorld, and activeMission
-  const worlds = localizedWorlds.map((w) => ({
-    ...w,
-    completedMissions: extraCompletedCounts[w.id] !== undefined ? extraCompletedCounts[w.id] : w.completedMissions,
-  }));
+  // Reactive worlds & missions derived from profile.completedMissions and profile.level
+  const worlds: World[] = localizedWorlds.reduce<World[]>((acc, w, worldIdx) => {
+    const updatedMissions = w.missions.map((m, idx) => {
+      const isCompleted = profile.completedMissions.includes(m.id);
+      if (isCompleted) {
+        return { ...m, status: 'completed' as const };
+      }
+      const prevCompleted =
+        idx > 0 && profile.completedMissions.includes(w.missions[idx - 1].id);
+      const isAvailable =
+        m.status === 'available' || idx === 0 || prevCompleted;
+      return {
+        ...m,
+        status: isAvailable ? ('available' as const) : ('locked' as const),
+      };
+    });
+
+    const completedCount = updatedMissions.filter((m) => m.status === 'completed').length;
+    const prevWorldCompleted = worldIdx > 0 ? acc[worldIdx - 1].completedMissions : 0;
+    const isWorldUnlocked =
+      w.status !== 'locked' ||
+      profile.level >= w.number + 1 ||
+      prevWorldCompleted >= 3;
+
+    acc.push({
+      ...w,
+      status: w.status === 'active' ? 'active' : isWorldUnlocked ? 'unlocked' : 'locked',
+      missions: updatedMissions,
+      completedMissions: completedCount,
+    });
+    return acc;
+  }, []);
 
   const selectedWorld = worlds.find((w) => w.id === selectedWorldId) || worlds[0];
-  const activeMission = selectedWorld.missions.find((m) => m.id === activeMissionId) || selectedWorld.missions[0];
+  const activeMission =
+    selectedWorld.missions.find((m) => m.id === activeMissionId) || selectedWorld.missions[0];
 
   // Track parent mode
   const isParentMode = activeScreen === 'parent-gate' || activeScreen === 'parent-dashboard';
@@ -53,8 +90,13 @@ export default function App() {
     setProfile((prev) => ({ ...prev, ...newProps }));
   };
 
+  const handleChangeAgeGroup = (ageGroup: ChildAgeGroup) => {
+    setProfile((prev) => ({ ...prev, ageGroup }));
+  };
+
   const handleStartMissionById = (missionId: string) => {
     const foundWorld = worlds.find((w) => w.missions.some((m) => m.id === missionId)) || worlds[0];
+    setArcadeMode(false);
     setSelectedWorldId(foundWorld.id);
     setActiveMissionId(missionId);
     setActiveScreen('mission-intro');
@@ -66,6 +108,7 @@ export default function App() {
   };
 
   const handleSelectMission = (mission: Mission) => {
+    setArcadeMode(false);
     setActiveMissionId(mission.id);
     setActiveScreen('mission-intro');
   };
@@ -99,17 +142,52 @@ export default function App() {
     });
   };
 
-  // Called when child completes the interactive cybersecurity game
-  const handleCompleteGame = () => {
-    // Award rewards and check level up
-    setProfile((prev) => {
-      const progression = checkLevelUp(
-        prev.xp,
-        prev.level,
-        prev.xpToNextLevel,
-        120
-      );
+  // Called when child completes an interactive cybersecurity game
+  const handleCompleteGame = (stats?: GameResultStats) => {
+    const bonusXp = stats && stats.accuracy >= 85 ? 25 : 0;
+    const bonusCoins = stats?.stars === 3 ? 10 : 0;
 
+    if (arcadeMode) {
+      const xpGained = 75 + bonusXp;
+      const coinsGained = 15 + bonusCoins;
+
+      setProfile((prev) => {
+        const progression = checkLevelUp(prev.xp, prev.level, prev.xpToNextLevel, xpGained);
+        if (progression.leveledUp) {
+          setLevelUpData({
+            isOpen: true,
+            oldLevel: progression.oldLevel,
+            newLevel: progression.newLevel,
+            bonusCoins: progression.bonusCoins,
+          });
+        }
+        return {
+          ...prev,
+          xp: progression.newXp,
+          level: progression.newLevel,
+          xpToNextLevel: progression.newXpToNextLevel,
+          coins: prev.coins + coinsGained + progression.bonusCoins,
+        };
+      });
+
+      setLastResult({
+        stats,
+        xpGained,
+        coinsGained,
+        skillPoints: 5,
+      });
+      setActiveScreen('mission-result');
+      return;
+    }
+
+    const mission = activeMission;
+    const xpGained = (mission.xpReward || 100) + bonusXp;
+    const coinsGained = (mission.coinReward || 25) + bonusCoins;
+    const skillKey = mission.skillBonus.skill;
+    const skillPoints = mission.skillBonus.points || 8;
+
+    setProfile((prev) => {
+      const progression = checkLevelUp(prev.xp, prev.level, prev.xpToNextLevel, xpGained);
       if (progression.leveledUp) {
         setLevelUpData({
           isOpen: true,
@@ -119,36 +197,53 @@ export default function App() {
         });
       }
 
-      const newCoins = prev.coins + 25 + progression.bonusCoins;
-      const newSkills = {
-        ...prev.skills,
-        privacidad: Math.min(100, prev.skills.privacidad + 8),
-      };
-      const newUnlockedBadges = prev.unlockedBadges.includes('badge-detective-digital')
-        ? prev.unlockedBadges
-        : [...prev.unlockedBadges, 'badge-detective-digital'];
-
-      const newCompletedMissions = prev.completedMissions.includes('w1-m1')
+      const updatedCompleted = prev.completedMissions.includes(mission.id)
         ? prev.completedMissions
-        : [...prev.completedMissions, 'w1-m1'];
+        : [...prev.completedMissions, mission.id];
+
+      const updatedBadges =
+        updatedCompleted.length >= 4 && !prev.unlockedBadges.includes('badge-detective-digital')
+          ? [...prev.unlockedBadges, 'badge-detective-digital']
+          : prev.unlockedBadges;
 
       return {
         ...prev,
         xp: progression.newXp,
         level: progression.newLevel,
         xpToNextLevel: progression.newXpToNextLevel,
-        coins: newCoins,
-        skills: newSkills,
-        unlockedBadges: newUnlockedBadges,
-        completedMissions: newCompletedMissions,
+        coins: prev.coins + coinsGained + progression.bonusCoins,
+        skills: {
+          ...prev.skills,
+          [skillKey]: Math.min(100, prev.skills[skillKey] + skillPoints),
+        },
+        unlockedBadges: updatedBadges,
+        completedMissions: updatedCompleted,
       };
     });
 
-    // Update World 1 mission count if not updated
-    setExtraCompletedCounts((prev) => ({
-      ...prev,
-      'world-1': Math.max(prev['world-1'] || 0, 4),
-    }));
+    // Find next mission in current world or first mission of next unlocked world
+    const currentIdx = selectedWorld.missions.findIndex((m) => m.id === mission.id);
+    let nextMission: Mission | undefined =
+      currentIdx >= 0 && currentIdx + 1 < selectedWorld.missions.length
+        ? selectedWorld.missions[currentIdx + 1]
+        : undefined;
+
+    if (!nextMission) {
+      const worldIdx = worlds.findIndex((w) => w.id === selectedWorld.id);
+      if (worldIdx >= 0 && worldIdx + 1 < worlds.length) {
+        nextMission = worlds[worldIdx + 1].missions[0];
+      }
+    }
+
+    setLastResult({
+      mission,
+      nextMission,
+      stats,
+      xpGained,
+      coinsGained,
+      skillLabel: t(`profile.skills.${skillKey}`),
+      skillPoints,
+    });
 
     setActiveScreen('mission-result');
   };
@@ -165,7 +260,10 @@ export default function App() {
   return (
     <IPhoneFrame
       activeScreen={activeScreen}
-      onNavigateScreen={(screen) => setActiveScreen(screen)}
+      onNavigateScreen={(screen) => {
+        setArcadeMode(false);
+        setActiveScreen(screen);
+      }}
       isParentMode={isParentMode}
     >
       {/* Dynamic Screen Viewport */}
@@ -193,12 +291,17 @@ export default function App() {
             onNavigateToEducation={() => setActiveScreen('education')}
             onNavigateToAchievements={() => setActiveScreen('achievements')}
             onOpenParentGate={() => setActiveScreen('parent-gate')}
+            onOpenArcade={() => {
+              setArcadeMode(true);
+              setActiveScreen('game');
+            }}
             onAwardXp={handleAwardXp}
           />
         )}
 
         {activeScreen === 'worlds' && (
           <WorldMapScreen
+            worlds={worlds}
             onSelectWorld={handleSelectWorld}
             selectedWorldId={selectedWorld.id}
           />
@@ -222,6 +325,7 @@ export default function App() {
         {activeScreen === 'mission-intro' && (
           <MissionIntroScreen
             mission={activeMission}
+            ageGroup={profile.ageGroup}
             onStartGame={() => setActiveScreen('game')}
             onBack={() => setActiveScreen('world-detail')}
           />
@@ -229,16 +333,41 @@ export default function App() {
 
         {activeScreen === 'game' && (
           <InteractiveGameScreen
-            mission={activeMission}
+            mission={arcadeMode ? undefined : activeMission}
             profile={profile}
+            openPickerInitially={arcadeMode}
+            onChangeAgeGroup={handleChangeAgeGroup}
             onCompleteGame={handleCompleteGame}
-            onExitGame={() => setActiveScreen('mission-intro')}
+            onExitGame={() => {
+              if (arcadeMode) {
+                setArcadeMode(false);
+                setActiveScreen('home');
+              } else {
+                setActiveScreen('mission-intro');
+              }
+            }}
           />
         )}
 
         {activeScreen === 'mission-result' && (
           <MissionResultScreen
-            onContinue={() => setActiveScreen('home')}
+            mission={lastResult?.mission}
+            nextMission={lastResult?.nextMission}
+            stats={lastResult?.stats}
+            xpGained={lastResult?.xpGained}
+            coinsGained={lastResult?.coinsGained}
+            skillLabel={lastResult?.skillLabel}
+            skillPoints={lastResult?.skillPoints}
+            onNextMission={(next) => {
+              setArcadeMode(false);
+              setSelectedWorldId(next.worldId);
+              setActiveMissionId(next.id);
+              setActiveScreen('mission-intro');
+            }}
+            onContinue={() => {
+              setArcadeMode(false);
+              setActiveScreen('home');
+            }}
           />
         )}
 

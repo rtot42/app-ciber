@@ -1,209 +1,481 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
-import { HelpCircle, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
-import { CiberMascot } from '../CiberMascot';
+import { HelpCircle, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { ChildAgeGroup } from '../../types';
+import { ChildAgeGroup, GameResultStats } from '../../types';
+import { GameHud, GameVictorySummary } from './GameShell';
+import { computeStars } from '../../utils/ageDifficulty';
+import { playGameSound } from '../../utils/gameAudio';
 
 interface QuizGameProps {
-  onComplete: () => void;
+  onComplete: (stats?: GameResultStats) => void;
   ageGroup?: ChildAgeGroup;
 }
 
-export const QuizGame: React.FC<QuizGameProps> = ({ onComplete, ageGroup = '8–10' }) => {
+interface QuizQuestion {
+  id: string;
+  question: string;
+  options: { text: string; isCorrect: boolean; feedback: string }[];
+}
+
+export const QuizGame: React.FC<QuizGameProps> = ({
+  onComplete,
+  ageGroup = '8–10' as ChildAgeGroup,
+}) => {
   const { language } = useLanguage();
+
+  const copy = useMemo(() => {
+    const esPool: QuizQuestion[] = [
+      {
+        id: 'q1',
+        question: '¿Por qué nunca debes compartir tu ubicación en tiempo real en historias públicas?',
+        options: [
+          {
+            text: 'Porque cualquiera puede saber exactamente dónde estás en ese instante.',
+            isCorrect: true,
+            feedback: '¡Exacto! Publica recuerdos cuando ya estés a salvo en casa.',
+          },
+          {
+            text: 'Porque solo gasta batería del teléfono.',
+            isCorrect: false,
+            feedback: 'El riesgo principal es tu seguridad física al revelar rutinas.',
+          },
+          {
+            text: 'Porque solo la ven tus amigos de clase.',
+            isCorrect: false,
+            feedback: 'Las cuentas públicas son visibles para cualquier desconocido en red.',
+          },
+        ],
+      },
+      {
+        id: 'q2',
+        question: 'Tu mejor amigo te pide tu contraseña del juego "solo por hoy" para pasarse un nivel. ¿Qué haces?',
+        options: [
+          {
+            text: 'No compartirla: las contraseñas son personales incluso entre amigos.',
+            isCorrect: true,
+            feedback: '¡Correcto! Si alguien entra con tu clave o pierde su móvil, tu cuenta queda expuesta.',
+          },
+          {
+            text: 'Dársela igual porque confío en él.',
+            isCorrect: false,
+            feedback: 'Incluso un buen amigo puede olvidar cerrar sesión o reenviarla por error.',
+          },
+        ],
+      },
+      {
+        id: 'q3',
+        question: '¿Qué debes revisar primero en un enlace antes de hacer clic?',
+        options: [
+          {
+            text: 'El dominio raíz exacto justo antes de la primera barra ("/").',
+            isCorrect: true,
+            feedback: '¡Bien! Ahí ves quién controla realmente el sitio web.',
+          },
+          {
+            text: 'Si la página tiene colores bonitos y emojis de regalo.',
+            isCorrect: false,
+            feedback: 'Los estafadores imitan logos y colores reales para engañarte.',
+          },
+        ],
+      },
+      {
+        id: 'q4',
+        question: 'Una app de linterna te pide permiso a "Contactos, Cámara y Micrófono". ¿Qué significa?',
+        options: [
+          {
+            text: 'Permisos excesivos sospechosos: una linterna no necesita oír ni ver tus contactos.',
+            isCorrect: true,
+            feedback: '¡Excelente ojo! Rechaza y busca una app que respete tus permisos.',
+          },
+          {
+            text: 'Es totalmente normal en cualquier app moderna.',
+            isCorrect: false,
+            feedback: '¡No! Pedir acceso sin relación con la función indica recolección abusiva de datos.',
+          },
+        ],
+      },
+      {
+        id: 'q5',
+        question: 'Un sitio dice "https://" con candado verde. ¿Significa automáticamente que no es phishing?',
+        options: [
+          {
+            text: 'No: HTTPS solo cifra el viaje de datos, los sitios falsos también pueden tener candado.',
+            isCorrect: true,
+            feedback: '¡Nivel Pro! El candado protege el túnel, pero debes verificar el dominio real.',
+          },
+          {
+            text: 'Sí, el candado garantiza que el sitio es 100% oficial y honesto.',
+            isCorrect: false,
+            feedback: 'Mito común: muchos clones de phishing usan certificados HTTPS gratuitos.',
+          },
+        ],
+      },
+    ];
+
+    const frPool: QuizQuestion[] = [
+      {
+        id: 'q1',
+        question: 'Pourquoi ne jamais partager ta localisation en direct dans des stories publiques ?',
+        options: [
+          {
+            text: 'Parce que n’importe qui peut savoir exactement où tu te trouves à cet instant.',
+            isCorrect: true,
+            feedback: 'Exact ! Poste tes souvenirs uniquement une fois rentré en sécurité.',
+          },
+          {
+            text: 'Uniquement parce que ça vide la batterie.',
+            isCorrect: false,
+            feedback: 'Le danger majeur est ta sécurité physique et celle de ta famille.',
+          },
+          {
+            text: 'Aucun souci, seuls mes camarades peuvent voir.',
+            isCorrect: false,
+            feedback: 'En mode public, tout inconnu sur Internet peut consulter tes stories.',
+          },
+        ],
+      },
+      {
+        id: 'q2',
+        question: 'Ton meilleur ami te demande ton mot de passe « juste pour ce soir » afin de débloquer un niveau. Que fais-tu ?',
+        options: [
+          {
+            text: 'Refuser poliment : un mot de passe reste strictement personnel.',
+            isCorrect: true,
+            feedback: 'Bravo ! Un mot de passe partagé n’est plus secret même entre amis.',
+          },
+          {
+            text: 'Le lui donner car c’est mon ami d’école.',
+            isCorrect: false,
+            feedback: 'Même par erreur, un appareil partagé ou piraté exposerait ton compte.',
+          },
+        ],
+      },
+      {
+        id: 'q3',
+        question: 'Que dois-tu vérifier en priorité dans une URL avant de cliquer ?',
+        options: [
+          {
+            text: 'Le domaine racine exact juste avant le premier « / ».',
+            isCorrect: true,
+            feedback: 'Bien vu ! C’est lui qui révèle le véritable propriétaire du site.',
+          },
+          {
+            text: 'Si le lien promet une belle récompense avec des émojis.',
+            isCorrect: false,
+            feedback: 'Les arnaques copient les logos officiels pour inspirer confiance.',
+          },
+        ],
+      },
+      {
+        id: 'q4',
+        question: 'Une appli lampe-torche réclame l’accès « Contacts, Micro et Caméra ». Que décides-tu ?',
+        options: [
+          {
+            text: 'Refuser : une lampe-torche n’a besoin ni du micro ni de tes contacts.',
+            isCorrect: true,
+            feedback: 'Excellent réflexe ! Des permissions inutiles signalent une collecte abusive.',
+          },
+          {
+            text: 'Tout accepter pour aller plus vite.',
+            isCorrect: false,
+            feedback: 'Toujours vérifier pourquoi une appli demande chaque permission.',
+          },
+        ],
+      },
+      {
+        id: 'q5',
+        question: 'Un site affiche « https:// » avec un cadenas. Est-ce forcément un site officiel sûr ?',
+        options: [
+          {
+            text: 'Non : HTTPS chiffre la connexion, mais un site pirate peut aussi avoir un cadenas.',
+            isCorrect: true,
+            feedback: 'Niveau Pro ! Il faut aussi contrôler attentivement le nom de domaine.',
+          },
+          {
+            text: 'Oui, le cadenas certifie que l’entreprise est honnête.',
+            isCorrect: false,
+            feedback: 'Idée reçue : de nombreux faux sites utilisent des certificats HTTPS gratuits.',
+          },
+        ],
+      },
+    ];
+
+    const enPool: QuizQuestion[] = [
+      {
+        id: 'q1',
+        question: 'Why should you never broadcast real-time location in public stories?',
+        options: [
+          {
+            text: 'Anyone online can see exactly where you are at that very moment.',
+            isCorrect: true,
+            feedback: 'Exactly! Share cool photos only after you are safely home.',
+          },
+          {
+            text: 'Because it only drains phone battery.',
+            isCorrect: false,
+            feedback: 'The main risk is physical privacy and exposing your daily routines.',
+          },
+          {
+            text: 'Only classmates can view public stories anyway.',
+            isCorrect: false,
+            feedback: 'Public stories can be viewed by complete strangers anywhere.',
+          },
+        ],
+      },
+      {
+        id: 'q2',
+        question: 'Your close friend asks for your game password "just tonight" to pass a level. What should you do?',
+        options: [
+          {
+            text: 'Keep it private — passwords belong only to you and your parents.',
+            isCorrect: true,
+            feedback: 'Spot on! Once shared, a password is no longer under your control.',
+          },
+          {
+            text: 'Share it since we hang out every day.',
+            isCorrect: false,
+            feedback: 'Even trusted friends might accidentally leave accounts logged in or get hacked.',
+          },
+        ],
+      },
+      {
+        id: 'q3',
+        question: 'What part of a link should you inspect first before clicking?',
+        options: [
+          {
+            text: 'The exact root domain right before the first "/".',
+            isCorrect: true,
+            feedback: 'Sharp! The root domain tells you who actually owns the page.',
+          },
+          {
+            text: 'Whether the button glows bright green.',
+            isCorrect: false,
+            feedback: 'Scam pages copy official logos and colors to look trustworthy.',
+          },
+        ],
+      },
+      {
+        id: 'q4',
+        question: 'A simple flashlight app asks for Contacts, Microphone, and Camera permissions. What does this tell you?',
+        options: [
+          {
+            text: 'Red flag: unnecessary access to personal data unrelated to a flashlight.',
+            isCorrect: true,
+            feedback: 'Awesome catch! Deny excessive permissions and uninstall.',
+          },
+          {
+            text: 'Every modern app requires full sensor access.',
+            isCorrect: false,
+            feedback: 'Apps should only request permissions essential for their core job.',
+          },
+        ],
+      },
+      {
+        id: 'q5',
+        question: 'A login page shows "https://" with a padlock icon. Does that guarantee it is not phishing?',
+        options: [
+          {
+            text: 'No — HTTPS encrypts traffic, but fake scam sites can also use HTTPS padlocks.',
+            isCorrect: true,
+            feedback: 'Pro answer! Always inspect the domain spelling even when HTTPS is shown.',
+          },
+          {
+            text: 'Yes, the padlock proves the site is the real brand.',
+            isCorrect: false,
+            feedback: 'Common myth! Attackers regularly install free HTTPS certificates on phishing domains.',
+          },
+        ],
+      },
+    ];
+
+    const pool = language === 'fr' ? frPool : language === 'en' ? enPool : esPool;
+    const count = ageGroup === '13–14' ? 5 : ageGroup === '11–12' ? 4 : 3;
+    const questions = pool.slice(0, count);
+
+    const labels = {
+      es: {
+        title: 'Trivia Táctica de Ciberdefensa',
+        subtitle: `Supera ${count} decisiones clave sin caer en trampas`,
+        nextBtn: 'Siguiente Pregunta',
+        takeaway:
+          'Piensa como un guardián: cuida tu ubicación en vivo, no prestes contraseñas, audita permisos de apps y recuerda que HTTPS no sustituye verificar el dominio real.',
+      },
+      fr: {
+        title: 'Quiz Tactique de Cyberdéfense',
+        subtitle: `Réussis ${count} décisions clés de sécurité`,
+        nextBtn: 'Question Suivante',
+        takeaway:
+          'Pense comme un gardien : protège ta position en direct, garde tes mots de passe secrets, surveille les permissions et vérifie le vrai nom de domaine.',
+      },
+      en: {
+        title: 'Tactical Cyber Defense Quiz',
+        subtitle: `Master ${count} key digital safety decisions`,
+        nextBtn: 'Next Question',
+        takeaway:
+          'Think like a guardian: avoid live location sharing, never lend passwords, reject greedy app permissions, and inspect root domains even over HTTPS.',
+      },
+    }[language];
+
+    return { questions, labels };
+  }, [ageGroup, language]);
+
+  const [idx, setIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(1);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [finished, setFinished] = useState(false);
 
-  const localizedQuestions = {
-    es: {
-      title: '¿Por qué nunca debes compartir tu ubicación en tiempo real en historias públicas?',
-      mechanicTag: 'Trivia Visual',
-      subTitle: 'Decisión de Ciberdefensa',
-      quickBadge: 'Pregunta Rápida',
-      mascotText: 'Ciber dice: "Tómate tu tiempo. Aprender no es competir por velocidad, sino entender el porqué de cada regla."',
-      completeBtn: '¡Completar y Guardar Puntos!',
-      selectBtn: 'Selecciona la respuesta más segura',
-      options: [
-        {
-          text: 'Porque cualquiera puede saber exactamente dónde estás en ese mismo instante.',
-          isCorrect: true,
-          feedback: '¡Exactamente! La ubicación en vivo permite que extraños conozcan tus rutinas. Es mejor compartir anécdotas cuando ya estás a salvo en casa.',
-        },
-        {
-          text: 'Porque consume mucha batería en el celular.',
-          isCorrect: false,
-          feedback: 'Aunque consume batería, el motivo de ciberseguridad prioritario es proteger tu privacidad física y la de tu familia.',
-        },
-        {
-          text: 'Porque las fotos se ven más oscuras.',
-          isCorrect: false,
-          feedback: '¡No afecta la calidad de la foto! Lo importante es mantener en secreto los lugares que visitas a solas.',
-        },
-        {
-          text: 'Solo tus amigos del colegio pueden verla, así que no hay problema.',
-          isCorrect: false,
-          feedback: 'En historias públicas o con cuentas abiertas, cualquier persona de la red puede mirar tus historias.',
-        },
-      ],
-    },
-    fr: {
-      title: 'Pourquoi ne devrais-tu jamais partager ta localisation en direct sur des stories publiques ?',
-      mechanicTag: 'Quiz Visuel',
-      subTitle: 'Décision de Cyberdéfense',
-      quickBadge: 'Question Rapide',
-      mascotText: 'Ciber dit : "Prends ton temps. Apprendre n’est pas une course de vitesse, mais comprendre le sens de chaque règle."',
-      completeBtn: 'Terminer et Enregistrer les Points !',
-      selectBtn: 'Choisis la réponse la plus sûre',
-      options: [
-        {
-          text: 'Parce que n’importe qui peut savoir exactement où tu te trouves à cet instant.',
-          isCorrect: true,
-          feedback: 'Exactement ! La localisation en direct permet à des inconnus de connaître tes habitudes. Il vaut mieux partager des souvenirs une fois rentré chez toi.',
-        },
-        {
-          text: 'Parce que cela consomme trop de batterie sur le smartphone.',
-          isCorrect: false,
-          feedback: 'Bien que cela consomme de la batterie, la raison de sécurité primordiale est de préserver ta vie privée physique et celle de ta famille.',
-        },
-        {
-          text: 'Parce que les photos deviennent plus sombres.',
-          isCorrect: false,
-          feedback: 'Cela n’affecte pas la qualité ! L’essentiel est de garder secrets les endroits où tu te déplaces seul.',
-        },
-        {
-          text: 'Seuls tes camarades de classe peuvent la voir, donc aucun danger.',
-          isCorrect: false,
-          feedback: 'Sur des comptes publics ou ouverts, n’importe quel internaute peut consulter tes stories.',
-        },
-      ],
-    },
-    en: {
-      title: 'Why should you never share your real-time location in public stories?',
-      mechanicTag: 'Visual Trivia',
-      subTitle: 'Cyber Defense Decision',
-      quickBadge: 'Quick Question',
-      mascotText: 'Ciber says: "Take your time. Learning is not a race for speed, but about understanding why safety rules exist."',
-      completeBtn: 'Complete & Save Points!',
-      selectBtn: 'Select the safest answer',
-      options: [
-        {
-          text: 'Because anyone can see exactly where you are at that very moment.',
-          isCorrect: true,
-          feedback: 'Exactly! Live location broadcasts your habits to strangers. It is always safer to post memories after you are safely back home.',
-        },
-        {
-          text: 'Because it drains phone battery too fast.',
-          isCorrect: false,
-          feedback: 'While it uses battery, the primary cyber safety priority is protecting your physical privacy and your family.',
-        },
-        {
-          text: 'Because photos appear darker.',
-          isCorrect: false,
-          feedback: 'It doesn’t affect photo quality! The critical goal is keeping your visited locations private.',
-        },
-        {
-          text: 'Only classmates can see it, so there is no risk.',
-          isCorrect: false,
-          feedback: 'On public accounts or open stories, anyone on the internet can see your broadcasts.',
-        },
-      ],
-    },
+  const current = copy.questions[idx];
+  const chosenOption = selectedIdx !== null ? current.options[selectedIdx] : null;
+
+  const handleSelect = (optIdx: number) => {
+    if (selectedIdx !== null) return;
+    setSelectedIdx(optIdx);
+    const opt = current.options[optIdx];
+    if (opt.isCorrect) {
+      const nextStreak = streak + 1;
+      setStreak(nextStreak);
+      setMaxStreak((m) => Math.max(m, nextStreak));
+      setCorrectCount((c) => c + 1);
+      setScore((s) => s + 120 + nextStreak * 20);
+      playGameSound(nextStreak > 1 ? 'combo' : 'correct');
+    } else {
+      setStreak(0);
+      playGameSound('wrong');
+    }
   };
 
-  const currentQ = localizedQuestions[language] || localizedQuestions.en || localizedQuestions.es;
-
-  const handleSelect = (idx: number) => {
-    setSelectedIdx(idx);
-    setFeedback(currentQ.options[idx].feedback);
+  const handleNext = () => {
+    if (idx < copy.questions.length - 1) {
+      setIdx((i) => i + 1);
+      setSelectedIdx(null);
+    } else {
+      playGameSound('win');
+      setFinished(true);
+    }
   };
 
-  const isSuccess = selectedIdx !== null && currentQ.options[selectedIdx].isCorrect;
+  const handleReplay = () => {
+    setIdx(0);
+    setSelectedIdx(null);
+    setScore(0);
+    setStreak(0);
+    setMaxStreak(1);
+    setCorrectCount(0);
+    setFinished(false);
+  };
+
+  const answered = idx + (selectedIdx !== null ? 1 : 0);
+  const accuracy = answered > 0 ? Math.round((correctCount / answered) * 100) : 100;
+
+  if (finished) {
+    const finalAcc = Math.round((correctCount / copy.questions.length) * 100);
+    const stats: GameResultStats = {
+      stars: computeStars(finalAcc, ageGroup),
+      accuracy: finalAcc,
+      score,
+      streakMax: maxStreak,
+      ageGroup,
+    };
+    return (
+      <div className="flex-1 min-h-0 w-full flex flex-col p-4 sm:p-6 bg-slate-50 overflow-y-auto scrollbar-none">
+        <GameVictorySummary
+          title={copy.labels.title}
+          takeaway={copy.labels.takeaway}
+          stats={stats}
+          ageGroup={ageGroup}
+          onReplay={handleReplay}
+          onContinue={onComplete}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none space-y-6 sm:space-y-7 pb-8">
-      {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
-            <HelpCircle className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-xs uppercase font-extrabold text-sky-600 tracking-wider">
-              {currentQ.mechanicTag}
-            </div>
-            <h2 className="text-base font-black text-slate-900">{currentQ.subTitle}</h2>
-          </div>
-        </div>
-        <span className="text-xs font-bold text-slate-600">
-          {currentQ.quickBadge}
-        </span>
-      </div>
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-3.5 sm:p-5 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none space-y-4 pb-8">
+      <GameHud
+        title={copy.labels.title}
+        subtitle={copy.labels.subtitle}
+        icon={<HelpCircle className="w-5 h-5" />}
+        accentColor="blue"
+        ageGroup={ageGroup}
+        currentStep={idx + 1}
+        totalSteps={copy.questions.length}
+        score={score}
+        streak={streak}
+        accuracy={answered > 0 ? accuracy : undefined}
+      />
 
-      {/* Mascot advice */}
-      <div className="flex items-center gap-3.5 p-4 bg-sky-50/80 rounded-3xl border border-sky-100">
-        <CiberMascot size="sm" expression={isSuccess ? 'celebrating' : 'thinking'} />
-        <div className="text-xs sm:text-sm text-sky-950 leading-relaxed">
-          {currentQ.mascotText}
-        </div>
-      </div>
-
-      {/* Question Card */}
-      <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-3">
-        <h3 className="text-sm font-black text-slate-900 leading-snug">
-          {currentQ.title}
+      <motion.div
+        key={current.id}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white rounded-3xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-4"
+      >
+        <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
+          {current.question}
         </h3>
 
-        <div className="space-y-2 pt-1">
-          {currentQ.options.map((opt, idx) => {
-            const isSelected = selectedIdx === idx;
+        <div className="space-y-2.5">
+          {current.options.map((opt, oIdx) => {
+            const isPicked = selectedIdx === oIdx;
             return (
               <button
-                key={idx}
-                onClick={() => handleSelect(idx)}
-                className={`w-full text-left p-3.5 rounded-2xl border transition flex items-center justify-between cursor-pointer ${
-                  isSelected
+                key={oIdx}
+                type="button"
+                disabled={selectedIdx !== null}
+                onClick={() => handleSelect(oIdx)}
+                className={`w-full text-left p-3.5 rounded-2xl border-2 text-xs sm:text-sm font-bold transition flex items-center justify-between gap-2 cursor-pointer ${
+                  selectedIdx !== null
                     ? opt.isCorrect
-                      ? 'bg-emerald-50 border-emerald-300 ring-2 ring-emerald-200'
-                      : 'bg-amber-50 border-amber-300 ring-2 ring-amber-200'
-                    : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-950'
+                      : isPicked
+                      ? 'bg-rose-50 border-rose-400 text-rose-950'
+                      : 'bg-slate-50 border-slate-200 text-slate-500 opacity-70'
+                    : 'bg-slate-50 hover:bg-sky-50 border-slate-200 hover:border-sky-300 text-slate-800'
                 }`}
               >
-                <span className="text-xs font-semibold text-slate-800">{opt.text}</span>
-                {isSelected && opt.isCorrect && (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 ml-2" />
+                <span className="leading-snug">{opt.text}</span>
+                {selectedIdx !== null && opt.isCorrect && (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                )}
+                {selectedIdx !== null && isPicked && !opt.isCorrect && (
+                  <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
                 )}
               </button>
             );
           })}
         </div>
 
-        {feedback && (
+        {chosenOption && (
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-3 rounded-2xl text-xs font-medium ${
-              isSuccess ? 'bg-emerald-50 border border-emerald-200 text-emerald-950' : 'bg-sky-50 border border-sky-200 text-sky-950'
+            className={`p-3.5 rounded-2xl border text-xs sm:text-sm font-medium ${
+              chosenOption.isCorrect
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                : 'bg-amber-50 border-amber-200 text-amber-950'
             }`}
           >
-            {feedback}
+            {chosenOption.feedback}
           </motion.div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Action CTA */}
-      <button
-        onClick={onComplete}
-        disabled={!isSuccess}
-        className={`w-full py-3.5 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-          isSuccess
-            ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 active:scale-95'
-            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-        }`}
-      >
-        <Sparkles className="w-4 h-4" />
-        <span>{isSuccess ? currentQ.completeBtn : currentQ.selectBtn}</span>
-      </button>
+      {chosenOption && (
+        <button
+          type="button"
+          onClick={handleNext}
+          className="w-full py-4 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition"
+        >
+          <span>{copy.labels.nextBtn}</span>
+          <ArrowRight className="w-5 h-5" />
+        </button>
+      )}
     </div>
   );
 };

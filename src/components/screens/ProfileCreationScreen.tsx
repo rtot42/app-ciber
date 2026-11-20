@@ -549,7 +549,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
       case 3:
         return 'thinking';
       case 4:
-        return isFinishing ? 'celebrating' : 'proud';
+        return isFinishing ? 'celebrating' : 'happy';
       default:
         return 'happy';
     }
@@ -573,27 +573,27 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 text-slate-900 select-none overflow-hidden">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col h-full bg-slate-50 text-slate-900 select-none overflow-hidden">
       {/* Top Header & Interactive Stepper */}
-      <header className="px-5 pt-4 pb-3 bg-white/90 backdrop-blur-md border-b border-slate-100 shrink-0 z-20 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+      <header className="px-4 sm:px-6 pt-4 pb-3 bg-white/95 backdrop-blur-md border-b border-slate-100 shrink-0 z-20 space-y-3 w-full">
+        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
+          <div className="flex items-center gap-3 min-w-0">
             <div
-              className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-xs transition-colors duration-300"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-md transition-colors duration-300 shrink-0"
               style={{ backgroundColor: selectedColor }}
             >
-              <Shield className="w-5 h-5" />
+              <Shield className="w-6 h-6" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-black uppercase tracking-wider text-cyan-700">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-cyan-700">
                   {loc.stepLabel(currentStep)}
                 </span>
-                <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">
+                <span className="text-xs text-slate-400 font-medium hidden sm:inline">
                   • {loc.regTitle}
                 </span>
               </div>
-              <h1 className="text-sm sm:text-base font-black text-slate-900 tracking-tight leading-tight mt-0.5">
+              <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-tight mt-0.5 truncate">
                 {currentStep === 1 && loc.step1Header}
                 {currentStep === 2 && loc.step2Header}
                 {currentStep === 3 && loc.step3Header}
@@ -602,13 +602,13 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <CiberMascot size="sm" expression={getMascotExpression()} />
+          <div className="flex items-center gap-2 shrink-0">
+            <CiberMascot size="md" expression={getMascotExpression()} />
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-2.5 w-full max-w-lg mx-auto bg-slate-100 rounded-full overflow-hidden">
           <motion.div
             className="h-full rounded-full transition-all duration-300"
             style={{
@@ -620,7 +620,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
         </div>
 
         {/* Navigation Step Indicators */}
-        <div className="flex items-center justify-between pt-0.5">
+        <div className="flex items-center justify-between pt-0.5 max-w-lg mx-auto w-full">
           {loc.stepItems.map((item) => {
             const isCompleted = item.step < currentStep;
             const isCurrent = item.step === currentStep;
@@ -629,7 +629,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 key={item.step}
                 type="button"
                 onClick={() => jumpToStep(item.step as 1 | 2 | 3 | 4)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
                   isCurrent
                     ? 'bg-slate-900 text-white shadow-xs'
                     : isCompleted
@@ -638,8 +638,8 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 }`}
               >
                 <span>{item.icon}</span>
-                <span className="hidden sm:inline text-[11px]">{item.label}</span>
-                {isCompleted && <Check className="w-3 h-3 text-cyan-600 stroke-[3]" />}
+                <span className="hidden sm:inline text-xs">{item.label}</span>
+                {isCompleted && <Check className="w-3.5 h-3.5 text-cyan-600 stroke-[3]" />}
               </button>
             );
           })}
@@ -647,7 +647,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
       </header>
 
       {/* Main Spacious Scrollable Viewport */}
-      <main className="flex-1 overflow-y-auto px-5 sm:px-6 py-6 scrollbar-none">
+      <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-6 py-6 scrollbar-none w-full">
         <div className="w-full max-w-lg mx-auto pb-24">
           <AnimatePresence mode="wait" custom={direction}>
             {/* STEP 1: GUARDIAN */}
@@ -663,24 +663,24 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
               >
                 {/* Header with generous spacing */}
                 <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs font-black text-cyan-600 uppercase tracking-wider block">
+                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
                     {loc.step1SubTag}
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
                     {loc.step1Title}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step1Desc}
                   </p>
                 </div>
 
                 {/* Hero Spotlight of Selected Guardian */}
-                <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center gap-4 sm:gap-5 relative overflow-hidden">
+                <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 flex items-center gap-5 relative overflow-hidden">
                   <div
-                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl relative shadow-inner shrink-0 transition-transform duration-300"
+                    className="w-26 h-26 sm:w-30 sm:h-30 rounded-3xl flex items-center justify-center text-5xl sm:text-6xl relative shadow-inner shrink-0 transition-transform duration-300"
                     style={{
                       backgroundColor: `${selectedColor}18`,
-                      border: `2px solid ${selectedColor}`,
+                      border: `3px solid ${selectedColor}`,
                     }}
                   >
                     <motion.span
@@ -690,50 +690,50 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                       {currentAvatarData.icon}
                     </motion.span>
                     <div
-                      className="absolute -bottom-2 px-2.5 py-0.5 rounded-full text-[9px] font-black text-white shadow-xs"
+                      className="absolute -bottom-2 px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-black text-white shadow-xs"
                       style={{ backgroundColor: selectedColor }}
                     >
                       {loc.level1Badge}
                     </div>
                   </div>
 
-                  <div className="flex-1 min-w-0 space-y-1">
+                  <div className="flex-1 min-w-0 space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-black text-slate-900 truncate">
+                      <h3 className="text-xl sm:text-2xl font-black text-slate-900 truncate">
                         {currentAvatarData.name}
                       </h3>
-                      <span className="text-[10px] font-black text-cyan-700 uppercase tracking-wider">
+                      <span className="text-xs font-black text-cyan-700 uppercase tracking-wider">
                         • {currentGuardianDetail.tag}
                       </span>
                     </div>
-                    <p className="text-xs font-bold text-cyan-600">
+                    <p className="text-sm font-extrabold text-cyan-600">
                       {currentGuardianDetail.role}
                     </p>
-                    <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-2">
                       {currentGuardianDetail.description}
                     </p>
                   </div>
                 </div>
 
                 {/* Superpower Showcase Box */}
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-100 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5">
-                    <Sparkles className="w-4 h-4 text-cyan-600 shrink-0" />
+                <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-100 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="w-5 h-5 text-cyan-600 shrink-0" />
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-wider text-cyan-800 block">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-cyan-800 block">
                         {loc.specialPowerLabel}
                       </span>
-                      <span className="text-xs font-bold text-slate-800">
+                      <span className="text-sm font-black text-slate-900">
                         {currentGuardianDetail.superpower}
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs font-black text-cyan-700">
+                  <span className="text-xs sm:text-sm font-black text-cyan-700">
                     {loc.selectedBadge}
                   </span>
                 </div>
 
-                {/* Grid of Guardian Options */}
+                {/* Grid of Guardian Options - Much larger and more tactile */}
                 <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-1">
                   {AVATAR_OPTIONS.map((avatar) => {
                     const isSelected = avatar.id === selectedAvatar;
@@ -744,24 +744,29 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                         key={avatar.id}
                         type="button"
                         onClick={() => setSelectedAvatar(avatar.id)}
-                        className={`p-3.5 sm:p-4 rounded-2xl text-center transition-all cursor-pointer flex flex-col items-center gap-2 ${
+                        className={`p-3.5 sm:p-4.5 rounded-3xl text-center transition-all cursor-pointer flex flex-col items-center gap-2 relative ${
                           isSelected
-                            ? 'bg-white shadow-md ring-2 ring-cyan-500 border border-transparent scale-102'
-                            : 'bg-white/80 hover:bg-white border border-slate-100 hover:border-slate-200'
+                            ? 'bg-white shadow-lg ring-4 ring-cyan-500 border-2 border-cyan-400 scale-[1.03]'
+                            : 'bg-white/90 hover:bg-white border-2 border-slate-100 hover:border-slate-200 shadow-2xs'
                         }`}
                       >
+                        {isSelected && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-cyan-500 text-white flex items-center justify-center shadow-xs">
+                            <Check className="w-3 h-3 stroke-[3]" />
+                          </div>
+                        )}
                         <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all"
+                          className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl transition-all shadow-inner"
                           style={{
-                            backgroundColor: isSelected ? `${selectedColor}22` : '#f1f5f9',
+                            backgroundColor: isSelected ? `${selectedColor}25` : '#f1f5f9',
                           }}
                         >
                           <span>{avatar.icon}</span>
                         </div>
-                        <span className="text-xs font-black text-slate-900 truncate w-full">
+                        <span className="text-sm sm:text-base font-black text-slate-900 truncate w-full">
                           {avatar.name}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-semibold line-clamp-1">
+                        <span className="text-xs text-cyan-700 font-bold line-clamp-1">
                           {detail?.role}
                         </span>
                       </button>
@@ -784,13 +789,13 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
               >
                 {/* Header */}
                 <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs font-black text-cyan-600 uppercase tracking-wider block">
+                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
                     {loc.step2SubTag}
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
                     {loc.step2Title}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step2Desc}
                   </p>
                 </div>
@@ -798,7 +803,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                 {/* Aura Preview Guardian Spotlight */}
                 <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center relative overflow-hidden space-y-3">
                   <div
-                    className="w-24 h-24 rounded-3xl flex items-center justify-center text-5xl relative transition-all duration-300"
+                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center text-6xl relative transition-all duration-300"
                     style={{
                       backgroundColor: `${selectedColor}18`,
                       border: `3px solid ${selectedColor}`,
@@ -809,10 +814,10 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                   </div>
 
                   <div className="space-y-1">
-                    <h3 className="text-base font-black text-slate-900">
+                    <h3 className="text-lg sm:text-xl font-black text-slate-900">
                       {currentAura.name}
                     </h3>
-                    <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-500 max-w-xs leading-relaxed">
                       {currentAura.desc}
                     </p>
                   </div>
@@ -828,31 +833,31 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                         key={aura.id}
                         type="button"
                         onClick={() => setSelectedColor(aura.hex)}
-                        className={`w-full p-3.5 sm:p-4 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                        className={`w-full p-4 sm:p-4.5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-white border-slate-900 shadow-sm ring-1 ring-slate-900'
-                            : 'bg-white hover:bg-slate-50 border-slate-100 hover:border-slate-200'
+                            ? 'bg-white border-slate-900 shadow-md ring-2 ring-slate-900'
+                            : 'bg-white hover:bg-slate-50 border-slate-100 hover:border-slate-200 shadow-2xs'
                         }`}
                       >
                         <div className="flex items-center gap-3.5">
                           <div
-                            className="w-8 h-8 rounded-xl shrink-0 shadow-xs flex items-center justify-center text-white"
+                            className="w-9 h-9 rounded-xl shrink-0 shadow-xs flex items-center justify-center text-white"
                             style={{ backgroundColor: aura.hex }}
                           >
-                            {isSelected && <Check className="w-4 h-4 stroke-[3]" />}
+                            {isSelected && <Check className="w-5 h-5 stroke-[3]" />}
                           </div>
                           <div>
-                            <span className="text-xs font-black text-slate-900 block">
+                            <span className="text-sm sm:text-base font-black text-slate-900 block">
                               {aura.name}
                             </span>
-                            <span className="text-[11px] text-slate-500 font-medium">
+                            <span className="text-xs text-slate-500 font-bold">
                               {aura.power}
                             </span>
                           </div>
                         </div>
 
                         <span
-                          className="w-3 h-3 rounded-full"
+                          className="w-3.5 h-3.5 rounded-full"
                           style={{ backgroundColor: aura.hex }}
                         />
                       </button>
@@ -875,13 +880,13 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
               >
                 {/* Header */}
                 <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs font-black text-cyan-600 uppercase tracking-wider block">
+                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
                     {loc.step3SubTag}
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
                     {loc.step3Title}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step3Desc}
                   </p>
                 </div>
@@ -898,47 +903,47 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                         onClick={() => setSelectedAge(ageGroup.id)}
                         className={`w-full p-5 sm:p-6 rounded-3xl border text-left transition-all cursor-pointer relative overflow-hidden space-y-3 ${
                           isSelected
-                            ? 'bg-white shadow-md ring-2 ring-cyan-500 border-transparent'
-                            : 'bg-white hover:bg-slate-50 border-slate-100 hover:border-slate-200'
+                            ? 'bg-white shadow-lg ring-4 ring-cyan-500 border-transparent'
+                            : 'bg-white hover:bg-slate-50 border-slate-100 hover:border-slate-200 shadow-2xs'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{ageGroup.icon}</span>
+                          <div className="flex items-center gap-3.5">
+                            <span className="text-3xl sm:text-4xl">{ageGroup.icon}</span>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-base font-black text-slate-900">
+                                <h3 className="text-lg sm:text-xl font-black text-slate-900">
                                   {ageGroup.title}
                                 </h3>
-                                <span className={`text-[11px] font-black ${ageGroup.accent}`}>
+                                <span className={`text-xs font-black ${ageGroup.accent}`}>
                                   • {ageGroup.rankBadge}
                                 </span>
                               </div>
-                              <span className="text-xs font-bold text-slate-500 block mt-0.5">
+                              <span className="text-xs sm:text-sm font-bold text-slate-500 block mt-0.5">
                                 {ageGroup.subtitle}
                               </span>
                             </div>
                           </div>
 
                           <div
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                            className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${
                               isSelected
                                 ? 'bg-cyan-500 border-cyan-500 text-white'
                                 : 'border-slate-300 bg-white'
                             }`}
                           >
-                            {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                            {isSelected && <Check className="w-4 h-4 stroke-[3]" />}
                           </div>
                         </div>
 
-                        <p className="text-xs text-slate-600 leading-relaxed">
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                           {ageGroup.desc}
                         </p>
 
-                        {/* Distinct feature points without pill clusters */}
-                        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-semibold text-slate-500">
+                        {/* Distinct feature points */}
+                        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold text-slate-600">
                           {ageGroup.points.map((pt, pIdx) => (
-                            <span key={pIdx} className="flex items-center gap-1">
+                            <span key={pIdx} className="flex items-center gap-1.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                               {pt}
                             </span>
@@ -964,31 +969,31 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
               >
                 {/* Header */}
                 <div className="text-center space-y-1.5 px-2">
-                  <span className="text-xs font-black text-cyan-600 uppercase tracking-wider block">
+                  <span className="text-xs sm:text-sm font-black text-cyan-600 uppercase tracking-wider block">
                     {loc.step4SubTag}
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
                     {loc.step4Title}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-md mx-auto">
+                  <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
                     {loc.step4Desc}
                   </p>
                 </div>
 
                 {/* Nickname Input & Randomizer Card */}
                 <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 space-y-4">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-600">
+                  <div className="flex items-center justify-between text-sm font-bold text-slate-700">
                     <span>{loc.step4Header}</span>
                     <button
                       type="button"
                       onClick={handleRandomizeNick}
-                      className="flex items-center gap-1.5 text-cyan-600 hover:text-cyan-700 cursor-pointer font-bold active:scale-95 transition"
+                      className="flex items-center gap-1.5 text-cyan-600 hover:text-cyan-700 cursor-pointer font-black active:scale-95 transition"
                     >
                       <motion.div
                         animate={isSpinningDice ? { rotate: 360 } : { rotate: 0 }}
                         transition={{ duration: 0.5, ease: 'easeInOut' }}
                       >
-                        <Dices className="w-4 h-4 text-cyan-500" />
+                        <Dices className="w-4.5 h-4.5 text-cyan-500" />
                       </motion.div>
                       <span>{loc.randomBtn}</span>
                     </button>
@@ -1002,9 +1007,9 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                       value={nickname}
                       onChange={(e) => setNickname(e.target.value)}
                       placeholder={loc.inputPlaceholder}
-                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-cyan-500 focus:bg-white text-base font-black text-slate-900 outline-none transition"
+                      className="w-full px-4.5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-cyan-500 focus:bg-white text-lg sm:text-xl font-black text-slate-900 outline-none transition"
                     />
-                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-mono">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-mono font-bold">
                       {nickname.length}/18
                     </div>
                   </div>
@@ -1014,7 +1019,7 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
                     <motion.div
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-900 leading-relaxed"
+                      className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs sm:text-sm font-bold text-amber-900 leading-relaxed"
                     >
                       {privacyWarning}
                     </motion.div>
@@ -1023,12 +1028,12 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
 
                 {/* Rules of Safe Nickname Card */}
                 <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100 space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-700">
-                    <Lock className="w-4 h-4 text-cyan-600" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase tracking-wider text-slate-700">
+                    <Lock className="w-4.5 h-4.5 text-cyan-600" />
                     <span>{loc.rulesTitle}</span>
                   </div>
 
-                  <ul className="space-y-2 text-xs text-slate-600 leading-relaxed">
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                       <span>{loc.rule1}</span>
@@ -1056,9 +1061,9 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
             <button
               type="button"
               onClick={goToPrevStep}
-              className="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer active:scale-95 flex items-center gap-1.5"
+              className="px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm sm:text-base font-bold transition cursor-pointer active:scale-95 flex items-center gap-2"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4.5 h-4.5" />
               <span>{loc.backBtn}</span>
             </button>
           ) : (
@@ -1069,20 +1074,20 @@ export const ProfileCreationScreen: React.FC<ProfileCreationScreenProps> = ({
             <button
               type="button"
               onClick={goToNextStep}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black tracking-wide shadow-md shadow-cyan-500/20 transition cursor-pointer active:scale-95 flex items-center gap-1.5"
+              className="px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-base sm:text-lg font-black tracking-wide shadow-lg shadow-cyan-500/25 transition cursor-pointer active:scale-95 flex items-center gap-2"
             >
               <span>{loc.nextBtn}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
             </button>
           ) : (
             <button
               type="button"
               disabled={isFinishing || !nickname.trim()}
               onClick={handleFinalSubmit}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-50 text-white text-xs font-black tracking-wide shadow-md shadow-emerald-500/20 transition cursor-pointer active:scale-95 flex items-center gap-1.5"
+              className="px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-50 text-white text-base sm:text-lg font-black tracking-wide shadow-lg shadow-emerald-500/25 transition cursor-pointer active:scale-95 flex items-center gap-2"
             >
               <span>{isFinishing ? loc.savingBtn : loc.finishBtn}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
             </button>
           )}
         </div>

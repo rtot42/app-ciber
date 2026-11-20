@@ -81,12 +81,12 @@ export const AchievementsScreen: React.FC<AchievementsScreenProps> = ({
   };
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col p-5 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto scrollbar-none pb-28 space-y-6 sm:space-y-7">
+    <div className="flex-1 min-h-0 w-full max-w-full flex flex-col p-4 sm:p-6 bg-slate-50 text-slate-800 select-none overflow-y-auto overflow-x-hidden scrollbar-none pb-28 space-y-5 sm:space-y-6">
       {/* Top Header Card */}
-      <section className="shrink-0 flex items-center justify-between bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <section className="shrink-0 w-full flex items-center justify-between bg-white p-4 sm:p-6 rounded-3xl border border-slate-100 shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-600">
-            <Award className="w-4 h-4" />
+            <Award className="w-4.5 h-4.5" />
             <span>{t('achievements.gallery')}</span>
           </div>
           <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
@@ -94,19 +94,19 @@ export const AchievementsScreen: React.FC<AchievementsScreenProps> = ({
           </h1>
         </div>
 
-        <div className="px-3.5 py-1.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold flex items-center gap-1.5 shadow-2xs">
+        <div className="px-3.5 py-1.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-2xs">
           <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
           <span>{t('achievements.unlockedOf', { unlocked: unlockedCount, total: badges.length })}</span>
         </div>
       </section>
 
       {/* Category Tabs */}
-      <div className="shrink-0 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <div className="shrink-0 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none w-full">
         {categories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setActiveCategoryId(cat.id)}
-            className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition cursor-pointer border ${
+            className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition cursor-pointer border ${
               activeCategoryId === cat.id
                 ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                 : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -118,7 +118,7 @@ export const AchievementsScreen: React.FC<AchievementsScreenProps> = ({
       </div>
 
       {/* Badges Collectible Grid with Ample Spacing */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-4 w-full">
         {filteredBadges.map((badge) => {
           const Icon = getIcon(badge.icon);
           const isUnlocked = badge.unlocked;
@@ -129,29 +129,29 @@ export const AchievementsScreen: React.FC<AchievementsScreenProps> = ({
               whileHover={{ scale: isUnlocked ? 1.02 : 1 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setSelectedBadge(badge)}
-              className={`p-5 rounded-3xl border transition-all cursor-pointer flex flex-col items-center text-center relative space-y-3 ${
+              className={`p-4 sm:p-5 rounded-3xl border transition-all cursor-pointer flex flex-col items-center text-center relative space-y-3 overflow-hidden ${
                 isUnlocked
                   ? 'bg-white border-slate-100 hover:border-cyan-200 shadow-sm'
                   : 'bg-slate-100/80 border-slate-200/60 opacity-60'
               }`}
             >
               {/* Rarity & Category Metadata */}
-              <div className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+              <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-500">
                 {getRarityLabel(badge.rarity)}
               </div>
 
               {/* Badge Emblem */}
               <div
-                className={`w-16 h-16 rounded-2xl flex items-center justify-center relative shadow-xs transition-colors ${
+                className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center relative shadow-xs transition-colors ${
                   isUnlocked
                     ? 'bg-cyan-50 border border-cyan-200 text-cyan-600'
                     : 'bg-slate-200 text-slate-400'
                 }`}
               >
                 {isUnlocked ? (
-                  <Icon className="w-8 h-8" />
+                  <Icon className="w-9 h-9 sm:w-10 sm:h-10" />
                 ) : (
-                  <Lock className="w-6 h-6 text-slate-400" />
+                  <Lock className="w-7 h-7 text-slate-400" />
                 )}
 
                 {isUnlocked && (
@@ -166,7 +166,7 @@ export const AchievementsScreen: React.FC<AchievementsScreenProps> = ({
                 <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-snug">
                   {badge.title}
                 </h3>
-                <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-slate-500 line-clamp-2 leading-relaxed">
                   {badge.description}
                 </p>
               </div>

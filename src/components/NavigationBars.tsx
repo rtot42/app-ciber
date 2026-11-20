@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Gamepad2, Award, User, BarChart3, Users, Lightbulb, Settings, ShieldCheck, GraduationCap } from 'lucide-react';
+import { Home, Gamepad2, Award, User, BarChart3, Users, Lightbulb, Settings, GraduationCap } from 'lucide-react';
 import { ScreenId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -25,8 +25,8 @@ export const ChildBottomNav: React.FC<ChildBottomNavProps> = ({
   ];
 
   return (
-    <nav className="w-full shrink-0 border-t border-slate-100 bg-white/95 backdrop-blur-xl px-4 py-2 z-30 shadow-xs">
-      <div className="flex items-center justify-around">
+    <nav className="w-full shrink-0 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-2 sm:px-4 pt-2.5 pb-3.5 sm:py-3 z-30 shadow-xs">
+      <div className="flex items-center justify-around max-w-2xl mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive =
@@ -37,30 +37,32 @@ export const ChildBottomNav: React.FC<ChildBottomNavProps> = ({
             <button
               key={tab.id}
               onClick={() => onNavigate(tab.id)}
-              className={`flex flex-col items-center gap-1 relative px-3 py-1.5 rounded-2xl transition-all cursor-pointer ${
+              className={`flex flex-col items-center gap-1 relative px-3 sm:px-4.5 py-1.5 rounded-2xl transition-all cursor-pointer ${
                 isActive
-                  ? 'text-cyan-600 font-bold'
+                  ? 'text-cyan-700 font-black'
                   : 'text-slate-400 hover:text-slate-600'
               }`}
             >
               {isActive && (
-                <div className="absolute inset-0 bg-cyan-50 rounded-2xl -z-10" />
+                <div className="absolute inset-0 bg-cyan-50/90 rounded-2xl -z-10" />
               )}
               <div className="relative">
                 <Icon
-                  className={`w-5 h-5 transition-transform ${
-                    isActive ? 'scale-110 stroke-[2.5]' : 'stroke-2'
+                  className={`w-7 h-7 transition-transform ${
+                    isActive ? 'scale-110 stroke-[2.7] text-cyan-600' : 'stroke-[2.1]'
                   }`}
                 />
-                {tab.badge && tab.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2 bg-amber-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center ring-2 ring-white">
+                {tab.badge !== undefined && tab.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-2.5 bg-amber-500 text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white shadow-2xs">
                     {tab.badge}
                   </span>
                 )}
               </div>
-              <span className="text-[11px] tracking-tight">{tab.label}</span>
+              <span className={`text-xs sm:text-sm tracking-tight ${isActive ? 'font-black text-cyan-700' : 'font-bold text-slate-500'}`}>
+                {tab.label}
+              </span>
               {isActive && (
-                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                <div className="w-2 h-2 rounded-full bg-cyan-500 shadow-2xs" />
               )}
             </button>
           );
@@ -79,7 +81,6 @@ interface ParentBottomNavProps {
 export const ParentBottomNav: React.FC<ParentBottomNavProps> = ({
   activeTab,
   onTabChange,
-  onExitParentMode,
 }) => {
   const { t } = useLanguage();
 
@@ -91,8 +92,8 @@ export const ParentBottomNav: React.FC<ParentBottomNavProps> = ({
   ];
 
   return (
-    <nav className="w-full shrink-0 border-t border-slate-100 bg-white/95 backdrop-blur-xl px-3 py-2 z-30 shadow-xs">
-      <div className="flex items-center justify-around">
+    <nav className="w-full shrink-0 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-2 sm:px-4 pt-2 pb-3 sm:py-2.5 z-30 shadow-xs">
+      <div className="flex items-center justify-around max-w-2xl mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -100,14 +101,14 @@ export const ParentBottomNav: React.FC<ParentBottomNavProps> = ({
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition cursor-pointer ${
+              className={`flex flex-col items-center gap-1 px-3 sm:px-4 py-1.5 rounded-2xl transition cursor-pointer ${
                 isActive
-                  ? 'text-cyan-700 font-bold'
+                  ? 'text-cyan-700 font-extrabold bg-cyan-50/80'
                   : 'text-slate-400 hover:text-slate-600'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-2'}`} />
-              <span className="text-[10px]">{tab.label}</span>
+              <Icon className={`w-6 h-6 ${isActive ? 'stroke-[2.6]' : 'stroke-2'}`} />
+              <span className="text-xs font-semibold">{tab.label}</span>
             </button>
           );
         })}
